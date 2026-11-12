@@ -23,9 +23,14 @@ for p, off in items:
     if not p.exists():
         continue
     for ps in json.loads(p.read_text())["passages"]:
+        last = ps.get("start_seconds", 0.0)
         for w in ps["words"]:
-            words.append((w["start_seconds"] + off, w["end_seconds"] + off, w["text"]))
-words.sort()
+            # digits and symbols can come back without word times; carry the previous time
+            st = w.get("start_seconds", last)
+            en = w.get("end_seconds", st)
+            last = en
+            words.append((st + off, en + off, w["text"]))
+words.sort(key=lambda w: w[0])
 # sentences: split at 。？！ ; record start/end
 sents, cur = [], []
 for w in words:

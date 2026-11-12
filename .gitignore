@@ -8,12 +8,16 @@ episodes/*/out/*.mp4
 episodes/*/out/build.log
 episodes/*/out/review/
 episodes/_demo/
+episodes/_imgtest/
 episodes/_test/
 episodes/_test/assets/narration-*
 node_modules/
+references/*/TRANSCRIPT.md
 references/*/chunks-*/
 references/*/chunks/
+references/*/evidence/
 references/*/evidence/*.mp4
 references/*/source.*
 references/shometsu-zukan-more/*.mp4
-episodes/_imgtest/
+references/shometsu-zukan-more/evidence-*/
+references/shometsu-zukan-more/queue.log
