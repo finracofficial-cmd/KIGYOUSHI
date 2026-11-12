@@ -99,6 +99,11 @@ def tts(text: str, cfg: dict, previous: str = "", following: str = "") -> bytes:
                 time.sleep(5 * (attempt + 1))
                 continue
             sys.exit(f"ElevenLabs HTTP {e.code}: {msg}")
+        except (urllib.error.URLError, ConnectionError, TimeoutError) as e:
+            if attempt < 3:
+                time.sleep(10 * (attempt + 1))
+                continue
+            raise RuntimeError(f"network error: {e}")
     raise RuntimeError("unreachable")
 
 

@@ -16,6 +16,7 @@ import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
@@ -46,6 +47,11 @@ def generate(prompt: str) -> bytes:
                 time.sleep(10 * (attempt + 1))
                 continue
             raise RuntimeError(f"OpenAI HTTP {e.code}: {msg}")
+        except (urllib.error.URLError, ConnectionError, TimeoutError) as e:
+            if attempt < 3:
+                time.sleep(10 * (attempt + 1))
+                continue
+            raise RuntimeError(f"network error: {e}")
     raise RuntimeError("unreachable")
 
 
