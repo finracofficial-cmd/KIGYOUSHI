@@ -17,7 +17,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 # hypit build --follow parses large progress records; the default Node heap is too small for long films.
-export NODE_OPTIONS="${NODE_OPTIONS:-} --max-old-space-size=4096"
+export NODE_OPTIONS="${NODE_OPTIONS:-} --max-old-space-size=6144"
 slug="${1:?usage: tools/run_episode.sh <slug> [stage...]}"
 shift || true
 stages=("$@")
@@ -46,6 +46,9 @@ sys.exit(1 if p else 0)") ;;
       hypit build "$ep/episode.svrun" --title "$slug" --follow 2>&1 | tee "$log"
       id=$(grep -oE 'bld_[0-9A-Za-z_]+' "$log" | head -1)
       grep -q "Build failed" "$log" && { echo "build failed: see $log and 'hypit inspect $id'" >&2; exit 1; }
+      if grep -q "needs attention" "$log"; then
+        hypit result finish "$id" --project "$PWD" --runtime "$PWD/hypit.runtime.json"
+      fi
       rm -f "$ep/out/$slug.mp4"
       hypit get "$id" --output final.video --to "$ep/out/$slug.mp4"
       echo "$id" > "$ep/out/last-build-id"

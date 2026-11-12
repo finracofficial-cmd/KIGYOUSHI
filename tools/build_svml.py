@@ -243,8 +243,9 @@ def build(slug: str) -> Path:
     bodies = ([f"body-{opening['id']}"] if opening else []) + [f"body-{s['id']}" for s in chapters]
     if credits:
         bodies.append("credits")
+    hug = ' inline-size="hug" block-size="hug"'
     for b in bodies:
-        flow(f"logo-{b}", "logo-frame", "logo-style", f"film.{b}", logo_body, z=80, align="center", motion=False)
+        flow(f"logo-{b}", "logo-frame", "logo-style", f"film.{b}", logo_body, z=80, align="center", motion=False, extra=hug)
         flow(f"logo-sub-{b}", "logo-sub-frame", "logo-sub-style", f"film.{b}", xml_escape(ch["logo"]["sub"]), z=80, align="center", motion=False)
     for s in chapters:
         b = f"body-{s['id']}"
@@ -255,7 +256,7 @@ def build(slug: str) -> Path:
              f'{xml_escape(ch["chapter_label"])} {num_label(n)}', align="center", block="end")
         flow(f"card-title-{s['id']}", "card-title-frame", "card-title-style", f"film.card-{s['id']}",
              xml_escape(s["title"]), align="center", block="start")
-    flow("ident-logo", "ident-logo-frame", "ident-logo-style", "film.ident", logo_body, z=70, align="center")
+    flow("ident-logo", "ident-logo-frame", "ident-logo-style", "film.ident", logo_body, z=70, align="center", extra=hug)
     flow("ident-title", "ident-title-frame", "ident-title-style", "film.ident", xml_escape(theme["main"]), z=70, align="center")
     flow("ident-sub", "ident-sub-frame", "ident-sub-style", "film.ident", xml_escape(theme["sub"]), z=70, align="center")
 

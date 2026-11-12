@@ -7,7 +7,7 @@
   text.theme-main { size: 40; weight: 900; line-height: 1.2; tracking: 1; }
   text.theme-sub { size: 30; weight: 700; line-height: 1.2; tracking: 1; }
   text.logo { size: 34; weight: 900; line-height: 1.08; tracking: 2; }
-  text.logo-sub { size: 15; weight: 700; line-height: 1; tracking: 6; }
+  text.logo-sub { size: 20; weight: 900; line-height: 1; tracking: 8; }
   text.ident-logo { size: 96; weight: 900; line-height: 1.08; tracking: 6; }
   text.ident-title { size: 64; weight: 900; line-height: 1.25; tracking: 2; }
   text.ident-sub { size: 40; weight: 700; line-height: 1.25; tracking: 2; }

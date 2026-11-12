@@ -29,6 +29,7 @@ npm install --global @hypit/hypit   # Hypit CLI
 npm install                         # フォント（@fontsource-variable/noto-sans-jp ほか）
 hypit programs up --endpoint whisperx.local   # 音声と台本の位置合わせ（初回は数GBのダウンロード）
 hypit programs prepare --endpoint html.local  # 書き出し用ブラウザ
+NODE_OPTIONS=--max-old-space-size=6144 hypit runtime up   # ビルド担当プロセス（結果の保存に大きなメモリが要る）
 ```
 - WhisperX 準備で NLTK が「proxied fetch」を拒否したら、punkt_tab を
   `https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/tokenizers/punkt_tab.zip` から取って
@@ -36,7 +37,8 @@ hypit programs prepare --endpoint html.local  # 書き出し用ブラウザ
 - `hypit transcribe` は1回の処理が5分を超えるとクライアント側でタイムアウトする。長い音声は
   `tools/chunk_audio.py` で4分以下に分けてから。
 - メモリは16GB。WhisperX（large-v3）は1回で最大10GB使うので、`expectedBatchSize` は4にしてあり、
-  文字起こしと書き出し（Chrome）を同時に走らせない。`hypit build --follow` は `NODE_OPTIONS=--max-old-space-size=4096` で。
+  文字起こしと書き出し（Chrome）を同時に走らせない。`hypit build` / `runtime up` は `NODE_OPTIONS=--max-old-space-size=6144` で
+  （既定の2GBだと結果の保存で落ち、Result が "needs attention" になる。その場合は `hypit result finish <id>`）。
 - 音声を変えずに見た目だけ直した再書き出しでは、前回の位置合わせ結果を自動で再利用する（`out/align-cache.json`）。
 - API キーは環境変数 `OPENAI_API_KEY` / `ELEVENLABS_API_KEY`（クラウド環境の設定に保存済み）。
 - 動画・音声・生成画像は git に入れない（.gitignore 済み）。episode.json と research.md はコミットする。
