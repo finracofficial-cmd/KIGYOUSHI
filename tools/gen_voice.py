@@ -14,7 +14,7 @@ A report of every block (error rate, remaining differences) goes to out/voice-re
 Unchanged blocks (same text, voice, model) are reused. Needs ELEVENLABS_API_KEY and a running
 WhisperX (`hypit programs up --endpoint whisperx.local`). ElevenLabs bills characters per request.
 
-Usage: gen_voice.py <slug> [--only ch01,ch02] [--force] [--dry-run] [--no-check]
+Usage: gen_voice.py <slug> [--only ch01,ch02] [--force] [--dry-run] [--no-check] [--recheck]
                      [--max-cer 0.05] [--retries 1]
 """
 from __future__ import annotations
@@ -60,10 +60,23 @@ def _under_10000(n: int) -> str:
     return s
 
 
+DIGIT_KANA = "ゼロ イチ ニ サン ヨン ゴ ロク ナナ ハチ キュウ".split()
+COUNTERS = "年月日円万億兆人台社件本枚個歳%％倍度時分秒期位回キセメグワ"
+
+
 def normalize_heard(text: str) -> str:
-    """Turn digits from the recognizer into kanji numerals so readings can be compared."""
+    """Turn digits from the recognizer into readable form so readings can be compared.
+
+    Codes such as 0840 or 724106 are read digit by digit; quantities (1996年, 1,500人) as numbers."""
     text = re.sub(r"(?<=\d),(?=\d{3})", "", text)
-    return re.sub(r"\d+", lambda m: int_to_kanji(int(m.group())), text)
+
+    def repl(m):
+        digits, nxt = m.group(), text[m.end():m.end() + 1]
+        if digits.startswith("0") or len(digits) >= 5 or (len(digits) == 4 and nxt not in COUNTERS):
+            if not (nxt and nxt in "年万億円"):
+                return "".join(DIGIT_KANA[int(c)] for c in digits)
+        return int_to_kanji(int(digits))
+    return re.sub(r"\d+", repl, text)
 
 
 def block_speech(ep, block, mode):
@@ -161,6 +174,8 @@ def main():
     ap.add_argument("--no-check", action="store_true")
     ap.add_argument("--max-cer", type=float, default=0.05)
     ap.add_argument("--retries", type=int, default=1)
+    ap.add_argument("--recheck", action="store_true",
+                    help="re-score existing blocks that are over the limit before regenerating them")
     a = ap.parse_args()
 
     ep = load_episode(a.slug)
@@ -195,8 +210,14 @@ def main():
                "settings": cfg["voice_settings"], "lang": cfg.get("language_code")}
         meta = json.loads(meta_p.read_text()) if meta_p.exists() else {}
         if not a.force and mp3.exists() and meta.get("key") == key:
-            report.append((sid, bi, meta.get("cer"), meta.get("diff", []), "reused"))
-            continue
+            if a.recheck and not a.no_check and (meta.get("cer") or 0) > a.max_cer:
+                c, diffs = score(block["lines"], ep, heard(mp3))
+                meta.update({"cer": round(c, 4), "diff": diffs})
+                meta_p.write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+                print(f"{sid}-{bi:02d} rechecked: reading error {c:.3f}")
+            if (meta.get("cer") or 0) <= a.max_cer or not a.recheck:
+                report.append((sid, bi, meta.get("cer"), meta.get("diff", []), "reused"))
+                continue
         total_chars += len(text)
         if a.dry_run:
             print(f"{sid}-{bi:02d}: {len(text)} chars")
