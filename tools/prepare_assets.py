@@ -2,8 +2,9 @@
 """Prepare derived assets after images and narration exist.
 
 - assets/narration/<seg>.m4a : narration loudness-normalized (channel audio.narration_lufs)
-- assets/derived/ident.png   : desaturated, darkened title-card background
-- assets/derived/credits.png : darkened background for the source roll
+- assets/derived/img/*.jpg  : JPEG copies of the illustrations used by the render
+- assets/derived/ident.jpg   : desaturated, darkened title-card background
+- assets/derived/credits.jpg : darkened background for the source roll
 - assets/derived/bgm-bed.m4a : background music looped to the film length at audio.bgm_lufs
 
 Background music comes from episode.json "bgm" or channel/bgm/*.{mp3,m4a,wav} (first file).
@@ -57,17 +58,28 @@ def main():
                  "-c:a", "aac", "-b:a", "160k", str(dst)])
         secs[sid] = duration(dst)
 
+    # JPEG copies keep the render's internal records small (PNG originals stay in assets/images)
+    (a / "derived" / "img").mkdir(parents=True, exist_ok=True)
+    used = {b["image"] for s in ep["segments"] for b in s["blocks"]}
+    for iid in sorted(used):
+        src = a / "images" / f"{iid}.png"
+        if not src.exists():
+            sys.exit(f"missing image {src} (run gen_images.py)")
+        dst = a / "derived" / "img" / f"{iid}.jpg"
+        if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
+            Image.open(src).convert("RGB").save(dst, quality=92)
+
     def bg(src_id: str, dst: Path, saturation: float, brightness: float):
         src = a / "images" / f"{src_id}.png"
         im = Image.open(src).convert("RGB")
         im = ImageEnhance.Color(im).enhance(saturation)
         im = ImageEnhance.Brightness(im).enhance(brightness)
-        im.save(dst)
+        im.save(dst, quality=90)
 
     first_image = ep["segments"][0]["blocks"][0]["image"]
-    bg(ep.get("ident_image", first_image), a / "derived" / "ident.png", 0.0, 0.55)
+    bg(ep.get("ident_image", first_image), a / "derived" / "ident.jpg", 0.0, 0.55)
     if ep.get("credits"):
-        bg(ep["credits"]["image"], a / "derived" / "credits.png", 0.6, 0.38)
+        bg(ep["credits"]["image"], a / "derived" / "credits.jpg", 0.6, 0.38)
 
     total = planned_seconds(ep, secs) + 5
     music = ep.get("bgm")

@@ -34,7 +34,8 @@
         "expectedCompute": "int8",
         "alignmentLanguages": [
           "ja"
-        ]
+        ],
+        "expectedBatchSize": 4
       }
     }
   },

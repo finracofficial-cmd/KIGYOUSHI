@@ -4,12 +4,14 @@
 Expects these prepared assets (see tools/prepare_assets.py):
   assets/images/<image-id>.png       generated illustrations
   assets/narration/<segment-id>.m4a  loudness-normalized narration per segment
-  assets/derived/ident.png, credits.png, bgm-bed.m4a
+  assets/derived/img/<image-id>.jpg, ident.jpg, credits.jpg, bgm-bed.m4a
 
 Usage: build_svml.py <slug>
 """
 from __future__ import annotations
 
+import hashlib
+import json
 import sys
 from pathlib import Path
 
@@ -91,10 +93,10 @@ def build(slug: str) -> Path:
                 used_images.append(b["image"])
     credits = ep.get("credits")
     for img in used_images:
-        w(f'  <asset:Image id="img-{img}" src="./assets/images/{img}.png"/>')
-    w('  <asset:Image id="img-ident" src="./assets/derived/ident.png"/>')
+        w(f'  <asset:Image id="img-{img}" src="./assets/derived/img/{img}.jpg"/>')
+    w('  <asset:Image id="img-ident" src="./assets/derived/ident.jpg"/>')
     if credits:
-        w('  <asset:Image id="img-credits" src="./assets/derived/credits.png"/>')
+        w('  <asset:Image id="img-credits" src="./assets/derived/credits.jpg"/>')
     for seg in segs:
         w(f'  <asset:Audio id="narr-{seg["id"]}" src="./assets/narration/{seg["id"]}.m4a"/>')
     w('  <asset:Audio id="bgm" src="./assets/derived/bgm-bed.m4a"/>')
@@ -104,12 +106,12 @@ def build(slug: str) -> Path:
     w(f'  <space:Canvas id="canvas" width="{W}" height="{H}"/>')
     extents = {}
     for img in used_images + (["ident"] if True else []):
-        p = d / ("assets/derived/ident.png" if img == "ident" else f"assets/images/{img}.png")
+        p = d / ("assets/derived/ident.jpg" if img == "ident" else f"assets/derived/img/{img}.jpg")
         iw, ih = Image.open(p).size
         extents[img] = (iw, ih)
         w(f'  <space:Extent id="ext-{img}" width="{iw}" height="{ih}"/>')
     if credits:
-        iw, ih = Image.open(d / "assets/derived/credits.png").size
+        iw, ih = Image.open(d / "assets/derived/credits.jpg").size
         w(f'  <space:Extent id="ext-credits" width="{iw}" height="{ih}"/>')
     frames = {
         "full": (0, 0, 100, 100),
@@ -215,14 +217,14 @@ def build(slug: str) -> Path:
         "theme-main-style": ("theme-main", "jp-black", f'<text:Fill color="{c["theme_main_text"]}"/><text:Box target="line" color="{c["theme_main_box"]}E6" padding="6 18" radius="0" border-color="{c["theme_accent"]}" border-width="0 0 0 8"/>'),
         "theme-sub-style": ("theme-sub", "jp-bold", f'<text:Fill color="{c["theme_sub_text"]}"/><text:Box target="line" color="{c["theme_sub_box"]}" padding="5 16" radius="0"/>'),
         "logo-style": ("logo", "jp-black", f'<text:Fill color="#FFFFFF"/><text:Box target="content" color="{c["seal"]}" padding="10 12" radius="6" border-color="#FFFFFF" border-width="3"/>'),
-        "logo-sub-style": ("logo-sub", "jp-bold", '<text:Fill color="#FFFFFF"/><text:Stroke color="#000000" width="3" placement="outside"/>'),
+        "logo-sub-style": ("logo-sub", "jp-bold", '<text:Stroke color="#000000" width="3" placement="outside"/><text:Fill color="#FFFFFF"/>'),
         "ident-logo-style": ("ident-logo", "jp-black", f'<text:Fill color="#FFFFFF"/><text:Box target="content" color="{c["seal"]}" padding="26 30" radius="14" border-color="#FFFFFF" border-width="6"/>'),
-        "ident-title-style": ("ident-title", "jp-black", '<text:Fill color="#FFFFFF"/><text:Stroke color="#000000" width="6" placement="outside"/>'),
-        "ident-sub-style": ("ident-sub", "jp-bold", f'<text:Fill color="{c["theme_accent"]}"/><text:Stroke color="#000000" width="5" placement="outside"/>'),
+        "ident-title-style": ("ident-title", "jp-black", '<text:Stroke color="#000000" width="8" placement="outside"/><text:Fill color="#FFFFFF"/>'),
+        "ident-sub-style": ("ident-sub", "jp-bold", f'<text:Stroke color="#000000" width="6" placement="outside"/><text:Fill color="{c["theme_accent"]}"/>'),
         "card-number-style": ("card-number", "jp-bold", f'<text:Fill color="{c["card_label"]}"/>'),
         "card-title-style": ("card-title", "jp-black", f'<text:Fill color="{c["card_title"]}"/>'),
-        "credits-style": ("credits", "jp-bold", '<text:Fill color="#FFFFFF"/><text:Stroke color="#000000" width="4" placement="outside"/>'),
-        "credits-head-style": ("credits-head", "jp-black", f'<text:Fill color="{c["theme_accent"]}"/><text:Stroke color="#000000" width="4" placement="outside"/>'),
+        "credits-style": ("credits", "jp-bold", '<text:Stroke color="#000000" width="5" placement="outside"/><text:Fill color="#FFFFFF"/>'),
+        "credits-head-style": ("credits-head", "jp-black", f'<text:Stroke color="#000000" width="5" placement="outside"/><text:Fill color="{c["theme_accent"]}"/>'),
         "ending-style": ("ending", "jp-black", '<text:Fill color="#FFFFFF"/>'),
     }
     for sid_, (recipe, font, paint) in styles.items():
@@ -294,9 +296,35 @@ def build(slug: str) -> Path:
 
     svml = d / "episode.svml"
     svml.write_text("\n".join(out) + "\n", encoding="utf-8")
-    (d / "episode.svrun").write_text(
-        '<?svml using="@hypit/markup/run@1"?>\n\n<svrun version="1">\n  <author source="./episode.svml"/>\n'
-        '  <target output="final.video"/>\n</svrun>\n', encoding="utf-8")
+
+    # Reuse narration media + alignment from the last successful build for unchanged segments.
+    hashes = {}
+    for seg in segs:
+        h = hashlib.sha256((d / "assets" / "narration" / f"{seg['id']}.m4a").read_bytes())
+        for b in seg["blocks"]:
+            for line in b["lines"]:
+                h.update(script_prose(line, readings).encode())
+        hashes[seg["id"]] = h.hexdigest()
+    (d / "out").mkdir(exist_ok=True)
+    (d / "out" / "align-pending.json").write_text(json.dumps(hashes, indent=1), encoding="utf-8")
+    cache_p = d / "out" / "align-cache.json"
+    cache = json.loads(cache_p.read_text()) if cache_p.exists() else {}
+    run = ['<?svml using="@hypit/markup/run@1"?>', "", '<svrun version="1">', '  <author source="./episode.svml"/>',
+           '  <target output="final.video"/>']
+    reused = []
+    for sid, h in hashes.items():
+        prev = cache.get(sid)
+        if not prev or prev["hash"] != h:
+            continue
+        reused.append(sid)
+        for name in (f"{sid}-media.media", f"{sid}-media.domain", f"{sid}-media.extent", f"{sid}-align.alignment"):
+            cid = "kept-" + name.replace(".", "-")
+            run.append(f'  <build-record id="{cid}" build="{prev["build"]}" output="{name}"/>')
+            run.append(f'  <satisfy output="{name}" candidate="{cid}"/>')
+    run.append("</svrun>")
+    (d / "episode.svrun").write_text("\n".join(run) + "\n", encoding="utf-8")
+    if reused:
+        print("reusing alignment for: " + ", ".join(reused))
     return svml
 
 

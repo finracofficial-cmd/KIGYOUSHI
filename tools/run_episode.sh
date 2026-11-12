@@ -17,7 +17,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 # hypit build --follow parses large progress records; the default Node heap is too small for long films.
-export NODE_OPTIONS="${NODE_OPTIONS:-} --max-old-space-size=8192"
+export NODE_OPTIONS="${NODE_OPTIONS:-} --max-old-space-size=4096"
 slug="${1:?usage: tools/run_episode.sh <slug> [stage...]}"
 shift || true
 stages=("$@")
@@ -48,7 +48,19 @@ sys.exit(1 if p else 0)") ;;
       grep -q "Build failed" "$log" && { echo "build failed: see $log and 'hypit inspect $id'" >&2; exit 1; }
       rm -f "$ep/out/$slug.mp4"
       hypit get "$id" --output final.video --to "$ep/out/$slug.mp4"
-      echo "$id" > "$ep/out/last-build-id" ;;
+      echo "$id" > "$ep/out/last-build-id"
+      python3 - "$ep" "$id" <<'PY'
+import json, sys, pathlib
+out = pathlib.Path(sys.argv[1]) / "out"
+pending = json.loads((out / "align-pending.json").read_text())
+cache_p = out / "align-cache.json"
+cache = json.loads(cache_p.read_text()) if cache_p.exists() else {}
+for sid, h in pending.items():
+    if cache.get(sid, {}).get("hash") != h:
+        cache[sid] = {"hash": h, "build": sys.argv[2]}
+cache_p.write_text(json.dumps(cache, indent=1))
+PY
+      ;;
     thumb)  (cd tools && python3 make_thumbnail.py "$slug") ;;
     meta)   (cd tools && python3 youtube_meta.py "$slug") ;;
     review) python3 tools/review_sheets.py "$ep/out/$slug.mp4" "$ep/out/review" ;;

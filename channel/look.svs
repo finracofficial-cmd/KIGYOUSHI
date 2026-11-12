@@ -27,8 +27,8 @@
     anchor-y: center;
     align: center;
     block-align: center;
-    inline-size: hug;
-    wrap: word;
+    inline-size: fixed;
+    wrap: grapheme;
     line-height: 1.32;
     size: 50;
     letter-spacing: 0;
