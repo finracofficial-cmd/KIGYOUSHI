@@ -29,7 +29,7 @@
     "whisperx.local": {
       "use": "@hypit/provider-whisperx-local",
       "config": {
-        "expectedModel": "small",
+        "expectedModel": "large-v3",
         "expectedDevice": "cpu",
         "expectedCompute": "int8",
         "alignmentLanguages": [

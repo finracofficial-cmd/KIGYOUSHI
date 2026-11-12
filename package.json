@@ -3,5 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "hypit": { "project": true }
+  "hypit": {
+    "project": true
+  },
+  "dependencies": {
+    "@fontsource-variable/noto-sans-jp": "^5.3.1",
+    "@fontsource/dela-gothic-one": "^5.3.0"
+  }
 }

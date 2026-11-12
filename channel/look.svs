@@ -1,0 +1,57 @@
+<?svml using="@hypit/recipe@1"?>
+
+<sheet version="1">
+  /* 栄枯盛衰ファイル: shared typography and caption treatment for every episode (1920x1080). */
+  film.main { background: #000000; }
+
+  text.theme-main { size: 40; weight: 900; line-height: 1.2; tracking: 1; }
+  text.theme-sub { size: 30; weight: 700; line-height: 1.2; tracking: 1; }
+  text.logo { size: 34; weight: 900; line-height: 1.08; tracking: 2; }
+  text.logo-sub { size: 15; weight: 700; line-height: 1; tracking: 6; }
+  text.ident-logo { size: 96; weight: 900; line-height: 1.08; tracking: 6; }
+  text.ident-title { size: 64; weight: 900; line-height: 1.25; tracking: 2; }
+  text.ident-sub { size: 40; weight: 700; line-height: 1.25; tracking: 2; }
+  text.card-number { size: 44; weight: 700; line-height: 1.2; tracking: 14; }
+  text.card-title { size: 72; weight: 900; line-height: 1.3; tracking: 3; }
+  text.credits { size: 34; weight: 700; line-height: 1.7; tracking: 1; }
+  text.credits-head { size: 40; weight: 900; line-height: 1.9; tracking: 4; }
+  text.ending { size: 56; weight: 900; line-height: 1.6; tracking: 2; }
+
+  caption.primary {
+    stack-order: 70;
+    x: 0.5;
+    y: 0.885;
+    width: 0.86;
+    height: 0.17;
+    anchor-x: center;
+    anchor-y: center;
+    align: center;
+    block-align: center;
+    inline-size: hug;
+    wrap: word;
+    line-height: 1.32;
+    size: 50;
+    letter-spacing: 0;
+    fill: #FFFFFF;
+    stroke-color: #000000;
+    stroke-width: 7;
+    shadow-color: #000000;
+    shadow-opacity: 0.55;
+    shadow-x: 0;
+    shadow-y: 2;
+    shadow-blur: 6;
+    background: #00000000;
+    border-color: #00000000;
+    border-width: 0;
+    padding: 0 0;
+    radius: 0;
+    karaoke: off;
+    lead-frames: 3;
+    tail-frames: 6;
+    handoff: cut;
+    cue-enter: fade;
+    cue-enter-frames: 3;
+    cue-exit: fade;
+    cue-exit-frames: 3;
+  }
+</sheet>

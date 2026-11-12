@@ -1,0 +1,36 @@
+{
+  "name": "栄枯盛衰ファイル",
+  "logo": { "lines": ["栄枯", "盛衰"], "sub": "FILE" },
+  "chapter_label": "FILE",
+  "canvas": { "width": 1920, "height": 1080, "fps": 30 },
+  "colors": {
+    "seal": "#A81E1E",
+    "theme_main_box": "#1B1B1B",
+    "theme_main_text": "#FFFFFF",
+    "theme_accent": "#C9A45C",
+    "theme_sub_box": "#A81E1EE6",
+    "theme_sub_text": "#FFFFFF",
+    "card_label": "#C9A45C",
+    "card_title": "#FFFFFF"
+  },
+  "narrator": {
+    "provider": "elevenlabs",
+    "voice_id": "",
+    "model_id": "eleven_multilingual_v2",
+    "voice_settings": { "stability": 0.55, "similarity_boost": 0.8, "style": 0.15, "use_speaker_boost": true, "speed": 1.0 },
+    "line_break_seconds": 0.7
+  },
+  "image": {
+    "provider": "openai",
+    "model": "gpt-image-2",
+    "size": "1536x1024",
+    "quality": "medium",
+    "style": "A semi-realistic painterly documentary illustration with visible oil and watercolor brush texture, cinematic natural lighting, period-accurate clothing, products, vehicles and architecture for the year described, rich but slightly muted colors, a calm and observational mood, landscape 3:2 composition with the main subject placed in the middle third, keeping the top-left corner and the bottom fifth of the frame visually quiet so on-screen titles and subtitles stay readable. No text overlays, captions, watermarks or borders."
+  },
+  "audio": { "narration_lufs": -16, "bgm_lufs": -36 },
+  "timing": { "ident_seconds": 5, "card_seconds": 4, "chapter_tail_seconds": 1.2, "end_card_seconds": 6, "crossfade_frames": 24 },
+  "texts": {
+    "end_card": ["ご視聴ありがとうございました", "チャンネル登録・高評価をお願いします"],
+    "disclaimer": "本動画は、公開されている企業資料・報道・書籍などをもとに制作しています。資料によって記載内容や数値が異なる場合は、複数の資料を確認したうえで構成しています。登場する企業名・商品名・ブランド名・ロゴは各社の商標または登録商標です。映像はイメージであり、実際の人物・建物・製品とは異なる場合があります。"
+  }
+}
