@@ -1,8 +1,84 @@
-× Command failed
+✓ Build submitted
 
-  CLI_ERROR
-  Runtime preflight failed for 1 demanded deployment requirement:
-    MANAGED_PROGRAM_DOWN (whisperx.local): whisperx.local is not usable: nothing is answering at http://127.0.0.1:8765
-  No Build was submitted and no external capability request was made.
+  Build   bld_20261112T110159691Z_FB6E9E9487
+  Title   pager-p00
+  Target  final.video
+  Work    7 requests
 
-Run with --debug to include the internal stack trace.
+Following accepted work. Ctrl-C stops watching; the Build continues.
+  · Working · 0/7 steps complete · 0s
+  · Working · 3/7 steps complete · 1 Transcribing and aligning words · 5s
+  · Working · 3/7 steps complete · 1 Transcribing and aligning words · 36s
+  · Working · 4/7 steps complete · 1m 01s
+  · Working · 4/7 steps complete · 1 preparing resources · 1m 31s
+  · Working · 5/7 steps complete · 1 starting browsers · 1m 38s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 0/3204 frames · 1m 44s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 30/3204 frames · 1m 50s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 62/3204 frames · 1m 56s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 90/3204 frames · 2m 02s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 146/3204 frames · 2m 08s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 201/3204 frames · 2m 14s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 254/3204 frames · 2m 20s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 306/3204 frames · 2m 26s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 358/3204 frames · 2m 32s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 409/3204 frames · 2m 37s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 468/3204 frames · 2m 44s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 518/3204 frames · 2m 49s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 562/3204 frames · 2m 55s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 617/3204 frames · 3m 01s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 677/3204 frames · 3m 07s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 726/3204 frames · 3m 13s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 780/3204 frames · 3m 19s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 830/3204 frames · 3m 25s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 881/3204 frames · 3m 31s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 942/3204 frames · 3m 37s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 993/3204 frames · 3m 43s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1047/3204 frames · 3m 49s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1101/3204 frames · 3m 54s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1157/3204 frames · 4m 00s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1215/3204 frames · 4m 06s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1264/3204 frames · 4m 12s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1324/3204 frames · 4m 18s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1377/3204 frames · 4m 24s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1427/3204 frames · 4m 30s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1480/3204 frames · 4m 36s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1534/3204 frames · 4m 42s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1595/3204 frames · 4m 48s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1645/3204 frames · 4m 54s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1698/3204 frames · 5m 00s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1757/3204 frames · 5m 06s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1818/3204 frames · 5m 12s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1870/3204 frames · 5m 18s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1925/3204 frames · 5m 25s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 1977/3204 frames · 5m 31s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2029/3204 frames · 5m 37s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2090/3204 frames · 5m 43s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2142/3204 frames · 5m 49s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2191/3204 frames · 5m 55s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2249/3204 frames · 6m 01s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2303/3204 frames · 6m 07s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2367/3204 frames · 6m 13s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2413/3204 frames · 6m 19s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2474/3204 frames · 6m 26s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2533/3204 frames · 6m 32s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2585/3204 frames · 6m 37s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2635/3204 frames · 6m 43s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2697/3204 frames · 6m 49s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2741/3204 frames · 6m 55s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2791/3204 frames · 7m 01s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2850/3204 frames · 7m 07s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2904/3204 frames · 7m 13s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 2958/3204 frames · 7m 19s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 3010/3204 frames · 7m 25s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 3086/3204 frames · 7m 30s
+  · Working · 5/7 steps complete · 1 rasterizing frames · 3166/3204 frames · 7m 37s
+  · Working · 5/7 steps complete · 1 encoding video · 7m 42s
+  · Working · 6/7 steps complete · 7m 48s
+  · Saving Result · 6/7 steps complete · 8m 01s
+✓ Build complete
+
+  Build  bld_20261112T110159691Z_FB6E9E9487
+  Title  pager-p00
+
+Inspect  hypit inspect bld_20261112T110159691Z_FB6E9E9487 --project /home/user/KIGYOUSHI
+Export   hypit get bld_20261112T110159691Z_FB6E9E9487 --output final.video --project /home/user/KIGYOUSHI --to <path>
