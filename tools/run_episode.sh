@@ -16,6 +16,8 @@
 # Paid stages skip anything already generated with the same prompt/text.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+# hypit build --follow parses large progress records; the default Node heap is too small for long films.
+export NODE_OPTIONS="${NODE_OPTIONS:-} --max-old-space-size=8192"
 slug="${1:?usage: tools/run_episode.sh <slug> [stage...]}"
 shift || true
 stages=("$@")

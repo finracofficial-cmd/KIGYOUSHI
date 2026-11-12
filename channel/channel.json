@@ -25,7 +25,7 @@
     "model": "gpt-image-2",
     "size": "1536x1024",
     "quality": "medium",
-    "style": "A semi-realistic painterly documentary illustration with visible oil and watercolor brush texture, cinematic natural lighting, period-accurate clothing, products, vehicles and architecture for the year described, rich but slightly muted colors, a calm and observational mood, landscape 3:2 composition with the main subject placed in the middle third, keeping the top-left corner and the bottom fifth of the frame visually quiet so on-screen titles and subtitles stay readable. No text overlays, captions, watermarks or borders."
+    "style": "A semi-realistic painterly documentary illustration with visible oil and watercolor brush texture, cinematic natural lighting, period-accurate clothing, products, vehicles and architecture for the year described, rich but slightly muted colors, a calm and observational mood, landscape 3:2 composition with the main subject placed in the middle third, keeping the top-left corner and the bottom fifth of the frame visually quiet so on-screen titles and subtitles stay readable. Keep any signage or packaging text short and generic; do not depict real copyrighted artwork, movie posters, film titles or company logos unless the scene names that brand explicitly. No text overlays, captions, watermarks or borders."
   },
   "audio": { "narration_lufs": -16, "bgm_lufs": -36 },
   "timing": { "ident_seconds": 5, "card_seconds": 4, "chapter_tail_seconds": 1.2, "end_card_seconds": 6, "crossfade_frames": 24 },
