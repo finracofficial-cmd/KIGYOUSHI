@@ -31,6 +31,16 @@ def duration(p: Path) -> float:
                                 capture_output=True, text=True, check=True).stdout)
 
 
+def ensure_services():
+    import urllib.request
+    try:
+        urllib.request.urlopen("http://127.0.0.1:8765/health", timeout=5).read()
+    except Exception:
+        print("starting WhisperX", flush=True)
+        sh(["hypit", "programs", "up", "--endpoint", "whisperx.local"], check=True, stdout=subprocess.DEVNULL)
+    sh(["hypit", "runtime", "up"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 def render(d: Path, part: dict) -> str:
     svrun = d / part["svrun"]
     if sh(["hypit", "check", str(svrun)], capture_output=True, text=True).returncode != 0:
@@ -69,6 +79,7 @@ def main():
             print(f"{part['name']}: unchanged, kept")
             continue
         print(f"{part['name']}: rendering {', '.join(part['segments'])}", flush=True)
+        ensure_services()
         bid = render(d, part)
         mp4.unlink(missing_ok=True)
         r = sh(["hypit", "get", bid, "--output", "final.video", "--to", str(mp4)], capture_output=True, text=True)
