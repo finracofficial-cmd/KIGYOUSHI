@@ -3,3 +3,4 @@ references/*/evidence/*.mp4
 .hypit/execution/
 .hypit/results/
 node_modules/
+references/*/chunks/
