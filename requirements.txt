@@ -1,0 +1,4 @@
+Pillow
+numpy
+sudachipy
+sudachidict_core

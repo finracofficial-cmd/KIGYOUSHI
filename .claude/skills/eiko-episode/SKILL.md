@@ -59,8 +59,10 @@ lint → images（OpenAI）→ voice（ElevenLabs）→ assets → svml → rend
 途中で失敗したら、そのステージから再実行できる（例: `tools/run_episode.sh <slug> render thumb meta review`）。
 
 - 画像が安全フィルタで拒否されたら、その prompt を穏当な描写に直して `images` だけ再実行。
-- ElevenLabs の読み間違いに気づいたら、該当箇所に `[表示|よみ]` を足して `voice` から再実行
-  （変更した章だけ再生成される）。
+- `voice` は絵1枚ぶんずつ ElevenLabs で読ませ、WhisperX で聞き直して台本と読みを照合する。
+  `out/voice-report.md` に ⚠ が付いたブロックは、「気になる箇所」を見て該当語に `[表示|よみ]` を足し
+  （何度も出る語は `readings`、全回共通なら `channel/yomi.json`）、`voice` から再実行する（変わったブロックだけ作り直される）。
+  ⚠ が残ったまま先へ進まない。認識側の揺れ（例: せいすい/せいずい）だけなら進めてよい。
 - render の失敗は `hypit inspect <build-id>` で原因を見る。WhisperX が止まっていたら
   `hypit programs up --endpoint whisperx.local`。
 

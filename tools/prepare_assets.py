@@ -7,7 +7,7 @@
 - assets/derived/credits.jpg : darkened background for the source roll
 - assets/derived/bgm-bed.m4a : background music looped to the film length at audio.bgm_lufs
 
-Background music comes from episode.json "bgm" or channel/bgm/*.{mp3,m4a,wav} (first file).
+Background music comes from episode.json "bgm" or all of channel/bgm/*.{mp3,m4a,wav}, alternated with crossfades.
 Without any music file a near-silent bed is written so the film still builds.
 
 Usage: prepare_assets.py <slug>
@@ -83,16 +83,33 @@ def main():
 
     total = planned_seconds(ep, secs) + 5
     music = ep.get("bgm")
-    src = (d / music) if music else next(iter(sorted(
-        p for p in (ROOT / "channel" / "bgm").glob("*") if p.suffix.lower() in (".mp3", ".m4a", ".wav"))), None)
+    tracks = [d / music] if music else sorted(
+        p for p in (ROOT / "channel" / "bgm").glob("*") if p.suffix.lower() in (".mp3", ".m4a", ".wav"))
     bed = a / "derived" / "bgm-bed.m4a"
-    if src and Path(src).exists():
-        run(["ffmpeg", "-v", "error", "-y", "-stream_loop", "-1", "-i", str(src), "-t", f"{total:.2f}",
-             "-af", f"loudnorm=I={au['bgm_lufs']}:TP=-6:LRA=7", "-ar", "48000", "-ac", "2",
-             "-c:a", "aac", "-b:a", "160k", str(bed)])
+    if tracks:
+        # Alternate the tracks with 6 s crossfades until the film is covered, then set the level.
+        xf = 6
+        seq, length = [], 0.0
+        while length < total:
+            t = tracks[len(seq) % len(tracks)]
+            seq.append(t)
+            length += duration(t) - (xf if len(seq) > 1 else 0)
+        inputs = sum((["-i", str(t)] for t in seq), [])
+        if len(seq) == 1:
+            chain = "[0:a]anull[m]"
+        else:
+            chain, prev = "", "[0:a]"
+            for i in range(1, len(seq)):
+                out = "[m]" if i == len(seq) - 1 else f"[x{i}]"
+                chain += f"{prev}[{i}:a]acrossfade=d={xf}:c1=tri:c2=tri{out};"
+                prev = out
+            chain = chain.rstrip(";")
+        chain += f";[m]atrim=0:{total:.2f},loudnorm=I={au['bgm_lufs']}:TP=-6:LRA=7[out]"
+        run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", chain, "-map", "[out]",
+             "-ar", "48000", "-ac", "2", "-c:a", "aac", "-b:a", "160k", str(bed)])
     else:
         print("no background music found in channel/bgm/; writing a silent bed")
-        run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", f"anullsrc=r=48000:cl=stereo", "-t", f"{total:.2f}",
+        run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-t", f"{total:.2f}",
              "-c:a", "aac", "-b:a", "96k", str(bed)])
     print(f"narration {sum(secs.values()):.1f}s, planned film {total - 5:.1f}s")
 

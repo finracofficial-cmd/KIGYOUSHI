@@ -51,7 +51,8 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
   参考動画と同じく1枚を30〜60秒見せるので、1 block は3〜8行が目安。
 - **数字と英字には必ず読みを付ける。** `[表示|よみ]` の形。例: `[2兆5000億円|にちょうごせんおくえん]`、
   `[Xacti|ざくてぃ]`。読みが無いと `tools/run_episode.sh <slug> lint` が止める。
-  繰り返し出る名前は `readings` にまとめれば本文に書かなくてよい。
+  繰り返し出る名前は `readings` にまとめれば本文に書かなくてよい。全回共通で読み間違えやすい語は
+  `channel/yomi.json` に足す（文脈で読みが変わる語は入れない）。
 - 「」は字幕にそのまま出る。`[` `]` `|` は読み指定の記号なので本文には使わない。
 - 章の `id` は `ch01`〜。`op` はつかみ（タイトル帯なし、最後にタイトル画面が入る）。
 - 画像 prompt には実在の人物名を書かない（「1940年代の日本人経営者」のように描写する）。
@@ -62,7 +63,9 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
 | パス | 中身 |
 | --- | --- |
 | `assets/images/<id>.png` | OpenAI で生成した絵（`.prompt.txt` が隣にあり、prompt が同じなら再生成しない） |
-| `assets/narration-raw/<seg>.mp3` | ElevenLabs のナレーション（`.txt` が同じなら再生成しない） |
+| `assets/narration-blocks/<seg>-<n>.mp3` | ElevenLabs のナレーション（絵1枚ぶんずつ。本文・声・モデルが同じなら再生成しない） |
+| `assets/narration-raw/<seg>.wav` | ブロックをつないだ章ごとのナレーション |
+| `out/voice-report.md` | 読みチェックの結果（聞き直した読みと台本の差） |
 | `assets/narration/<seg>.m4a` | 音量をそろえたナレーション |
 | `assets/derived/` | タイトル画面・エンドロールの背景、BGM ベッド |
 | `episode.svml` / `episode.svrun` | Hypit のソース（自動生成。手で直さない） |

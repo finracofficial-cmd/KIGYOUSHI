@@ -27,6 +27,7 @@ episode.json ─┬─ tools/gen_images.py   OpenAI (gpt-image)      → assets/
 ```bash
 npm install --global @hypit/hypit   # Hypit CLI
 npm install                         # フォント（@fontsource-variable/noto-sans-jp ほか）
+pip install -r requirements.txt     # 読み変換（SudachiPy）ほか
 hypit programs up --endpoint whisperx.local   # 音声と台本の位置合わせ（初回は数GBのダウンロード）
 hypit programs prepare --endpoint html.local  # 書き出し用ブラウザ
 NODE_OPTIONS=--max-old-space-size=6144 hypit runtime up   # ビルド担当プロセス（結果の保存に大きなメモリが要る）
@@ -40,5 +41,8 @@ NODE_OPTIONS=--max-old-space-size=6144 hypit runtime up   # ビルド担当プ�
   文字起こしと書き出し（Chrome）を同時に走らせない。`hypit build` / `runtime up` は `NODE_OPTIONS=--max-old-space-size=6144` で
   （既定の2GBだと結果の保存で落ち、Result が "needs attention" になる。その場合は `hypit result finish <id>`）。
 - 音声を変えずに見た目だけ直した再書き出しでは、前回の位置合わせ結果を自動で再利用する（`out/align-cache.json`）。
+- ナレーションは絵1枚ぶん（block）ずつ生成し、WhisperX で聞き直して読みを確かめる（`tools/gen_voice.py`、
+  結果は `out/voice-report.md`）。全回共通の読みは `channel/yomi.json`、回ごとの読みは episode.json の `readings`。
+- BGM は `channel/bgm/` の曲を交互にクロスフェードしてつなぐ（ElevenLabs Music で作成）。
 - API キーは環境変数 `OPENAI_API_KEY` / `ELEVENLABS_API_KEY`（クラウド環境の設定に保存済み）。
 - 動画・音声・生成画像は git に入れない（.gitignore 済み）。episode.json と research.md はコミットする。
