@@ -1,0 +1,8 @@
+× Command failed
+
+  CLI_ERROR
+  Runtime preflight failed for 1 demanded deployment requirement:
+    MANAGED_PROGRAM_DOWN (whisperx.local): whisperx.local is not usable: nothing is answering at http://127.0.0.1:8765
+  No Build was submitted and no external capability request was made.
+
+Run with --debug to include the internal stack trace.

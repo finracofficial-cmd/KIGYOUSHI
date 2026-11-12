@@ -15,8 +15,8 @@ YouTube チャンネル「栄枯盛衰ファイル」の動画を Claude Code �
 episode.json ─┬─ tools/gen_images.py   OpenAI (gpt-image)      → assets/images/
               ├─ tools/gen_voice.py    ElevenLabs TTS          → assets/narration-raw/
               ├─ tools/prepare_assets.py 音量・背景・BGM       → assets/narration/, assets/derived/
-              ├─ tools/build_svml.py   Hypit ソース生成         → episode.svml / episode.svrun
-              ├─ hypit build           WhisperX で字幕と絵の切替を音声に合わせ、1920x1080 で書き出し
+              ├─ tools/build_svml.py   Hypit ソース生成（章ごとのパート）→ episode-pNN.svml / .svrun
+              ├─ tools/render_parts.py パートごとに hypit build（WhisperX で字幕と絵の切替を音声に合わせる）→ 結合 → BGM を重ねる
               ├─ tools/make_thumbnail.py / tools/youtube_meta.py
               └─ tools/review_sheets.py 確認用コマ一覧・音量
 ```
@@ -40,6 +40,8 @@ NODE_OPTIONS=--max-old-space-size=6144 hypit runtime up   # ビルド担当プ�
 - メモリは16GB。WhisperX（large-v3）は1回で最大10GB使うので、`expectedBatchSize` は4にしてあり、
   文字起こしと書き出し（Chrome）を同時に走らせない。`hypit build` / `runtime up` は `NODE_OPTIONS=--max-old-space-size=6144` で
   （既定の2GBだと結果の保存で落ち、Result が "needs attention" になる。その場合は `hypit result finish <id>`）。
+- 20分を超える映像を1本で書き出すと、Hypit の字幕データ（約480MB）が JavaScript の文字列上限を超えて失敗する。
+  そのため章ごとのパートに分けて書き出し、ffmpeg でつないでから BGM を重ねる。変わっていないパートは再書き出ししない。
 - 音声を変えずに見た目だけ直した再書き出しでは、前回の位置合わせ結果を自動で再利用する（`out/align-cache.json`）。
 - ナレーションは絵1枚ぶん（block）ずつ生成し、WhisperX で聞き直して読みを確かめる（`tools/gen_voice.py`、
   結果は `out/voice-report.md`）。全回共通の読みは `channel/yomi.json`、回ごとの読みは episode.json の `readings`。

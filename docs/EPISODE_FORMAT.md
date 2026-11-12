@@ -68,7 +68,8 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
 | `out/voice-report.md` | 読みチェックの結果（聞き直した読みと台本の差） |
 | `assets/narration/<seg>.m4a` | 音量をそろえたナレーション |
 | `assets/derived/` | タイトル画面・エンドロールの背景、BGM ベッド |
-| `episode.svml` / `episode.svrun` | Hypit のソース（自動生成。手で直さない） |
+| `episode-pNN.svml` / `.svrun` | Hypit のソース。章ごとのパート（自動生成。手で直さない） |
+| `out/parts/pNN.mp4` | パートごとの書き出し（結合前） |
 | `out/<slug>.mp4` | 完成動画 |
 | `out/thumbnail.png` | サムネイル |
 | `out/youtube.txt` | タイトル・概要欄（章タイムスタンプ付き）・タグ |
