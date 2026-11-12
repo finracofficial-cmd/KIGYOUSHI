@@ -51,7 +51,7 @@
     handoff: cut;
     cue-enter: fade;
     cue-enter-frames: 3;
-    cue-exit: fade;
-    cue-exit-frames: 3;
+    cue-exit: cut;
+    cue-exit-frames: 0;
   }
 </sheet>
