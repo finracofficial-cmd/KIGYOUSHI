@@ -9,7 +9,7 @@
 #   voice     generate narration with ElevenLabs           (paid)
 #   assets    loudness, title/credits backgrounds, BGM bed
 #   svml      write episode.svml / episode.svrun
-#   render    hypit check + build (+ WhisperX alignment) and export out/<slug>.mp4
+#   render    render each part with Hypit (+ WhisperX alignment), join them, add music -> out/<slug>.mp4
 #   thumb     compose out/thumbnail.png
 #   meta      write out/youtube.txt (title, description with chapter timestamps, tags)
 #   review    write contact sheets of the finished video to out/review/
@@ -40,30 +40,7 @@ sys.exit(1 if p else 0)") ;;
     voice)  (cd tools && python3 gen_voice.py "$slug") ;;
     assets) (cd tools && python3 prepare_assets.py "$slug") ;;
     svml)   (cd tools && python3 build_svml.py "$slug") ;;
-    render)
-      hypit check "$ep/episode.svrun"
-      log="$ep/out/build.log"
-      hypit build "$ep/episode.svrun" --title "$slug" --follow 2>&1 | tee "$log"
-      id=$(grep -oE 'bld_[0-9A-Za-z_]+' "$log" | head -1)
-      grep -q "Build failed" "$log" && { echo "build failed: see $log and 'hypit inspect $id'" >&2; exit 1; }
-      if grep -q "needs attention" "$log"; then
-        hypit result finish "$id" --project "$PWD" --runtime "$PWD/hypit.runtime.json"
-      fi
-      rm -f "$ep/out/$slug.mp4"
-      hypit get "$id" --output final.video --to "$ep/out/$slug.mp4"
-      echo "$id" > "$ep/out/last-build-id"
-      python3 - "$ep" "$id" <<'PY'
-import json, sys, pathlib
-out = pathlib.Path(sys.argv[1]) / "out"
-pending = json.loads((out / "align-pending.json").read_text())
-cache_p = out / "align-cache.json"
-cache = json.loads(cache_p.read_text()) if cache_p.exists() else {}
-for sid, h in pending.items():
-    if cache.get(sid, {}).get("hash") != h:
-        cache[sid] = {"hash": h, "build": sys.argv[2]}
-cache_p.write_text(json.dumps(cache, indent=1))
-PY
-      ;;
+    render) (cd tools && python3 render_parts.py "$slug") ;;
     thumb)  (cd tools && python3 make_thumbnail.py "$slug") ;;
     meta)   (cd tools && python3 youtube_meta.py "$slug") ;;
     review) python3 tools/review_sheets.py "$ep/out/$slug.mp4" "$ep/out/review" ;;
