@@ -63,8 +63,12 @@ lint → images（OpenAI）→ voice（ElevenLabs）→ assets → svml → rend
   `out/voice-report.md` に ⚠ が付いたブロックは、「気になる箇所」を見て該当語に `[表示|よみ]` を足し
   （何度も出る語は `readings`、全回共通なら `channel/yomi.json`）、`voice` から再実行する（変わったブロックだけ作り直される）。
   ⚠ が残ったまま先へ進まない。認識側の揺れ（例: せいすい/せいずい）だけなら進めてよい。
+- render は章ごとのパートに分けて書き出す（1パート20〜35分、全体で2時間半ほど）。バックグラウンドで実行し、
+  ツールの時間制限で止まったら `tools/run_episode.sh <slug> render thumb meta review` をもう一度実行する
+  （書き出し済みのパートは飛ばす。途中だったパートの build は Worker で続いているので、
+  `hypit activity` で終わりを待ってから再実行すると無駄がない）。
 - render の失敗は `hypit inspect <build-id>` で原因を見る。WhisperX が止まっていたら
-  `hypit programs up --endpoint whisperx.local`。
+  `hypit programs up --endpoint whisperx.local`。メモリ不足で落ちやすいので、書き出し中は重い処理を並行させない。
 
 ## 5. 確認する
 
