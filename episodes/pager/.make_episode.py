@@ -1,0 +1,350 @@
+import json
+
+images = {
+  "op-phone-queue": "A school hallway in Japan in the mid-1990s after classes. Several high-school girls in navy sailor uniforms and loose white socks wait in a line at a green public telephone; the girl at the front holds the receiver on her shoulder and taps the push buttons quickly, a prepaid phone card inserted. Warm late-afternoon light through tall windows.",
+  "op-pager-display": "A close-up of a small 1990s Japanese pager lying on a school desk next to a notebook and a mechanical pencil. Its little grey LCD screen shows only the digits 0840. A teenage girl's hand reaches toward it. Soft morning light, shallow depth of field.",
+  "us-lab-1958": "A late-1950s American telephone laboratory: engineers in white shirts and narrow ties examine an early pocket radio pager, a small grey box with a clip, on a workbench covered with vacuum-tube equipment, schematics and a black rotary telephone.",
+  "tokyo-1968-salesman": "Tokyo in 1968: a Japanese salesman in a dark suit and narrow tie walks along a busy shopping street among other office workers; a boxy cream-colored pager is clipped to his belt. Showa-era signs, trams and small cars, overcast daylight.",
+  "showa-public-phone": "A Showa-era red public telephone on the counter of a small Tokyo tobacco shop in the early 1970s. A man in a work jacket, a pager on his belt, dials the office while checking a small notebook; customers and a shopkeeper in the background.",
+  "construction-site-1970s": "A Japanese construction site in the late 1970s: a foreman in a yellow helmet stands beside scaffolding and a small site office, looking down at a compact beeping pager in his hand while workers carry steel pipes behind him. Dusty afternoon light.",
+  "radio-tower-1978": "A rooftop radio transmission tower above a dense Tokyo skyline at dusk in the late 1970s, antennas silhouetted against an orange sky, office lights coming on in the buildings below.",
+  "liberalization-1985": "A press-conference style scene in mid-1980s Japan: rows of businessmen in grey suits at a long table with microphones and name cards, reporters and cameras in front, a banner-less plain wall, serious atmosphere.",
+  "new-carrier-office-1987": "A newly opened pager company sales office in a Japanese city in 1987: a clean counter with brochures, a staff member in a company blazer explaining a small display pager to a businessman, boxes of new pagers stacked behind, bright fluorescent light.",
+  "business-card-pager": "A desk in a 1980s Japanese office: a businessman's hand holds a business card printed with a pager number next to a numeric-display pager showing a phone number, beside a push-button desk phone, ashtray and a paper calendar.",
+  "colorful-pagers-1990": "A display shelf in a Japanese electronics shop around 1990 lined with small colorful pagers in white, pink, mint green and yellow, pen-shaped and card-shaped models arranged on small stands with handwritten price tags.",
+  "shady-street-1990": "A dim back alley in a Japanese city at night around 1990: a figure in a leather jacket seen from behind checks a glowing pager screen under a flickering street lamp, neon reflections on wet pavement, mysterious mood, no faces visible.",
+  "schoolgirls-codes": "Two Japanese high-school girls in mid-1990s school uniforms sit on a classroom windowsill comparing their pagers and laughing, a small notebook with handwritten rows of numbers open between them. Bright, nostalgic daylight.",
+  "school-phone-line": "A long line of Japanese high-school students holding phone cards waits at a single public telephone in a school entrance hall during lunch break in the mid-1990s; a teacher watches from the doorway. Busy, lively atmosphere.",
+  "white-paper-desk": "A government office desk in Tokyo in 1994: an open thick official report with charts and tables, a cup of green tea, reading glasses and a small pager lying on top of the pages. Quiet, slightly humorous still life.",
+  "living-room-tv-1993": "A Japanese family living room in 1993 in the evening: a CRT television showing a TV drama scene, a low table with snacks, and on the table a pager next to a cordless home phone. Warm lamp light, no people visible.",
+  "kana-input": "Close-up of fingers pressing the buttons of a grey push-button public telephone in 1995 Japan, a pager held in the other hand showing a short line of katakana characters on its small screen. Motion blur on the fingers.",
+  "pager-shop-boom-1996": "A crowded mobile-communications shop in Shibuya in 1996: teenagers and young adults gather around a counter full of colorful pagers, posters of smiling young people on the walls, shopping bags, energetic city atmosphere.",
+  "peak-crowd-1996": "A busy Tokyo scramble crossing in 1996 seen from above at dusk, crowds of young people in 90s fashion, giant video screens and billboards glowing, many people looking down at small devices in their hands.",
+  "crossover-1996": "A 1996 Japanese street scene: a young businessman talks on a new compact mobile phone outside a station while, beside him, a high-school girl checks her pager. The two devices are clearly visible, symbolizing a changing era.",
+  "phs-1995": "A Japanese high-school girl in 1997 holds a slim PHS handset with a short antenna, typing a short message on its tiny screen while sitting on a bench at a train station; a forgotten pager hangs from her school bag.",
+  "keitai-shop-1999": "A Japanese mobile-phone shop in 1999 filled with rows of folding and bar-type mobile phones with small color screens, large posters advertising mobile internet, customers comparing handsets, a small neglected corner with a few pagers.",
+  "one-way": "A man in late 1990s Japan stands in a phone booth in the rain at night, a pager in one hand and the receiver in the other, waiting for someone to answer; his breath fogs the glass. Lonely, cinematic mood.",
+  "empty-office-1999": "An empty office of a pager company in 1999 Tokyo: rows of desks cleared, cardboard boxes stacked, a whiteboard with a downward sales chart partly erased, blinds half closed, late evening light.",
+  "closed-counters-2001": "A row of closed shop shutters in a Japanese shopping arcade in the early 2000s, one with a faded sign for pager service, paper notices taped to the shutter, a few passers-by walking past without looking.",
+  "transmitter-room-2000s": "A dim equipment room with racks of old radio transmitters and blinking status lights in the 2000s, cables neatly bundled, a single engineer in a grey jacket checking a clipboard by the light of a desk lamp.",
+  "hospital-corridor": "A Japanese hospital corridor at night in the 2010s: a doctor in a white coat walks quickly while glancing at a small pager clipped to his pocket; nurses' station lights in the background, calm blue tones.",
+  "elderly-mother-pager": "A small, tidy Japanese apartment kitchen in 2019: an elderly woman in a cardigan sits at a table by the window, carefully pressing buttons on a cordless home phone, a calendar and a teapot beside her. Soft afternoon light, tender mood.",
+  "farewell-2019": "A small farewell gathering in Akihabara, Tokyo, in September 2019: people in casual clothes stand quietly in line to lay white flowers in front of a table where an old pager is displayed in a framed stand. Respectful, gently humorous mood, evening city lights.",
+  "last-day-2019": "The night of September 30, 2019 in Tokyo: an office desk with an old pager lying beside a modern smartphone, a wall calendar showing the end of September, city lights through the window behind.",
+  "storm-town": "A Japanese residential town during a heavy typhoon at night: rain lashing against closed windows, an outdoor loudspeaker pole on a street corner barely visible through the storm, warm light inside the houses.",
+  "disaster-radio": "Inside a Japanese home during a storm: a small white emergency receiver radio on a shelf near the window lights up with a text alert, a family's raincoats and a flashlight nearby, rain streaking the glass.",
+  "rooftop-antenna-now": "A modern rooftop antenna above Tokyo at dawn in the 2020s, glass office towers and the city skyline behind it, clear sky, quiet and hopeful atmosphere.",
+  "credits-skyline": "A quiet Japanese city at dusk seen from a riverside, a long row of street lights turning on, an old green public telephone booth standing alone on the embankment in the foreground."
+}
+
+op = [
+  {"image": "op-phone-queue", "lines": [
+    "[1990年代|せんきゅうひゃくきゅうじゅうねんだい]半ばの放課後。学校の公衆電話の前には、制服姿の高校生が列を作っていました。",
+    "テレホンカードを差し込み、プッシュボタンを素早く叩く。[0、8、4、0|ぜろ、はち、よん、ぜろ]。",
+  ]},
+  {"image": "op-pager-display", "lines": [
+    "数秒後、友だちの手の中で、小さな画面に数字が浮かびます。「[0840|ぜろはちよんぜろ]」。おはよう、の意味でした。",
+    "ポケットベル。最盛期の[1996年|せんきゅうひゃくきゅうじゅうろくねん]、日本ではおよそ[1,077万台|せんななじゅうななまんだい]が使われていました。",
+    "会社員の腰で鳴っていた呼び出しの道具は、いつの間にか、若者たちの言葉になっていたのです。",
+    "しかし、その音は、やがて街から聞こえなくなります。",
+    "最後のサービスが終わったのは、[2019年9月|にせんじゅうきゅうねんくがつ]。そのとき残っていた利用者は、およそ[1,500人|せんごひゃくにん]でした。",
+    "携帯電話に負けた。そう一言で片付けられることの多い話です。しかし、それだけでは説明できないことがあります。",
+    "なぜ、[1,000万台|いっせんまんだい]を超えた道具は消えたのか。なぜ、最後の一社は、[2019年|にせんじゅうきゅうねん]まで鳴らし続けたのか。",
+    "そして、その電波は今、何を運んでいるのか。",
+    "今回ひもとくのは、ポケットベルの栄枯盛衰です。",
+  ]},
+]
+
+ch01 = [
+  {"image": "us-lab-1958", "lines": [
+    "物語は、アメリカから始まります。",
+    "[1958年|せんきゅうひゃくごじゅうはちねん]、電話会社の研究所が、ポケットに入る無線の呼び出し装置の試験を社内誌で紹介しました。",
+    "想定した利用者は、外回りのセールスマンや医師。電話のベルを、持ち主のポケットまで延ばす。それが狙いでした。",
+    "一方、日本で「ポケットベル」という名前が生まれたのは、[1963年|せんきゅうひゃくろくじゅうさんねん]のことです。",
+    "横浜の大井電気が、工場やビルの中で人を呼び出す装置にこの名前を付けたのが、始まりとされています。",
+  ]},
+  {"image": "tokyo-1968-salesman", "lines": [
+    "そして、[1968年7月|せんきゅうひゃくろくじゅうはちねんしちがつ]。日本電信電話公社が、東京[23区|にじゅうさんく]でポケットベルのサービスを始めます。",
+    "初代の受信機は、縦およそ[12センチ|じゅうにせんち]、重さ[160グラム|ひゃくろくじゅうぐらむ]。充電式でした。",
+    "できることは、ただ一つ。鳴ること。画面も、文字もありません。",
+  ]},
+  {"image": "showa-public-phone", "lines": [
+    "ベルが鳴ったら、近くの公衆電話を探して、会社に電話をかける。",
+    "誰が、何の用で呼んだのか。それを知るには、電話をかけるしかありませんでした。",
+    "それでも、外を歩き回る人にとっては、どこにいても会社とつながれる、画期的な仕組みだったのです。",
+  ]},
+  {"image": "construction-site-1970s", "lines": [
+    "利用者の中心は、販売、建設、サービスの仕事をする人たちでした。",
+    "[1977年度|せんきゅうひゃくななじゅうななねんど]の末には、この三つの業種だけで、加入者の[75%|ななじゅうごぱーせんと]を占めています。",
+    "加入数は、サービス開始の翌年春にはおよそ[4,700|よんせんななひゃく]。それが[1978年|せんきゅうひゃくななじゅうはちねん]の春には[72万|ななじゅうにまん]に増えました。",
+    "当時の通信白書は、加入数でアメリカを上回り、世界一になったと書いています。",
+  ]},
+  {"image": "radio-tower-1978", "lines": [
+    "電波が足りなくなると、[1978年|せんきゅうひゃくななじゅうはちねん]にはデジタル方式を導入。受信機は小さくなり、乾電池で動くようになりました。",
+    "[1981年|せんきゅうひゃくはちじゅういちねん]の春、加入数は[100万|ひゃくまん]を超えます。",
+    "[1982年|せんきゅうひゃくはちじゅうにねん]には、一台に二つの番号を付け、鳴り方の違いで、誰からの呼び出しかを聞き分けられるサービスも始まりました。",
+    "やがて、音を消して光だけで知らせる機種も登場します。会議の最中でも、そっと呼び出しに気づけるように。",
+    "ただ、この時代のポケベルは、一つの組織が全国で提供するサービスでした。",
+    "その独占に、やがて大きな風穴が開きます。",
+  ]},
+]
+
+ch02 = [
+  {"image": "liberalization-1985", "lines": [
+    "[1985年4月|せんきゅうひゃくはちじゅうごねんしがつ]、電気通信事業法が施行され、電電公社は民営化されて、NTTになりました。",
+    "通信の世界に、競争が持ち込まれたのです。",
+    "このとき、新しく参入した会社の多くが選んだのが、ポケットベルでした。",
+    "[1986年度|せんきゅうひゃくはちじゅうろくねんど]以降に参入した[19社|じゅうきゅうしゃ]のうち、[15社|じゅうごしゃ]が無線呼び出しの会社です。",
+    "理由は、始めるための設備投資が小さく、参入しやすかったからだと、白書は分析しています。",
+  ]},
+  {"image": "new-carrier-office-1987", "lines": [
+    "[1987年9月1日|せんきゅうひゃくはちじゅうななねんくがつついたち]、新しい事業者の第一号として、九州ネットワークシステムがサービスを開始。",
+    "翌月には、東京電力などが出資した東京テレメッセージも続きます。",
+    "多くは地元の企業が中心となり、おおむね県ごとに一社ずつ、新しいポケベル会社が生まれていきました。",
+    "最初は赤字でした。[1988年度|せんきゅうひゃくはちじゅうはちねんど]の上半期、新しい事業者の損失は合わせて[19億円|じゅうきゅうおくえん]。",
+    "しかし、その一年後には黒字に転じます。[1990年度|せんきゅうひゃくきゅうじゅうねんど]には、すべての都道府県で、二つの会社から選べるようになりました。",
+  ]},
+  {"image": "business-card-pager", "lines": [
+    "同じ[1987年|せんきゅうひゃくはちじゅうななねん]、ポケベルに大きな変化が起きます。数字が表示できるようになったのです。",
+    "画面に出せるのは、最大[12桁|じゅうにけた]の数字だけ。それでも、意味は大きく変わりました。",
+    "呼び出した人が、自分の電話番号を送れば、受け取った人は会社を通さずに、直接かけ直せる。",
+    "名刺にポケベルの番号を刷る人も現れました。通信白書は、数字を表示するポケベルを「動く伝言板」と表現しています。",
+  ]},
+  {"image": "colorful-pagers-1990", "lines": [
+    "端末も変わっていきます。ペンの形、薄いカードの形。[1990年|せんきゅうひゃくきゅうじゅうねん]ごろからは、白やピンクといったカラフルな端末も登場しました。",
+    "[1990年9月|せんきゅうひゃくきゅうじゅうねんくがつ]の末、全国の契約数は[469万|よんひゃくろくじゅうきゅうまん]。",
+    "競争によって料金は下がり、ポケベルは、少しずつ身近な道具になっていきます。",
+  ]},
+  {"image": "shady-street-1990", "lines": [
+    "そして、この「数字」に、もう一つの使い道を見つけた人たちがいました。",
+    "数字の並びに意味を込めて、暗号のように送る。",
+    "当時の新聞は、これをいち早く使っていたのが、福岡の麻薬の密売人や、大阪の暴走族だったと報じています。",
+    "ところが、この数字の暗号を、本当に使いこなしたのは、まったく別の人たちでした。",
+  ]},
+]
+
+ch03 = [
+  {"image": "schoolgirls-codes", "lines": [
+    "[1990年代|せんきゅうひゃくきゅうじゅうねんだい]の前半、ポケベルは女子高校生たちの間に広がっていきます。",
+    "「[0840|ぜろはちよんぜろ]」は、おはよう。「[0833|ぜろはちさんさん]」は、おやすみ。",
+    "「[724106|ななにいよんいちぜろろく]」は、何してる。「[3341|さんさんよんいち]」は、さみしい。",
+    "そして、「[14106|いちよんいちぜろろく]」は、愛してる。",
+    "数字の読み方や形を組み合わせた、彼女たちだけの言葉でした。",
+    "[1994年|せんきゅうひゃくきゅうじゅうよねん]には、こうした暗号を集めた『[ポケベル暗号BOOK|ぽけべるあんごうぶっく]』がベストセラーになります。",
+    "ポケベル、プリクラ、ルーズソックス。ポケベルは、女子高生の「三種の神器」の一つに数えられました。",
+  ]},
+  {"image": "white-paper-desk", "lines": [
+    "この暗号は、政府にまで届きます。",
+    "[1994年|せんきゅうひゃくきゅうじゅうよねん]の通信白書は、若者たちのユニークな使い方として、コラムで暗号を解説しました。",
+    "その中には、こんな例もあります。「[49-85|よんきゅう、はちご]」。至急、渋谷のハチ公のところへ来て。",
+    "業務で使う人たちには、思いもよらない使い方だったと、白書は書いています。",
+  ]},
+  {"image": "school-phone-line", "lines": [
+    "メッセージを送るには、プッシュ式の電話が必要でした。",
+    "しかし、当時の家庭には、まだダイヤル式の電話も多く残っていました。",
+    "だから、彼女たちは公衆電話に並びました。休み時間ごとに、学校の公衆電話には行列ができます。",
+    "公衆電話のボタンを押せなくしたり、ポケベルを禁止したりする高校も出てきました。",
+    "元NTTドコモの技術者は、利用者のおよそ[3分の2|さんぶんのに]が[10代|じゅうだい]だったと振り返っています。",
+    "消防署からは、救急隊員と連絡が取りにくいという苦情が寄せられたこともあったといいます。",
+  ]},
+  {"image": "living-room-tv-1993", "lines": [
+    "[1993年|せんきゅうひゃくきゅうじゅうさんねん]には、日本テレビ系で、ドラマ『ポケベルが鳴らなくて』が放送されます。",
+    "ポケベルは、恋や待ちぼうけを描く小道具にもなりました。",
+    "家の電話では、相手の家族が出るかもしれない。ポケベルなら、本人にだけ届く。",
+    "その小さな画面は、若者たちにとって、誰にも邪魔されない通り道だったのです。",
+  ]},
+  {"image": "kana-input", "lines": [
+    "やがて、カタカナが表示できる端末が広がります。",
+    "アは[11|いちいち]、イは[12|いちに]。五十音の表に合わせて、二つの数字で一文字を打つ。",
+    "画面には、短い文章が届くようになりました。",
+    "大みそかには、紅白歌合戦を見ながら感想を送り合い、年が明けた瞬間に「オメデトー」。そんな光景もあったといいます。",
+    "皮肉なことに、文字が送れるようになると、数字の暗号は役目を終えていきます。",
+  ]},
+  {"image": "pager-shop-boom-1996", "lines": [
+    "[1995年3月|せんきゅうひゃくきゅうじゅうごねんさんがつ]、それまで借りるものだった端末を、買えるようになります。",
+    "同じ年の[7月|しちがつ]、全国の契約数は、ついに[1,000万|いっせんまん]を突破しました。",
+    "このころ、ポケベルの事業者は全国で[40社|よんじゅっしゃ]。NTTドコモの地域会社と、新しい事業者がしのぎを削っていました。",
+    "[1996年|せんきゅうひゃくきゅうじゅうろくねん]には、女優の広末涼子さんが、ドコモのポケベルのCMに登場します。",
+    "誰にベル番号を教えようかな。そんな言葉が、時代の気分を表していました。",
+  ]},
+  {"image": "peak-crowd-1996", "lines": [
+    "そして、[1996年|せんきゅうひゃくきゅうじゅうろくねん]。契約数は、およそ[1,077万|せんななじゅうななまん]に達します。",
+    "仕事の道具として始まったポケベルは、日本中の若者の、ポケットの中の言葉になっていました。",
+    "しかし、この頂点のとき、数字の上では、すでに逆転が起きていたのです。",
+  ]},
+]
+
+ch04 = [
+  {"image": "crossover-1996", "lines": [
+    "[1996年3月|せんきゅうひゃくきゅうじゅうろくねんさんがつ]の末。ポケベルの契約数は、年度末として過去最高の[1,061万|せんろくじゅういちまん]を記録しました。",
+    "ところが同じ日、携帯電話は[1,020万|せんにじゅうまん]、PHSは[151万|ひゃくごじゅういちまん]。二つを合わせると、すでにポケベルを上回っていました。",
+    "翌月には、携帯電話だけでもポケベルを追い抜きます。",
+    "携帯電話が、急に安くなっていたのです。",
+    "保証金の廃止、端末の売り切り、そして料金の自由化。制度が変わるたびに競争が進み、料金は下がっていきました。",
+  ]},
+  {"image": "phs-1995", "lines": [
+    "もう一つの相手が、[1995年7月|せんきゅうひゃくきゅうじゅうごねんしちがつ]に始まったPHSです。",
+    "基本料金が安く、通話料は公衆電話に近い。ポケベルを使っていた若者たちが、次々に乗り換えていきました。",
+    "国の調査では、サービスの種類を乗り換えた人は[38.4%|さんじゅうはってんよんぱーせんと]。ポケベルからPHSへの乗り換えは、[15歳|じゅうごさい]から[19歳|じゅうきゅうさい]に目立ちました。",
+    "そして、[1996年11月|せんきゅうひゃくきゅうじゅうろくねんじゅういちがつ]。PHSで、[20文字|にじゅうもじ]のメッセージを送り合える、Pメールが始まります。",
+  ]},
+  {"image": "keitai-shop-1999", "lines": [
+    "[1997年|せんきゅうひゃくきゅうじゅうななねん]には、ドコモの携帯電話でもショートメールが始まりました。",
+    "そして[1999年2月|せんきゅうひゃくきゅうじゅうきゅうねんにがつ]、iモードが登場します。",
+    "電話も、メールも、一台でできる。ポケベルだけが持っていた「文字が届く」という強みは、消えていきました。",
+  ]},
+  {"image": "one-way", "lines": [
+    "では、ポケベルが消えた理由は、携帯電話に負けたこと、それだけでしょうか。",
+    "ポケベルには、生まれつきの限界がありました。受け取ることしかできないのです。",
+    "メッセージが届いても、返事をするには、また電話を探さなければならない。",
+    "携帯電話なら、その場ですぐに返せる。一方通行という作りそのものが、時代に合わなくなっていました。",
+  ]},
+  {"image": "empty-office-1999", "lines": [
+    "さらに、業界の形にも弱さがありました。",
+    "ブームの中で、各社は大きな投資を続けていました。",
+    "首都圏の東京テレメッセージは、[1993年度|せんきゅうひゃくきゅうじゅうさんねんど]からの[4年間|よねんかん]で、およそ[660億円|ろっぴゃくろくじゅうおくえん]を投資したとされます。",
+    "最も多いときで、およそ[134万|ひゃくさんじゅうよんまん]あった契約は、ブームが終わると急速に減っていきました。",
+    "[1999年5月|せんきゅうひゃくきゅうじゅうきゅうねんごがつ]、東京テレメッセージは会社更生法の適用を申請します。負債は、およそ[250億円|にひゃくごじゅうおくえん]。",
+    "そのとき残っていた契約は、[36万|さんじゅうろくまん]でした。",
+  ]},
+  {"image": "closed-counters-2001", "lines": [
+    "全国の契約数は、[1999年3月|せんきゅうひゃくきゅうじゅうきゅうねんさんがつ]の末に[376万|さんびゃくななじゅうろくまん]。たった一年で、半分近くが消えました。",
+    "業界も、手をこまねいていたわけではありません。",
+    "[1999年2月|せんきゅうひゃくきゅうじゅうきゅうねんにがつ]には、呼び出す側が料金を払い、持つ側の月額を無料や大幅な値下げにする料金制度を始めます。",
+    "減り方は緩やかになりました。しかし、流れそのものは変わりませんでした。",
+    "[2002年3月|にせんにねんさんがつ]の末、契約数はおよそ[114万|ひゃくじゅうよんまん]。ピークの、およそ一割です。",
+    "県ごとに細かく分かれていた新しい事業者は、需要が減ると、支えきれなくなります。",
+    "[2001年|にせんいちねん]の春までに、[31社|さんじゅういっしゃ]のうち[29社|にじゅうきゅうしゃ]が事業から撤退しました。",
+    "そして[2001年|にせんいちねん]の元日、ドコモは、[1968年|せんきゅうひゃくろくじゅうはちねん]から使ってきた「ポケットベル」という名前をやめ、「クイックキャスト」に変えます。",
+    "利用者が、個人から法人へと移ったからでした。",
+    "ポケベルは、名前さえも手放したのです。",
+    "それでも、その電波は、まだ止まりませんでした。",
+  ]},
+]
+
+ch05 = [
+  {"image": "transmitter-room-2000s", "lines": [
+    "[2004年|にせんよねん]、ドコモは新しい受け付けを終了。[2007年3月|にせんななねんさんがつ]、サービスそのものを終えました。",
+    "最後の三か月で、全国の契約数は[45万|よんじゅうごまん]から[16万|じゅうろくまん]へと減っています。",
+    "残ったのは、首都圏の東京テレメッセージの流れをくむ会社でした。",
+    "会社更生、社名の変更、別の会社との合併。経営の主は何度も変わり、[2008年|にせんはちねん]、二代目の東京テレメッセージが生まれます。",
+  ]},
+  {"image": "hospital-corridor", "lines": [
+    "[2012年|にせんじゅうにねん]に社長となったのは、もともと外資系ファンドのアナリストとして、この事業を分析していた人物でした。",
+    "会社の説明によれば、社長の無給の期間は[3年|さんねん]続き、新しい機器を開発するために、自分の貯金にまで手を付けたといいます。",
+    "そのころ、ポケベルを使い続けていたのは、主に病院などの法人でした。",
+    "建物の奥まで届き、文字だけを確実に伝える。その性質が、医療の現場では必要とされていたのです。",
+  ]},
+  {"image": "elderly-mother-pager", "lines": [
+    "[2018年12月|にせんじゅうはちねんじゅうにがつ]、東京テレメッセージは、個人向けのサービスを終えると発表しました。",
+    "そのとき利用者は、[1,500人|せんごひゃくにん]を下回っていました。",
+    "端末の製造が終わってから、すでに[20年|にじゅうねん]以上がたっていたことも、区切りの理由の一つでした。",
+    "最後まで個人で使っていた人の中には、近くで一人暮らしをする[80歳|はちじゅっさい]の母親のためだけに、ポケベルを持ち続けた男性もいました。",
+    "番号を知っているのは、母親だけ。だから、ベルが鳴れば、それは母からの連絡でした。",
+  ]},
+  {"image": "farewell-2019", "lines": [
+    "サービス終了の前日、[2019年9月29日|にせんじゅうきゅうねんくがつにじゅうくにち]。東京・秋葉原では、ポケベルの「お葬式」が開かれたと伝えられています。",
+    "集まったのは、およそ[300人|さんびゃくにん]。遺影の代わりに、一台のポケベルが飾られました。",
+    "その画面には、「[1141064|いちいちよんいちぜろろくよん]」。愛してるよ、の数字が表示されていたといいます。",
+    "寂しくはないか。そう聞かれた社長は、「全然ないです」と答えています。",
+    "やめるためのお金すらなかった時代を越えて、ようやく次へ進める。社長はそう語っていました。",
+  ]},
+  {"image": "last-day-2019", "lines": [
+    "[2019年9月30日|にせんじゅうきゅうねんくがつさんじゅうにち]。日本で最後の、個人向けのポケベルサービスが終わりました。",
+    "そして偶然にも、同じ日、ドコモはiモードの新しい受け付けを終えています。",
+    "iモードの絵文字は、ポケベルでのメッセージのやり取りを参考に考えられたといわれます。",
+    "ポケベルが育てた「短い文字で気持ちを送る」文化は、携帯電話へと受け継がれていました。",
+    "その携帯電話の時代もまた、ひとつの区切りを迎えていたのです。",
+    "しかし、ポケベルの電波の物語は、ここで終わりではありません。",
+  ]},
+]
+
+ch06 = [
+  {"image": "storm-town", "lines": [
+    "大雨や台風の夜。街の防災スピーカーの声は、雨音にかき消され、家の中までは届きにくいことがあります。",
+    "ポケベルの電波は、出力がおよそ[250ワット|にひゃくごじゅうわっと]。波長はおよそ[1メートル|いちめーとる]で、窓から家の中に入り込みやすい性質を持っていました。",
+    "[2016年|にせんじゅうろくねん]、消防庁は、この電波を使った仕組みを、防災行政無線の代わりとして使えると認めます。",
+  ]},
+  {"image": "disaster-radio", "lines": [
+    "今、この電波は、家の中の防災ラジオに、避難の情報を届けています。",
+    "[2025年3月|にせんにじゅうごねんさんがつ]の末で、これを使う市町村は[77|ななじゅうなな]。",
+    "文字だけを受け取る。返事はできない。建物の奥まで届く。",
+    "かつて弱点とされた一方通行の性質が、今度は、確実に知らせるための強みになっていました。",
+    "海を越えたイギリスでは、[2019年|にせんじゅうきゅうねん]の時点で、国の医療機関がおよそ[13万台|じゅうさんまんだい]のポケベルを使っていました。",
+    "世界のポケベルの、十台に一台以上です。",
+  ]},
+  {"image": "rooftop-antenna-now", "lines": [
+    "ポケットベルという名前は、もう売り場にはありません。",
+    "それでも、短い文字で気持ちを伝える習慣は、スマートフォンの画面に残り、窓を越えて届く電波は、今も誰かの命を守っています。",
+    "会社員を呼び出す道具は、若者たちの言葉になり、そして、防災の電波になりました。",
+    "人とつながりたいという気持ちだけで、[1,000万台|いっせんまんだい]まで広がった小さな機械。",
+    "放課後の公衆電話から打たれた「[0840|ぜろはちよんぜろ]」は、確かに、誰かのポケットを鳴らしていたのです。",
+    "ポケットベルの栄枯盛衰。そのファイルを、ここで閉じます。",
+  ]},
+]
+
+ep = {
+  "slug": "pager",
+  "youtube_title": "ポケベルはなぜ消えた？1000万台が鳴った通信の栄枯盛衰【栄枯盛衰ファイル】",
+  "youtube_description": "1990年代、日本中で1000万台以上が使われたポケットベル。会社員を呼び出す道具は、女子高生の「0840（おはよう）」で若者の言葉になり、そして消えていきました。\nなぜポケベルは消えたのか。携帯電話に負けた、だけではない理由と、2019年の最後の日、そして今も防災に使われる電波の話まで。",
+  "tags": ["ポケベル", "ポケットベル", "平成レトロ", "通信の歴史", "ドコモ", "東京テレメッセージ", "PHS", "iモード", "栄枯盛衰", "企業史"],
+  "theme": {"main": "なぜ「ポケベル」は消えたのか？", "sub": "1,000万台が鳴った通信の栄枯盛衰"},
+  "readings": {
+    "NTT": "えぬてぃーてぃー",
+    "PHS": "ぴーえいちえす",
+    "iモード": "あいもーど",
+    "Pメール": "ぴーめーる",
+    "CM": "しーえむ",
+    "大井電気": "おおいでんき",
+    "電電公社": "でんでんこうしゃ",
+    "日本電信電話公社": "にっぽんでんしんでんわこうしゃ",
+    "東京テレメッセージ": "とうきょうてれめっせーじ",
+    "九州ネットワークシステム": "きゅうしゅうねっとわーくしすてむ",
+    "広末涼子": "ひろすえりょうこ",
+    "防災行政無線": "ぼうさいぎょうせいむせん",
+    "ハチ公": "はちこう",
+    "白書": "はくしょ",
+    "加入数": "かにゅうすう",
+    "発信": "はっしん",
+  },
+  "images": {k: {"prompt": v} for k, v in images.items()},
+  "segments": [
+    {"id": "op", "kind": "opening", "blocks": op},
+    {"id": "ch01", "kind": "chapter", "title": "会社に電話せよ", "blocks": ch01},
+    {"id": "ch02", "kind": "chapter", "title": "数字が届いた日", "blocks": ch02},
+    {"id": "ch03", "kind": "chapter", "title": "0840の時代", "blocks": ch03},
+    {"id": "ch04", "kind": "chapter", "title": "なぜ鳴らなくなったのか", "blocks": ch04},
+    {"id": "ch05", "kind": "chapter", "title": "最後の1,500人", "blocks": ch05},
+    {"id": "ch06", "kind": "chapter", "title": "電波は残った", "blocks": ch06},
+  ],
+  "ident_image": "op-phone-queue",
+  "credits": {"image": "credits-skyline", "sources": [
+    "総務省（郵政省）『通信白書』昭和48〜平成12年版、『情報通信白書』平成13年版・令和元年版",
+    "総務省「電気通信サービスの契約数及びシェア」統計データ",
+    "一般社団法人電気通信事業者協会 契約数月次統計（1996〜1997年）",
+    "国立科学博物館 産業技術史資料データベース「ポケットベル」",
+    "大井電気株式会社 沿革",
+    "NTTドコモ 会社沿革・報道発表資料",
+    "東京テレメッセージ株式会社 ブランドストーリー・お知らせ",
+    "消防庁「防災行政無線等の整備状況」",
+    "INTERNET Watch（1999年）、ケータイWatch（2001・2002・2005年）",
+    "ITmedia（2007・2018・2026年）",
+    "J-CAST ニュース（2018・2019年）",
+    "日経ビジネス、日経クロステック（2019・2020年）",
+    "文春オンライン（2018・2020年）",
+    "日刊SPA!（2019年）、SoraNews24（2019年）",
+    "nippon.com「iモードの終了」（2026年）",
+    "Y!mobile「PHSサービス終了特設サイト」",
+    "Bell Laboratories Record（1958年）",
+  ]},
+  "thumbnail": {"image": "op-pager-display", "lines": ["ポケベル", "なぜ消えた？", "1000万台が鳴ったのに…"]},
+}
+json.dump(ep, open("/home/user/KIGYOUSHI/episodes/pager/episode.json", "w"), ensure_ascii=False, indent=2)
+
+import re
+total = 0
+for s in ep["segments"]:
+    n = sum(len(re.sub(r"\[([^|\]]+)\|[^\]]+\]", r"\1", l)) for b in s["blocks"] for l in b["lines"])
+    total += n
+    print(s["id"], len(s["blocks"]), "blocks", n, "chars")
+print("total", total, "chars;", len(images), "images")
