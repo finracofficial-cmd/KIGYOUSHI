@@ -117,7 +117,6 @@ def main():
         if not force and mp4.exists() and fpf.exists() and fpf.read_text() == part["fingerprint"]:
             print(f"{part['name']}: unchanged, kept")
             continue
-        ensure_services()
         r = None
         bid = None if force else adopt(d, part)
         if bid:
@@ -128,6 +127,7 @@ def main():
                 bid = None
         if not bid:
             print(f"{part['name']}: rendering {', '.join(part['segments'])}", flush=True)
+            ensure_services()
             bid = render(d, part)
             mp4.unlink(missing_ok=True)
             r = sh(["hypit", "get", bid, "--output", "final.video", "--to", str(mp4)], capture_output=True, text=True)
