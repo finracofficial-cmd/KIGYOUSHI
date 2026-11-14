@@ -1,0 +1,679 @@
+{
+  "slug": "toshiba",
+  "youtube_title": "東芝はなぜ解体された？売上7兆円の名門が、テレビも半導体も手放した理由【栄枯盛衰ファイル】",
+  "tags": [
+    "東芝",
+    "東芝 解体",
+    "東芝 なぜ",
+    "東芝 上場廃止",
+    "ウェスチングハウス",
+    "不適切会計",
+    "キオクシア",
+    "レグザ",
+    "ダイナブック",
+    "サザエさん",
+    "日本の家電メーカー",
+    "家電メーカー",
+    "半導体",
+    "原発",
+    "企業の歴史",
+    "企業史",
+    "栄枯盛衰",
+    "栄枯盛衰ファイル",
+    "経済解説",
+    "昭和レトロ"
+  ],
+  "theme": {
+    "main": "なぜ「東芝」は解体されたのか？",
+    "sub": "売上7兆円の名門、150年の栄枯盛衰"
+  },
+  "readings": {
+    "東芝": "とうしば",
+    "田中久重": "たなかひさしげ",
+    "からくり儀右衛門": "からくりぎえもん",
+    "万年時計": "まんねんどけい",
+    "万般の機械考案の依頼に応ず": "ばんぱんのきかいこうあんのいらいにおうず",
+    "藤岡市助": "ふじおかいちすけ",
+    "白熱舎": "はくねつしゃ",
+    "芝浦製作所": "しばうらせいさくしょ",
+    "東京芝浦電気": "とうきょうしばうらでんき",
+    "東京電気": "とうきょうでんき",
+    "電気釜": "でんきがま",
+    "重電": "じゅうでん",
+    "東芝日曜劇場": "とうしばにちようげきじょう",
+    "舛岡富士雄": "ますおかふじお",
+    "NAND型": "なんどがた",
+    "東芝機械": "とうしばきかい",
+    "旧ソ連": "きゅうそれん",
+    "ウェスチングハウス": "うぇすちんぐはうす",
+    "HD DVD": "えいちでぃーでぃーぶいでぃー",
+    "DVD": "でぃーぶいでぃー",
+    "A4": "えーよん",
+    "USB": "ゆーえすびー",
+    "美的集団": "びてきしゅうだん",
+    "毀損": "きそん",
+    "課徴金": "かちょうきん",
+    "税引前": "ぜいびきまえ",
+    "のれん": "のれん",
+    "株主資本": "かぶぬししほん",
+    "債務超過": "さいむちょうか",
+    "東芝メディカルシステムズ": "とうしばめでぃかるしすてむず",
+    "日本産業パートナーズ": "にほんさんぎょうぱーとなーず",
+    "浜松町": "はままつちょう",
+    "時価総額": "じかそうがく",
+    "評価益": "ひょうかえき"
+  },
+  "images": {
+    "op-kitchen-showa": {
+      "prompt": "A warm Japanese kitchen and living room in the late 1960s: an electric rice cooker steaming on the counter, a twin-tub washing machine by the back door, a small refrigerator and a wooden-cabinet television showing a family cartoon on a Sunday evening. A mother sets out dinner while children sit at a low table. Golden evening light, nostalgic mood."
+    },
+    "op-tv-showroom": {
+      "prompt": "An electronics store in Japan in the late 2000s: a long wall of thin flat-screen televisions all showing the same bright image, rows of refrigerators and washing machines in the aisle, customers browsing, a salesperson in a company polo shirt. Clean, prosperous atmosphere."
+    },
+    "op-empty-hq": {
+      "prompt": "A tall glass corporate headquarters tower in Tokyo at dusk in December, seen from the street; most office lights are off, a few remain on; a lone office worker in a dark coat walks past the entrance. Quiet, reflective mood."
+    },
+    "clock-1851": {
+      "prompt": "A master clockmaker's workshop in Kyoto in the 1850s: an elderly Japanese craftsman in an Edo-period kimono carefully adjusts an ornate brass and lacquer mechanical clock with several dials and a small globe on top, tools and gears spread on a wooden bench, lantern light."
+    },
+    "ginza-1875": {
+      "prompt": "A small workshop on a street in Tokyo's Ginza in 1875, early Meiji era: a wooden shopfront with a hanging vertical signboard, rickshaws and people in kimono and early Western clothes passing by, gas lamps and brick buildings under construction, morning light."
+    },
+    "light-bulb-1890": {
+      "prompt": "A tiny early electric light bulb workshop in Tokyo in 1890: a young Japanese engineer in a Western suit and a few workers carefully blow glass bulbs and insert thin filaments at a workbench, a single glowing bulb lighting their faces in a dim room."
+    },
+    "factory-1939": {
+      "prompt": "A large Japanese electrical machinery factory in the late 1930s: rows of heavy generators and motors under construction, workers in caps and overalls, cranes overhead, sunlight streaming through high factory windows."
+    },
+    "washer-1930": {
+      "prompt": "A well-to-do Japanese household in 1930: a woman in a kimono with a white apron looks curiously at a new round electric washing machine with a wringer on top, standing in a tiled washroom, a younger maid watching beside her. Soft daylight."
+    },
+    "rice-cooker-1955": {
+      "prompt": "A Japanese housewife in the mid-1950s in a small modest kitchen lifting the lid of a new white electric rice cooker; steam rises; a wooden table with miso soup bowls and a child peeking from the doorway. Early morning light."
+    },
+    "color-tv-1960": {
+      "prompt": "A Japanese living room in 1960: a family gathers around a large wooden-cabinet color television showing vivid colors, neighbors peeking in through the open sliding door, tatami mats and a low table. Warm evening light."
+    },
+    "sunday-tv-1970s": {
+      "prompt": "A Japanese family on a Sunday evening in the 1970s sitting together in front of a television in a tatami room, dinner on the low table, a father in a cardigan, children laughing. The TV screen glows; no readable text."
+    },
+    "word-processor-1978": {
+      "prompt": "A Japanese computer laboratory in 1978: researchers in white shirts gather around a huge desk-sized Japanese word processor with a large keyboard and a green-text screen showing Japanese characters, cabinets of electronics around it."
+    },
+    "laptop-1989": {
+      "prompt": "A businessman in a Tokyo office in 1989 opens a thin grey A4-size notebook computer on his desk with an amazed look, colleagues leaning in to see it, beige desktop computers and paper files around them."
+    },
+    "nand-lab-1987": {
+      "prompt": "A Japanese semiconductor research lab in 1987: an engineer in a white coat looks at a silicon wafer under a microscope, reflections of colorful circuit patterns on the wafer, clean-room style lighting, screens with diagrams."
+    },
+    "capitol-1987": {
+      "prompt": "Washington, D.C. in July 1987: a crowd of photographers and reporters in front of the U.S. Capitol watching a few men in suits smash an unbranded portable stereo radio with sledgehammers on the lawn. Summer daylight, tense news scene."
+    },
+    "semiconductor-fab": {
+      "prompt": "A huge modern semiconductor fabrication plant in Japan in the 2000s: workers in white full-body clean-room suits walk between automated machines under yellow light, rows of wafer pods on overhead rails."
+    },
+    "dvd-format-war": {
+      "prompt": "A Japanese electronics store in early 2008: two competing next-generation disc player displays side by side, one crowded with customers and the other nearly abandoned, staff looking uncertain. Unbranded discs, no readable logos."
+    },
+    "nuclear-plant-us": {
+      "prompt": "An American nuclear power plant construction site in the late 2000s: two large cooling towers and a half-built reactor building, cranes and workers, wide open landscape under a cloudy sky."
+    },
+    "boardroom-2006": {
+      "prompt": "A luxurious corporate boardroom in Tokyo in 2006: Japanese executives in dark suits shake hands with American executives across a long table, documents and small flags, a city skyline through the windows."
+    },
+    "tsunami-2011": {
+      "prompt": "The Japanese coastline in spring 2011 after the tsunami, viewed from a distance: a damaged industrial facility by the sea under grey skies, debris on the shore, a quiet, somber mood. No people in distress shown."
+    },
+    "office-night-2012": {
+      "prompt": "A large Japanese corporate office late at night in 2012: rows of desks, most empty, a few employees still working under fluorescent light, a wall calendar showing the end of September, a clock showing late night, tense atmosphere."
+    },
+    "report-2015": {
+      "prompt": "A thick investigation report lying on a conference table in 2015, its cover blank, with reading glasses, a pen and a cup of coffee; through the window, a grey Tokyo skyline. Quiet, serious mood."
+    },
+    "press-bow-2015": {
+      "prompt": "A Japanese press conference in July 2015: a row of executives in dark suits stand behind a long table and bow deeply, camera flashes from a crowd of reporters, a plain backdrop with no logos."
+    },
+    "construction-us-2016": {
+      "prompt": "A stalled nuclear construction site in the southern United States in 2016: rusting steel frames, idle cranes, a half-finished concrete containment structure, a few workers in hard hats looking at blueprints."
+    },
+    "court-2017": {
+      "prompt": "A downtown American federal courthouse in March 2017, seen from the steps: reporters with cameras waiting outside, grey morning light, flags on the building."
+    },
+    "stock-board-2017": {
+      "prompt": "A Japanese securities company trading floor in 2017: a large electronic stock board with falling red numbers, traders looking at screens with serious faces. No readable company names."
+    },
+    "selling-off": {
+      "prompt": "An empty corporate meeting room in Tokyo in 2016–2018: several thick contract binders on a long table, pens and signature pages, a few people in suits standing by the window with their backs turned. Late afternoon light."
+    },
+    "memory-chip": {
+      "prompt": "A close-up of a modern flash memory chip on a green circuit board, with a futuristic data center out of focus behind it, blue and white light."
+    },
+    "living-room-tv-2018": {
+      "prompt": "A modern Japanese living room in 2018: a large flat-screen TV on the wall showing a nature program, a family on the sofa, a refrigerator and washing machine visible in the open kitchen area. Warm, everyday mood."
+    },
+    "sazae-sunday-2018": {
+      "prompt": "A quiet Japanese apartment on a Sunday evening in 2018: an older couple watching television together, a cup of tea on the table, soft lamp light; the TV screen glows without readable text."
+    },
+    "shareholders-meeting": {
+      "prompt": "A large Japanese shareholders' meeting hall around 2021: hundreds of attendees in suits and masks seated in rows, a stage with a long table of executives, microphones on stands in the aisles."
+    },
+    "delisting-2023": {
+      "prompt": "The Tokyo Stock Exchange building in December 2023 in winter evening light, the round trading hall visible through glass, a few people walking by in coats, cold clear air."
+    },
+    "kawasaki-now": {
+      "prompt": "A modern office tower in Kawasaki, Japan, in 2025 near a station, office workers entering in the morning, clean glass facade, trees and a pedestrian deck."
+    },
+    "credits-ginza": {
+      "prompt": "Tokyo's Ginza district at dusk today, a quiet side street with modern buildings and warm lamp light, an old-fashioned clock in a shop window in the foreground."
+    }
+  },
+  "segments": [
+    {
+      "id": "op",
+      "kind": "opening",
+      "blocks": [
+        {
+          "image": "op-kitchen-showa",
+          "lines": [
+            "炊飯器、洗濯機、冷蔵庫、テレビ。",
+            "日本の家庭に並んだ家電の多くで、「日本初」をうたってきた会社があります。",
+            "日曜日の夕方、テレビから流れる『サザエさん』。この番組を、長年スポンサーとして支えたのも、その会社でした。",
+            "東芝です。"
+          ]
+        },
+        {
+          "image": "op-tv-showroom",
+          "lines": [
+            "最盛期の[2008年3月期|にせんはちねんさんがつき]、連結売上高はおよそ[7兆6,681億円|ななちょうろくせんろっぴゃくはちじゅういちおくえん]。世界におよそ[20万人|にじゅうまんにん]の従業員を抱えていました。",
+            "しかし今、東芝ブランドのテレビを作っているのは、中国のハイセンスの傘下にある会社です。",
+            "東芝ブランドの洗濯機や冷蔵庫も、中国の家電大手、美的集団の傘下にあります。"
+          ]
+        },
+        {
+          "image": "op-empty-hq",
+          "lines": [
+            "そして[2023年12月|にせんにじゅうさんねんじゅうにがつ]、東芝は、[74年|ななじゅうよねん]続いた株式の上場を廃止しました。",
+            "東芝は、倒産したわけではありません。会社は今もあり、利益率は過去最高を記録しています。",
+            "それなのに、なぜ。",
+            "なぜ、日本を代表する名門は、テレビも、白物家電も、パソコンも、半導体も、手放すことになったのか。",
+            "なぜ、創業から[150年|ひゃくごじゅうねん]を数える会社は、株式市場から姿を消したのか。",
+            "今回ひもとくのは、東芝の栄枯盛衰です。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch01",
+      "kind": "chapter",
+      "title": "万般の機械考案の依頼に応ず",
+      "blocks": [
+        {
+          "image": "clock-1851",
+          "lines": [
+            "物語は、江戸時代の終わりに始まります。",
+            "「からくり儀右衛門」と呼ばれた発明家、田中久重。",
+            "[1851年|せんはっぴゃくごじゅういちねん]に彼が作った「万年時計」は、一度ねじを巻けば一年動き続けるとされ、今は国の重要文化財になっています。",
+            "その時計を、今も持っているのが、東芝です。"
+          ]
+        },
+        {
+          "image": "ginza-1875",
+          "lines": [
+            "[1875年7月|せんはっぴゃくななじゅうごねんしちがつ]、[70代|ななじゅうだい]になっていた久重は、東京・銀座に工房を開きます。",
+            "店先の看板には、こう書かれていました。「万般の機械考案の依頼に応ず」。",
+            "どんな機械の注文でも引き受ける。東芝は、この工房を創業としています。",
+            "工房はやがて、発電機や電動機をつくる「芝浦製作所」へと育っていきました。",
+            "東芝の記録によれば、芝浦製作所は明治の半ばに、日本で最初の水車発電機や電気扇風機を作っています。"
+          ]
+        },
+        {
+          "image": "light-bulb-1890",
+          "lines": [
+            "もう一つの源流が、電球です。",
+            "[1890年|せんはっぴゃくきゅうじゅうねん]、電気工学者の藤岡市助らが、東京で「白熱舎」を立ち上げます。",
+            "最初は、一日に数個の電球しか作れなかったといいます。",
+            "白熱舎はのちに「東京電気」となり、電球や真空管、そしてラジオ受信機へと手を広げていきました。",
+            "重い機械の芝浦製作所と、電球の東京電気。のちに東芝となる二つの会社は、こうして別々の場所で育っていきます。"
+          ]
+        },
+        {
+          "image": "washer-1930",
+          "lines": [
+            "[1930年|せんきゅうひゃくさんじゅうねん]、芝浦製作所は、国産第一号とされる電気洗濯機と電気冷蔵庫を世に出します。",
+            "洗濯機の値段は[370円|さんびゃくななじゅうえん]。銀行員の初任給がおよそ[70円|ななじゅうえん]の時代でした。",
+            "そして[1939年|せんきゅうひゃくさんじゅうきゅうねん]、重電の芝浦製作所と、電球の東京電気が合併。「東京芝浦電気」が誕生します。"
+          ]
+        },
+        {
+          "image": "rice-cooker-1955",
+          "lines": [
+            "戦後、東芝の名を日本中の台所に広げたのが、[1955年|せんきゅうひゃくごじゅうごねん]に発売された自動式の電気釜でした。",
+            "スイッチを入れれば、火加減を見なくてもご飯が炊ける。",
+            "朝早く起きて、かまどの前に立つ毎日が変わっていきます。",
+            "電気釜は、発売から[4年|よねん]ほどで、全国の家庭のおよそ半分に広がったとされています。",
+            "暮らしを変える家電の会社。東芝のイメージは、こうして形作られていきました。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch02",
+      "kind": "chapter",
+      "title": "家電の東芝、技術の東芝",
+      "blocks": [
+        {
+          "image": "color-tv-1960",
+          "lines": [
+            "[1960年|せんきゅうひゃくろくじゅうねん]、東芝は「日本初」とうたうカラーテレビを発売します。",
+            "テレビは、家族の真ん中にありました。",
+            "東芝は、日曜夜の「東芝日曜劇場」を、[1956年|せんきゅうひゃくごじゅうろくねん]から[2002年|にせんにねん]まで提供します。"
+          ]
+        },
+        {
+          "image": "sunday-tv-1970s",
+          "lines": [
+            "[1969年|せんきゅうひゃくろくじゅうきゅうねん]には、アニメ『サザエさん』の提供を始めました。",
+            "日曜日の夕方、番組の始まりに流れる東芝の名前。それは、多くの家庭にとって、週末の終わりを告げる音でもありました。"
+          ]
+        },
+        {
+          "image": "word-processor-1978",
+          "lines": [
+            "東芝は、家電の会社であると同時に、技術の会社でもありました。",
+            "[1978年|せんきゅうひゃくななじゅうはちねん]、東芝は日本語ワードプロセッサを発表します。",
+            "価格は[630万円|ろっぴゃくさんじゅうまんえん]。重さは[220キロ|にひゃくにじゅっきろ]。大学を出た新入社員の初任給が、およそ[10万円|じゅうまんえん]の時代でした。",
+            "それでも、手書きが当たり前だった日本語の文書を、機械で打てるようにした、大きな一歩でした。"
+          ]
+        },
+        {
+          "image": "laptop-1989",
+          "lines": [
+            "[1985年|せんきゅうひゃくはちじゅうごねん]には、持ち運べるラップトップ型のパソコンをヨーロッパで発売。",
+            "[1989年|せんきゅうひゃくはちじゅうきゅうねん]には、A4サイズのノートパソコン「ダイナブック」を、[19万8,000円|じゅうきゅうまんはっせんえん]で発表しました。",
+            "重さは[2.7キロ|にーてんななきろ]。当時としては驚くほど軽い、鞄に入れて持ち歩けるパソコンでした。"
+          ]
+        },
+        {
+          "image": "nand-lab-1987",
+          "lines": [
+            "そして、のちに東芝の運命を大きく左右する発明が生まれます。",
+            "[1987年|せんきゅうひゃくはちじゅうななねん]、東芝の技術者、舛岡富士雄さんらが、NAND型フラッシュメモリーを学会で発表しました。",
+            "電源を切ってもデータが消えない、安くて大容量のメモリー。",
+            "今、スマートフォンやUSBメモリーの中に入っている記憶装置の、原点の一つです。",
+            "[2007年|にせんななねん]、東芝のNAND型フラッシュメモリーの世界シェアは[27.9%|にじゅうななてんきゅうぱーせんと]。韓国のサムスン電子に次ぐ、世界[2位|にい]でした。"
+          ]
+        },
+        {
+          "image": "capitol-1987",
+          "lines": [
+            "もちろん、順風満帆だったわけではありません。",
+            "[1987年|せんきゅうひゃくはちじゅうななねん]、グループ会社の東芝機械が、旧ソ連への輸出規制に違反した問題が発覚します。",
+            "アメリカの議会前では、議員たちが東芝製のラジオをハンマーで叩き壊し、東芝の会長と社長が辞任しました。",
+            "それでも東芝は、家電、重電、半導体、パソコンを抱える総合電機メーカーとして成長を続けます。",
+            "[1996年|せんきゅうひゃくきゅうじゅうろくねん]には、東芝が「世界初」とうたうDVDプレーヤーを発売。映像をディスクで楽しむ時代の扉を開きました。",
+            "このDVDの規格づくりで東芝の味方についたのが、[1991年|せんきゅうひゃくきゅうじゅういちねん]から東芝が出資していた、アメリカの映画会社ワーナーでした。"
+          ]
+        },
+        {
+          "image": "semiconductor-fab",
+          "lines": [
+            "[2008年3月期|にせんはちねんさんがつき]、東芝の連結売上高は、過去最高の[7兆6,681億円|ななちょうろくせんろっぴゃくはちじゅういちおくえん]。従業員は[19万7,718人|じゅうきゅうまんななせんななひゃくじゅうはちにん]に達しました。",
+            "しかし、この頂点に向かう途中で、東芝はもう一つの大きな賭けに出ていました。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch03",
+      "kind": "chapter",
+      "title": "二つの賭け",
+      "blocks": [
+        {
+          "image": "boardroom-2006",
+          "lines": [
+            "[2006年2月|にせんろくねんにがつ]、東芝は、アメリカの原子力メーカー、ウェスチングハウスの買収を発表します。",
+            "買収額は[54億ドル|ごじゅうよんおくどる]。当時のレートで、およそ[6,210億円|ろくせんにひゃくじゅうおくえん]でした。",
+            "東芝は、原子力事業の売上高を、[2015年|にせんじゅうごねん]に[7,000億円|ななせんおくえん]、[2020年|にせんにじゅうねん]には[9,000億円|きゅうせんおくえん]に伸ばす目標を掲げます。"
+          ]
+        },
+        {
+          "image": "nuclear-plant-us",
+          "lines": [
+            "このころ世界では、温暖化対策として原子力発電を見直す動きが広がっていました。「原子力ルネサンス」と呼ばれた時代です。",
+            "東芝は、半導体と原子力を二本の柱とする会社へと、姿を変えようとしていました。",
+            "[2008年|にせんはちねん]、ウェスチングハウスは、アメリカで[4基|よんき]の原子力発電所の建設を受注します。",
+            "のちに、東芝を最も深く追い詰めることになる工事でした。"
+          ]
+        },
+        {
+          "image": "dvd-format-war",
+          "lines": [
+            "一方で、身近な分野ではつまずきもありました。",
+            "次世代DVDの規格争いで、東芝はHD DVDを推し、ソニーなどのブルーレイと競っていました。",
+            "ところが[2008年1月|にせんはちねんいちがつ]、長年の盟友だったワーナーが、ブルーレイに一本化すると発表します。",
+            "[2008年2月|にせんはちねんにがつ]、東芝は撤退を発表。会見では「もはや勝ち目がない」という言葉が使われました。",
+            "同じ日に東芝が発表したのは、フラッシュメモリーの新しい工場の計画でした。",
+            "家電の東芝から、半導体と原子力の東芝へ。会社の重心は、はっきりと移っていきます。"
+          ]
+        },
+        {
+          "image": "tsunami-2011",
+          "lines": [
+            "そして、[2011年3月|にせんじゅういちねんさんがつ]。東日本大震災と、東京電力福島第一原子力発電所の事故が起きます。",
+            "世界の原子力への見方は、一変しました。",
+            "[2011年5月|にせんじゅういちねんごがつ]、当時の社長は、原子力の受注目標について「数年シフトする可能性がある」と述べています。",
+            "のちに分かることですが、ウェスチングハウスは、[2012年度|にせんじゅうにねんど]と[2013年度|にせんじゅうさんねんど]に、",
+            "自らの決算で、およそ[13億ドル|じゅうさんおくどる]の減損を計上していました。",
+            "しかし東芝は、それを連結決算に反映せず、開示もしていませんでした。",
+            "東芝はのちに、「適時適切に開示すべきでした」と認めています。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch04",
+      "kind": "chapter",
+      "title": "チャレンジ",
+      "blocks": [
+        {
+          "image": "office-night-2012",
+          "lines": [
+            "[2015年2月|にせんじゅうごねんにがつ]、証券取引等監視委員会が、東芝に検査に入ります。",
+            "東芝が設けた第三者委員会の報告書によれば、[2008年度|にせんはちねんど]から[2014年度|にせんじゅうよねんど]の途中までに、",
+            "税引前でおよそ[1,518億円|せんごひゃくじゅうはちおくえん]の利益が水増しされていました。",
+            "報告書には、パソコン事業で、四半期末の利益がその月の売上高を上回る月があったことも記されています。",
+            "報告書は、その背景に、経営トップが示した「チャレンジ」と呼ばれる過大な目標があったと指摘しています。",
+            "たとえば[2012年9月|にせんじゅうにねんくがつ]、四半期の締めまで残り[3日|みっか]という時点で、[120億円|ひゃくにじゅうおくえん]の利益の改善を求めた場面も記されていました。",
+            "そして報告書は、「上司の意向に逆らうことができないという企業風土」があったと書いています。"
+          ]
+        },
+        {
+          "image": "press-bow-2015",
+          "lines": [
+            "[2015年7月|にせんじゅうごねんしちがつ]、社長を含む[8人|はちにん]の取締役が辞任します。",
+            "社長は会見で、「[140年|ひゃくよんじゅうねん]の歴史の中でブランドイメージが大変、大きく毀損した」と語りました。",
+            "一方で、直接の指示は否定し、「チャレンジという言葉を使った覚えはない」とも述べています。",
+            "決算の修正は、最終的に[2,248億円|にせんにひゃくよんじゅうはちおくえん]。金融庁は、およそ[73億円|ななじゅうさんおくえん]の課徴金の納付を命じました。",
+            "東証などは、東芝株を「特設注意市場銘柄」に指定し、内部管理の改善を求めました。",
+            "なお、東芝が旧経営陣に損害賠償を求めた裁判では、[2025年|にせんにじゅうごねん]の二審判決が、",
+            "会計処理が違法だったとはいえないと判断し、一審の判決を取り消しています。東芝は上告しました。"
+          ]
+        },
+        {
+          "image": "construction-us-2016",
+          "lines": [
+            "しかし、本当の危機は、その先にありました。",
+            "[2015年|にせんじゅうごねん]の末、ウェスチングハウスは、アメリカの原発建設会社を、[0ドル|ぜろどる]で買収します。",
+            "建設中の原発は、工事の遅れとコストの膨張を抱えていました。",
+            "当初およそ[105億円|ひゃくごおくえん]とされた買収に伴う「のれん」は、一年後には[6,253億円|ろくせんにひゃくごじゅうさんおくえん]に膨らみます。",
+            "[2017年2月|にせんじゅうななねんにがつ]、東芝は、原子力事業ののれん[7,125億円|ななせんひゃくにじゅうごおくえん]を、すべて損失として処理すると発表しました。"
+          ]
+        },
+        {
+          "image": "court-2017",
+          "lines": [
+            "[2017年3月|にせんじゅうななねんさんがつ]、ウェスチングハウスは、アメリカの連邦破産法の適用を申請します。負債は、およそ[98億ドル|きゅうじゅうはちおくどる]でした。",
+            "当時の社長は、買収について、「今から振り返ると非常に問題のある判断」とした一方で、",
+            "「当時としては仕方がなかったのだろう」とも述べています。"
+          ]
+        },
+        {
+          "image": "stock-board-2017",
+          "lines": [
+            "[2016年度|にせんじゅうろくねんど]、東芝の最終赤字は[9,656億円|きゅうせんろっぴゃくごじゅうろくおくえん]。日本の製造業として過去最悪とも報じられました。",
+            "株主資本は、およそ[5,529億円|ごせんごひゃくにじゅうきゅうおくえん]のマイナス。負債が資産を上回る、債務超過に陥ります。",
+            "[2017年8月|にせんじゅうななねんはちがつ]、東芝の株は、東京証券取引所の一部から二部へと降格しました。",
+            "生き残るために、東芝は、自らの体を切り売りし始めます。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch05",
+      "kind": "chapter",
+      "title": "切り売り",
+      "blocks": [
+        {
+          "image": "selling-off",
+          "lines": [
+            "最初に手放したのは、医療機器でした。[2016年|にせんじゅうろくねん]、東芝メディカルシステムズを、キヤノンにおよそ[6,655億円|ろくせんろっぴゃくごじゅうごおくえん]で売却します。",
+            "同じ年、洗濯機や冷蔵庫などの白物家電事業を、中国の美的集団に売却。東芝のブランドは、その後も[40年間|よんじゅうねんかん]使えることになりました。",
+            "[2017年12月|にせんじゅうななねんじゅうにがつ]には、上場廃止を避けるため、およそ[6,000億円|ろくせんおくえん]の増資を実施します。",
+            "引き受け先は[60|ろくじゅう]に上り、その多くは海外の投資ファンドでした。この決断が、のちの東芝の行方を大きく左右します。"
+          ]
+        },
+        {
+          "image": "memory-chip",
+          "lines": [
+            "そして[2018年6月|にせんじゅうはちねんろくがつ]、東芝は、最大の稼ぎ頭だった半導体メモリー事業を手放します。",
+            "売却額は、およそ[2兆円|にちょうえん]。買い手は、アメリカの投資ファンド、ベインキャピタルを中心とする企業連合でした。",
+            "舛岡さんらが生んだフラッシュメモリーの事業は、東芝の外へ出ていきます。",
+            "会社は[2019年|にせんじゅうきゅうねん]、「キオクシア」と名前を変えました。日本語の「記憶」と、価値を意味するギリシャ語を組み合わせた名前です。",
+            "東芝にとって、最も利益を生んでいた事業でした。それを手放さなければ、会社そのものが生き残れなかったのです。"
+          ]
+        },
+        {
+          "image": "living-room-tv-2018",
+          "lines": [
+            "[2018年|にせんじゅうはちねん]には、テレビ事業を中国のハイセンスに、およそ[129億円|ひゃくにじゅうきゅうおくえん]で売却。",
+            "同じ年、ダイナブックのパソコン事業を、シャープにおよそ[40億円|よんじゅうおくえん]で売却しました。",
+            "東芝の名前の付いた製品は、今もお店に並んでいます。しかし、それを作る会社の多くは、もう東芝のものではありません。"
+          ]
+        },
+        {
+          "image": "sazae-sunday-2018",
+          "lines": [
+            "[2018年3月|にせんじゅうはちねんさんがつ]、『サザエさん』の放送から、東芝の提供が外れます。",
+            "[1969年|せんきゅうひゃくろくじゅうきゅうねん]から、およそ[50年|ごじゅうねん]。日曜日の夕方に流れていた東芝の名前は、静かに消えました。",
+            "しかし、東芝の物語は、ここで終わりではありませんでした。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch06",
+      "kind": "chapter",
+      "title": "74年目の上場廃止",
+      "blocks": [
+        {
+          "image": "shareholders-meeting",
+          "lines": [
+            "増資で東芝の大株主となった海外のファンドは、経営に厳しい注文をつけ始めます。",
+            "[2021年|にせんにじゅういちねん]、株主の求めで行われた調査の報告書は、東芝が株主総会をめぐって経済産業省と「いわば一体」となって動いたと指摘しました。",
+            "取締役会の議長の再任は、株主総会で否決されます。",
+            "会社を分ける案も、[2022年|にせんにじゅうにねん]の株主総会で否決されました。",
+            "東芝の経営は、株主の間で揺れ続けます。"
+          ]
+        },
+        {
+          "image": "delisting-2023",
+          "lines": [
+            "最後に選ばれたのは、株式を買い集めて非上場にする道でした。",
+            "名乗りを上げたのは、国内の投資ファンド、日本産業パートナーズを中心とする陣営でした。",
+            "業績の見通しが下がるたびに提示価格は引き下げられ、最後に[10円|じゅうえん]だけ上乗せされて、[1株|ひとかぶ][4,620円|よんせんろっぴゃくにじゅうえん]に決まります。",
+            "買い付けの総額は、およそ[2兆円|にちょうえん]でした。",
+            "[2023年12月20日|にせんにじゅうさんねんじゅうにがつはつか]。東芝は、[1949年|せんきゅうひゃくよんじゅうきゅうねん]から[74年|ななじゅうよねん]続いた株式の上場を廃止しました。"
+          ]
+        },
+        {
+          "image": "kawasaki-now",
+          "lines": [
+            "では今、東芝はどうなっているのでしょうか。",
+            "[2025年8月|にせんにじゅうごねんはちがつ]、東芝は本社を、東京・浜松町から川崎へ移しました。",
+            "事業の中心は、発電や送電、鉄道など、社会を支えるインフラです。",
+            "[2025年度|にせんにじゅうごねんど]の売上高は、およそ[3兆7,091億円|さんちょうななせんきゅうじゅういちおくえん]。営業利益は[3,008億円|さんぜんはちおくえん]。",
+            "売上高に占める営業利益の割合は、過去最高を記録しました。",
+            "一方で、[2024年|にせんにじゅうよねん]には、企業博物館「東芝未来科学館」の一般公開を終えています。",
+            "理由は、事業が消費者向けから企業向けへと移ったためでした。",
+            "再び上場を目指すのは、早くても[2028年度|にせんにじゅうはちねんど]になると報じられています。"
+          ]
+        },
+        {
+          "image": "memory-chip",
+          "lines": [
+            "そして、皮肉な数字があります。",
+            "東芝が手放したメモリー事業、キオクシアは、[2024年12月|にせんにじゅうよねんじゅうにがつ]に上場しました。",
+            "[2026年6月|にせんにじゅうろくねんろくがつ]、その時価総額は、一時トヨタ自動車を上回り、日本でいちばん大きな会社になったと報じられています。",
+            "東芝自身も、まだ持っていたキオクシアの株で、売却益と評価益を合わせて、およそ[2兆円|にちょうえん]を超える利益を計上しました。",
+            "東芝そのものが買い取られた金額と、ほぼ同じ規模です。"
+          ]
+        },
+        {
+          "image": "credits-ginza",
+          "lines": [
+            "東芝という会社は、かつての総合電機メーカーの姿では、もう存在していません。",
+            "それでも、東芝の名前の付いた冷蔵庫があり、テレビの国内シェアでトップに立つレグザがある。",
+            "ダイナブックがあり、世界のスマートフォンの中には、フラッシュメモリーがある。",
+            "東芝が生み出した技術と製品は、それぞれ別の会社の中で、今も働き続けています。",
+            "「万般の機械考案の依頼に応ず」。",
+            "どんな機械でも作る、と掲げて始まった会社は、[150年|ひゃくごじゅうねん]の間に、あまりに多くのものを作りすぎたのかもしれません。",
+            "そして、その一つひとつが、今は別の場所で、日本の暮らしを支えています。",
+            "東芝の栄枯盛衰。そのファイルを、ここで閉じます。"
+          ]
+        }
+      ]
+    }
+  ],
+  "ident_image": "op-kitchen-showa",
+  "credits": {
+    "image": "credits-ginza",
+    "sources": [
+      "株式会社東芝 有価証券報告書・決算短信・プレスリリース",
+      "東芝未来科学館「1号機ものがたり」「東芝の歴史」",
+      "東芝 第三者委員会 調査報告書（2015年7月20日）",
+      "金融庁・証券取引等監視委員会 課徴金納付命令に関する公表資料",
+      "東京証券取引所 特設注意市場銘柄の指定・上場廃止に関する公表",
+      "東京高等裁判所 判決（2025年3月19日）に関する報道",
+      "キヤノン、キオクシアホールディングス、TVS REGZA、シャープ、Dynabook 各社発表",
+      "日本産業パートナーズ 公開買付けに関する公表資料",
+      "国立科学博物館、IEEE マイルストーン、情報処理学会",
+      "日本経済新聞、ロイター、時事通信、共同通信、NHK",
+      "東洋経済オンライン、ダイヤモンド・オンライン、日刊工業新聞",
+      "ITmedia、AV Watch、BCN"
+    ]
+  },
+  "thumbnail": {
+    "image": "op-empty-hq",
+    "lines": [
+      "東芝",
+      "なぜ解体された？",
+      "売上7兆円の名門だったのに…"
+    ]
+  },
+  "description": {
+    "intro": [
+      "炊飯器、洗濯機、冷蔵庫、テレビ、ワープロ、ノートパソコン、そしてフラッシュメモリー。数々の「日本初」をうたい、日曜夕方の『サザエさん』を長年支えた総合電機メーカー「東芝」。",
+      "1875年、からくり儀右衛門こと田中久重が銀座に開いた工房に始まり、2008年3月期には売上高およそ7兆6,681億円、従業員およそ20万人を抱える日本を代表する企業に成長しました。",
+      "しかし、2006年のウェスチングハウス買収、2015年に発覚した不適切会計、2017年の米原子力事業の巨額損失をきっかけに、医療機器、白物家電、半導体メモリー、テレビ、パソコンを次々と売却。2023年12月、74年続いた上場を廃止しました。"
+    ],
+    "questions": [
+      "なぜ、日本を代表する名門は、事業を次々と手放すことになったのでしょうか。",
+      "そして、倒産していない東芝は、なぜ株式市場から姿を消したのでしょうか。"
+    ],
+    "overview": "今回の「栄枯盛衰ファイル」では、1875年の創業から、家電と技術で築いた全盛期、原子力と半導体への二つの賭け、不適切会計とウェスチングハウスの破綻、事業の切り売り、上場廃止、そして手放したキオクシアが日本一の時価総額になった現在まで、東芝の歴史をたどります。",
+    "comment_prompt": "あの頃、東芝の家電やダイナブックを使っていた方、日曜夕方の『サザエさん』で東芝の名前を聞いていた方は、ぜひ思い出をコメント欄で教えてください。",
+    "sources_summary": "本動画は、東芝の有価証券報告書・決算資料・プレスリリース、第三者委員会の調査報告書、金融庁・証券取引等監視委員会・東京証券取引所の公表資料、売却先各社の発表、当時の新聞・専門メディアの報道などを参考に制作しています。",
+    "main_sources": [
+      "株式会社東芝",
+      "東芝未来科学館",
+      "第三者委員会 調査報告書",
+      "金融庁",
+      "証券取引等監視委員会",
+      "東京証券取引所",
+      "キヤノン",
+      "キオクシア",
+      "TVS REGZA",
+      "シャープ",
+      "日本産業パートナーズ",
+      "日本経済新聞",
+      "ロイター",
+      "時事通信",
+      "東洋経済オンライン",
+      "ITmedia"
+    ],
+    "notes": [
+      "※2015年の会計問題について、本動画では東芝と第三者委員会が用いた「不適切会計」という表現を使っています。東芝が旧経営陣に損害賠償を求めた訴訟では、2025年3月の東京高裁判決が会計処理を違法とはいえないと判断し、東芝は上告しています（動画制作時点）。",
+      "※「日本初」「世界初」などの表現は、東芝の説明に基づくものを含みます。",
+      "※キオクシア株に関する東芝の利益には、売却益のほか評価益が含まれます。",
+      "※現在、東芝ブランドの白物家電は東芝ライフスタイル（美的集団傘下）、テレビはTVS REGZA（ハイセンス傘下）、パソコンはDynabook（シャープ傘下）が手がけています。"
+    ],
+    "reference_urls": [
+      {
+        "title": "東芝 第三者委員会の調査報告書について（2015年7月21日 開示）",
+        "url": "https://www.global.toshiba/content/dam/toshiba/migration/corp/irAssets/about/ir/jp/news/20150721_1.pdf"
+      },
+      {
+        "title": "東芝 ウェスチングハウスののれん減損に関する開示（2015年11月17日）",
+        "url": "https://www.global.toshiba/content/dam/toshiba/migration/corp/irAssets/about/ir/jp/news/20151117_1.pdf"
+      },
+      {
+        "title": "東芝 原子力事業ののれん減損に関する開示（2017年2月14日）",
+        "url": "https://www.global.toshiba/content/dam/toshiba/migration/corp/irAssets/about/ir/jp/news/20170214_4.pdf"
+      },
+      {
+        "title": "東芝 ウェスチングハウスの米連邦破産法申請に関する開示（2017年3月29日）",
+        "url": "https://www.global.toshiba/content/dam/toshiba/migration/corp/irAssets/about/ir/jp/news/20170329_1.pdf"
+      },
+      {
+        "title": "東芝 東芝メディカルシステムズの譲渡に関する開示（2016年3月17日）",
+        "url": "https://www.global.toshiba/content/dam/toshiba/migration/corp/irAssets/about/ir/jp/news/20160317_3.pdf"
+      },
+      {
+        "title": "東芝 白物家電事業の譲渡に関する開示（2016年3月30日）",
+        "url": "https://www.global.toshiba/content/dam/toshiba/migration/corp/irAssets/about/ir/jp/news/20160330_2.pdf"
+      },
+      {
+        "title": "東芝 調査報告書の受領に関する開示（2021年6月10日）",
+        "url": "https://www.global.toshiba/content/dam/toshiba/migration/corp/irAssets/about/ir/jp/news/20210610_1.pdf"
+      },
+      {
+        "title": "東芝 公開買付けへの意見表明に関する開示（2023年8月7日）",
+        "url": "https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/news/20230807_5.pdf"
+      },
+      {
+        "title": "日本取引所グループ 東芝株式の上場廃止等の決定（2023年11月22日）",
+        "url": "https://www.jpx.co.jp/news/1023/20231122-11.html"
+      },
+      {
+        "title": "東芝 沿革",
+        "url": "https://www.global.toshiba/jp/outline/corporate/history/chronology.html"
+      },
+      {
+        "title": "東芝未来科学館「1号機ものがたり」",
+        "url": "https://toshiba-mirai-kagakukan.jp/history/ichigoki/products.htm"
+      },
+      {
+        "title": "東芝未来科学館「田中久重」",
+        "url": "https://toshiba-mirai-kagakukan.jp/history/toshiba_history/hisashige.htm"
+      },
+      {
+        "title": "キオクシア フラッシュメモリの歴史",
+        "url": "https://www.kioxia.com/ja-jp/rd/technology/history.html"
+      },
+      {
+        "title": "AV Watch 東芝のHD DVD事業撤退（2008年2月19日）",
+        "url": "https://av.watch.impress.co.jp/docs/20080219/toshiba2.htm"
+      },
+      {
+        "title": "時事通信 キオクシア時価総額が国内首位に（2026年6月12日）",
+        "url": "https://www.jiji.com/jc/article?k=2026061200850&g=eco"
+      },
+      {
+        "title": "ダイヤモンド・オンライン 東芝旧経営陣訴訟の控訴審判決",
+        "url": "https://diamond.jp/articles/-/393245"
+      }
+    ],
+    "hashtags": [
+      "東芝",
+      "TOSHIBA",
+      "キオクシア",
+      "レグザ",
+      "ダイナブック",
+      "サザエさん",
+      "ウェスチングハウス",
+      "家電メーカー",
+      "企業史",
+      "昭和レトロ"
+    ]
+  }
+}
