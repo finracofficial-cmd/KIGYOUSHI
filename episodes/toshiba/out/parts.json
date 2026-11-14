@@ -5,7 +5,7 @@
   "segments": [
    "op"
   ],
-  "fingerprint": "e7689428fddda1c6d87e30a979df24a77c3adca59e251c70b54312429a4dbbbc"
+  "fingerprint": "502d171b7b609719cc92dc815e5847928a89b7da45250dcec8870d383af8ce2c"
  },
  {
   "name": "p01",
@@ -13,7 +13,7 @@
   "segments": [
    "ch01"
   ],
-  "fingerprint": "07fbb52c2589cdc1f8847d790ed5208c4d85c31143d452385ae80e9453745c1c"
+  "fingerprint": "24a1d8afe554ce54f3b03b1762e753a94c7869e070fc6454927eaa2d8f529f5a"
  },
  {
   "name": "p02",
@@ -21,7 +21,7 @@
   "segments": [
    "ch02"
   ],
-  "fingerprint": "8af6ca2cbc0276239614499c903a409db2ca4ae19f34b4a54e3fe25b967d1233"
+  "fingerprint": "064f5935c8822afd44c8a0998952bf5c3dd0bfcdaa710e25194c44a157740ea6"
  },
  {
   "name": "p03",
@@ -29,7 +29,7 @@
   "segments": [
    "ch03"
   ],
-  "fingerprint": "ece2f3039e93159a30e37fea6819e9491798f6f8f656cc2e0653ad80b5661522"
+  "fingerprint": "b259e5334796c54df3bf4a879af8b8036c0d2fd9f91b80a9550a5d20b882c0db"
  },
  {
   "name": "p04",
@@ -37,7 +37,7 @@
   "segments": [
    "ch04"
   ],
-  "fingerprint": "08e0745d8d6307ed32b8b1436af22a206a6ddaa4749be0f31c359b8d43bf4d44"
+  "fingerprint": "1c2075c66a80ed0ede9d812f48e66baedeeb82743c360651c8135aac3b7d657f"
  },
  {
   "name": "p05",
@@ -45,7 +45,7 @@
   "segments": [
    "ch05"
   ],
-  "fingerprint": "838a4dba1affd460ff99c649a1dd57f3a5c160594cd6fccda5d00ee67ff08489"
+  "fingerprint": "e9ee3d299773add0d74b3ee4cab8524d589d969786864bd77da9a25db6d5b917"
  },
  {
   "name": "p06",
@@ -53,6 +53,6 @@
   "segments": [
    "ch06"
   ],
-  "fingerprint": "48845999ac6b2304f85d4df3a7f3f96309a419c46a36ee5b23355062698a1163"
+  "fingerprint": "b2f907881e22189b26c96e9275940cdf69f53747ad6f219923dc8f59f6968773"
  }
 ]
