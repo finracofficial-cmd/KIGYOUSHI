@@ -1,5 +1,8 @@
 # チャンネル情報（YouTube Studio に貼るもの）
 
+チャンネル: https://www.youtube.com/@eiko_seisui_file
+各動画の概要欄は `tools/youtube_meta.py` が自動で作る（`episodes/<slug>/out/description.txt`）。
+
 ## チャンネル説明文
 
 ```
