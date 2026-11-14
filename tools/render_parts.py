@@ -80,11 +80,17 @@ def wait_build(bid: str) -> bool:
         if b["work"]["state"] != "working":
             break
         time.sleep(60)
+    finish = ["hypit", "result", "finish", bid, "--project", str(ROOT), "--runtime", str(ROOT / "hypit.runtime.json")]
     if b.get("attention") or b["result"].get("state") == "open":
         # e.g. the result save ran out of memory; finishing it recovers the outputs
-        sh(["hypit", "result", "finish", bid, "--project", str(ROOT), "--runtime", str(ROOT / "hypit.runtime.json")],
-           capture_output=True)
+        sh(finish, capture_output=True)
         b = status(bid) or b
+        if "already owned" in (b.get("attention") or {}).get("message", ""):
+            # the process that was saving it died; a runtime restart releases its claim
+            sh(["hypit", "runtime", "down"], capture_output=True)
+            sh(["hypit", "runtime", "up"], capture_output=True)
+            sh(finish, capture_output=True)
+            b = status(bid) or b
     return b["result"].get("state") == "complete"
 
 
