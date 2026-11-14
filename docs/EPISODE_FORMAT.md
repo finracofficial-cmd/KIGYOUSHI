@@ -38,6 +38,20 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
   // サムネイル。image は images のキー。lines は2〜3行（最後の行は赤帯）
   "thumbnail": { "image": "sign-removal", "lines": ["三洋電機", "なぜ消えた？", "倒産してないのに…"] },
 
+  // YouTube の概要欄。tools/youtube_meta.py が下の順に組み立てる（目次・チャンネル紹介・AI 表記は自動）
+  "description": {
+    "intro": ["何だったのか・全盛期（2〜3文）", "転落と消滅の経緯を年つきで（1〜2文）"],
+    "questions": ["なぜ、〜のでしょうか。", "なぜ、〜のでしょうか。"],
+    "overview": "今回の「栄枯盛衰ファイル」では、〇〇から、〜、〜、そして〜まで、〇〇の歴史をたどります。",
+    "comment_prompt": "あの頃、〇〇を使っていた方は、ぜひ思い出をコメント欄で教えてください。",
+    "sources_summary": "本動画は、〇〇の公式発表、〇〇の統計、当時の新聞・専門メディアの報道などを参考に制作しています。",
+    "main_sources": ["総務省", "〇〇株式会社", "ITmedia"],
+    "notes": ["※数字の食い違いや、同名の別法人などの注意書き（確かめた事実だけ）"],
+    "reference_urls": [{ "title": "発行元『タイトル』（年）", "url": "https://..." }],
+    "hashtags": ["題材名", "関連ワード"]
+  },
+  "tags": ["検索されそうな語を15〜20個"],
+
   // 任意: タイトル画面の背景（省略時は最初の絵）、BGM ファイル（省略時は channel/bgm/ の先頭）
   "ident_image": "store-aisle",
   "bgm": "assets/bgm.mp3"
@@ -72,5 +86,17 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
 | `out/parts/pNN.mp4` | パートごとの書き出し（結合前） |
 | `out/<slug>.mp4` | 完成動画 |
 | `out/thumbnail.png` | サムネイル |
-| `out/youtube.txt` | タイトル・概要欄（章タイムスタンプ付き）・タグ |
+| `out/youtube.txt` | タイトル・概要欄・タグ（確認用） |
+| `out/description.txt` | 概要欄だけ（そのまま YouTube に貼る） |
 | `out/review/` | 確認用のコマ一覧と音量測定 |
+
+## 概要欄の組み立て（tools/youtube_meta.py）
+
+1. `intro`（全盛期 → 転落の経緯） 2. `questions`（なぜ×2） 3. `overview`（今回の「栄枯盛衰ファイル」では〜）
+4. `comment_prompt` 5. 【目次】章タイムスタンプ（自動） 6. 【栄枯盛衰ファイルについて】（channel.json の youtube.about と URL）
+7. 【参考文献・出典について】`sources_summary`・`main_sources`・`notes`・AI 表記（自動）
+8. 【参考文献】`credits.sources` 9. 【主な出典URL】`reference_urls` 10. ハッシュタグ（#栄枯盛衰ファイル を先頭に最大15個）
+
+- 文献は必ず載せる。`reference_urls` は research.md で実際に開いた URL から、事実の根拠になった主要なものを10〜16件。
+- 概要欄は5,000字まで。超えると `reference_urls` を後ろから減らす。
+- `notes` には確かめた事実だけを書く（未確認の商標・数字は書かない）。

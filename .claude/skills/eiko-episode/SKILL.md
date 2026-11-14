@@ -41,7 +41,11 @@ STYLE_GUIDE.md の型どおりに書く。数字・年・社名・人名は rese
   （時代・場所・人物の服装・製品の形・光）を2〜4文で。画風は書かない（共通設定が足される）。
   実在の人物名は書かず、描写で表す。
 - `credits.sources` に research.md の主要な出典を「発行元『タイトル』（年）」の形で並べる。
-- `thumbnail`、`youtube_title`、`youtube_description`、`tags` も書く。
+- `thumbnail`、`youtube_title`、`description`、`tags` も書く（書式は docs/EPISODE_FORMAT.md）。
+  - `youtube_title` は「〇〇はなぜ消えた？＋具体的な一言（数字・意外な事実）」の形を基本にする。
+  - `description` は概要欄の中身。文献が大事なので、`sources_summary`・`main_sources` と、
+    research.md で実際に開いた主要な URL を `reference_urls` に10〜16件入れる。`notes` には数字の食い違いや
+    同名の別法人など、視聴者が誤解しやすい点を確かめた事実だけで書く。
 
 書いたら自分で読み直す:
 1. 全ての数字・年月を research.md と照合する。
@@ -81,6 +85,6 @@ lint → images（OpenAI）→ voice（ElevenLabs）→ assets → svml → rend
 
 ## 6. 渡す
 
-`out/<slug>.mp4`、`out/thumbnail.png`、`out/youtube.txt` の場所と、題材の要点・尺・使った画像枚数と
+`out/<slug>.mp4`、`out/thumbnail.png`、`out/description.txt`（概要欄）と `out/youtube.txt`（タイトル・タグ）の場所と、題材の要点・尺・使った画像枚数と
 ElevenLabs の文字数を短く報告する。動画ファイルは git に入れない（.gitignore 済み）。
 episode.json・research.md・TOPICS.md の更新はコミットしてプッシュする。
