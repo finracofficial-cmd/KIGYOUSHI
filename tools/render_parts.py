@@ -43,13 +43,16 @@ def ensure_services():
     sh(["hypit", "runtime", "up"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def activity() -> dict:
-    """Builds the Worker knows about, by id."""
-    r = sh(["hypit", "activity", "--json"], capture_output=True, text=True)
-    try:
-        return {b["id"]: b for b in json.loads(r.stdout).get("builds", [])}
-    except (json.JSONDecodeError, AttributeError):
-        return {}
+def status(bid: str) -> dict | None:
+    """One build as the Worker sees it ({"work": ..., "result": ...}), or None when it cannot be read.
+    (`hypit activity` is avoided: it loads every unfinished Result and can take gigabytes.)"""
+    for _ in range(3):
+        r = sh(["hypit", "status", bid, "--json"], capture_output=True, text=True)
+        try:
+            return json.loads(r.stdout)["build"]
+        except (json.JSONDecodeError, KeyError):
+            time.sleep(20)
+    return None
 
 
 def adopt(d: Path, part: dict) -> str | None:
@@ -69,17 +72,20 @@ def adopt(d: Path, part: dict) -> str | None:
 
 def wait_build(bid: str) -> bool:
     """Wait until the Worker has finished a build. `hypit build --follow` can return while the build is still
-    running, so the Worker's own activity list is what counts. False when the build failed outright."""
+    running, so the Worker's own state is what counts. True when the Result is complete."""
     while True:
-        b = activity().get(bid)
-        if not b or b["work"]["state"] != "working":
+        b = status(bid)
+        if b is None:
+            sys.exit(f"cannot read the state of build {bid}; is the runtime up? (`hypit runtime up`)")
+        if b["work"]["state"] != "working":
             break
         time.sleep(60)
-    if b and "attention" in b:  # e.g. the result save ran out of memory; finishing it recovers the outputs
+    if b.get("attention") or b["result"].get("state") == "open":
+        # e.g. the result save ran out of memory; finishing it recovers the outputs
         sh(["hypit", "result", "finish", bid, "--project", str(ROOT), "--runtime", str(ROOT / "hypit.runtime.json")],
            capture_output=True)
-        return True
-    return not (b and b["work"].get("outcome") == "failed")
+        b = status(bid) or b
+    return b["result"].get("state") == "complete"
 
 
 def render(d: Path, part: dict) -> str:
