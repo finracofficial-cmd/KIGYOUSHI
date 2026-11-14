@@ -2,7 +2,8 @@
 """Render an episode's parts with Hypit, join them, and lay the background music under the film.
 
 Reads out/parts.json written by build_svml.py. A part whose fingerprint matches its last successful
-render (out/parts/<name>.fingerprint) is not rendered again. After each successful part, the
+render (out/parts/<name>.fingerprint) is not rendered again. A build cut off by a tool time limit keeps
+running in the Hypit Worker; the next run waits for it (out/parts/<name>.pending) instead of starting over. After each successful part, the
 alignment of its segments is recorded in out/align-cache.json so later builds can reuse it.
 
 Writes out/parts/<name>.mp4 and the finished out/<slug>.mp4.
@@ -11,6 +12,7 @@ Usage: render_parts.py <slug> [--force]
 from __future__ import annotations
 
 import json
+import time
 import os
 import re
 import subprocess
@@ -41,12 +43,47 @@ def ensure_services():
     sh(["hypit", "runtime", "up"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+def activity() -> dict:
+    """Builds the Worker knows about, by id."""
+    r = sh(["hypit", "activity", "--json"], capture_output=True, text=True)
+    try:
+        return {b["id"]: b for b in json.loads(r.stdout).get("builds", [])}
+    except (json.JSONDecodeError, AttributeError):
+        return {}
+
+
+def adopt(d: Path, part: dict) -> str | None:
+    """A build of this exact part started by an earlier run that was cut off (the build keeps going in the
+    Worker). Wait for it and return its id, or None when there is nothing to adopt."""
+    pend = d / "out" / "parts" / f"{part['name']}.pending"
+    log = d / "out" / "parts" / f"{part['name']}.build.log"
+    if not (pend.exists() and log.exists()) or pend.read_text() != part["fingerprint"]:
+        return None
+    m = re.search(r"bld_[0-9A-Za-z_]+", log.read_text(errors="replace"))
+    if not m:
+        return None
+    bid = m.group()
+    while True:
+        b = activity().get(bid)
+        if not b or b["work"]["state"] != "working":
+            break
+        print(f"{part['name']}: waiting for earlier build {bid} ({', '.join(b.get('phases', {})) or 'working'})", flush=True)
+        time.sleep(60)
+    if b and b["work"].get("outcome") == "failed" and "attention" not in b:
+        return None
+    if b and "attention" in b:
+        sh(["hypit", "result", "finish", bid, "--project", str(ROOT), "--runtime", str(ROOT / "hypit.runtime.json")],
+           capture_output=True)
+    return bid
+
+
 def render(d: Path, part: dict) -> str:
     svrun = d / part["svrun"]
     if sh(["hypit", "check", str(svrun)], capture_output=True, text=True).returncode != 0:
         r = sh(["hypit", "check", str(svrun)], capture_output=True, text=True)
         sys.exit(f"{part['name']}: check failed\n{r.stdout}{r.stderr}")
     log = d / "out" / "parts" / f"{part['name']}.build.log"
+    (d / "out" / "parts" / f"{part['name']}.pending").write_text(part["fingerprint"])
     with open(log, "w") as f:
         sh(["hypit", "build", str(svrun), "--title", f"{d.name}-{part['name']}", "--follow"], stdout=f, stderr=subprocess.STDOUT)
     text = log.read_text(errors="replace")
@@ -78,14 +115,24 @@ def main():
         if not force and mp4.exists() and fpf.exists() and fpf.read_text() == part["fingerprint"]:
             print(f"{part['name']}: unchanged, kept")
             continue
-        print(f"{part['name']}: rendering {', '.join(part['segments'])}", flush=True)
         ensure_services()
-        bid = render(d, part)
-        mp4.unlink(missing_ok=True)
-        r = sh(["hypit", "get", bid, "--output", "final.video", "--to", str(mp4)], capture_output=True, text=True)
+        r = None
+        bid = None if force else adopt(d, part)
+        if bid:
+            mp4.unlink(missing_ok=True)
+            r = sh(["hypit", "get", bid, "--output", "final.video", "--to", str(mp4)], capture_output=True, text=True)
+            if r.returncode != 0:
+                print(f"{part['name']}: earlier build {bid} has no video; rendering again", flush=True)
+                bid = None
+        if not bid:
+            print(f"{part['name']}: rendering {', '.join(part['segments'])}", flush=True)
+            bid = render(d, part)
+            mp4.unlink(missing_ok=True)
+            r = sh(["hypit", "get", bid, "--output", "final.video", "--to", str(mp4)], capture_output=True, text=True)
         if r.returncode != 0:
             sys.exit(f"{part['name']}: export failed\n{r.stdout}{r.stderr}")
         fpf.write_text(part["fingerprint"])
+        (pdir / f"{part['name']}.pending").unlink(missing_ok=True)
         cache = json.loads(cache_p.read_text()) if cache_p.exists() else {}
         for sid in part["segments"]:
             if cache.get(sid, {}).get("hash") != pending[sid]:
