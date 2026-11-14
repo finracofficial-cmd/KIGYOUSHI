@@ -63,18 +63,23 @@ def adopt(d: Path, part: dict) -> str | None:
     if not m:
         return None
     bid = m.group()
+    print(f"{part['name']}: picking up earlier build {bid}", flush=True)
+    return bid if wait_build(bid) else None
+
+
+def wait_build(bid: str) -> bool:
+    """Wait until the Worker has finished a build. `hypit build --follow` can return while the build is still
+    running, so the Worker's own activity list is what counts. False when the build failed outright."""
     while True:
         b = activity().get(bid)
         if not b or b["work"]["state"] != "working":
             break
-        print(f"{part['name']}: waiting for earlier build {bid} ({', '.join(b.get('phases', {})) or 'working'})", flush=True)
         time.sleep(60)
-    if b and b["work"].get("outcome") == "failed" and "attention" not in b:
-        return None
-    if b and "attention" in b:
+    if b and "attention" in b:  # e.g. the result save ran out of memory; finishing it recovers the outputs
         sh(["hypit", "result", "finish", bid, "--project", str(ROOT), "--runtime", str(ROOT / "hypit.runtime.json")],
            capture_output=True)
-    return bid
+        return True
+    return not (b and b["work"].get("outcome") == "failed")
 
 
 def render(d: Path, part: dict) -> str:
@@ -91,10 +96,7 @@ def render(d: Path, part: dict) -> str:
     if not m:
         sys.exit(f"{part['name']}: no build id; see {log}")
     bid = m.group()
-    if "needs attention" in text:
-        sh(["hypit", "result", "finish", bid, "--project", str(ROOT), "--runtime", str(ROOT / "hypit.runtime.json")],
-           capture_output=True)
-    if "Build failed" in text or "Execution  failed" in text:
+    if not wait_build(bid) or "Build failed" in text or "Execution  failed" in text:
         sys.exit(f"{part['name']}: build failed ({bid}); see {log} and `hypit inspect {bid}`")
     return bid
 
