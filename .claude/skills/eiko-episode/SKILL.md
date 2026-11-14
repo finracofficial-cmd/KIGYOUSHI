@@ -69,8 +69,8 @@ lint → images（OpenAI）→ voice（ElevenLabs）→ assets → svml → rend
   ⚠ が残ったまま先へ進まない。認識側の揺れ（例: せいすい/せいずい）だけなら進めてよい。
 - render は章ごとのパートに分けて書き出す（1パート20〜35分、全体で2時間半ほど）。バックグラウンドで実行し、
   ツールの時間制限で止まったら `tools/run_episode.sh <slug> render thumb meta review` をもう一度実行する
-  （書き出し済みのパートは飛ばす。途中だったパートの build は Worker で続いているので、
-  `hypit activity` で終わりを待ってから再実行すると無駄がない）。
+  （書き出し済みのパートは飛ばす。途中だったパートの build は Worker で続いていて、再実行するとその終わりを待って
+  書き出すので、最初からやり直しにはならない）。
 - render の失敗は `hypit inspect <build-id>` で原因を見る。WhisperX が止まっていたら
   `hypit programs up --endpoint whisperx.local`。メモリ不足で落ちやすいので、書き出し中は重い処理を並行させない。
 
