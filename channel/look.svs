@@ -46,8 +46,10 @@
     padding: 0 0;
     radius: 0;
     karaoke: off;
-    lead-frames: 3;
-    tail-frames: 6;
+    /* Hypit's caption timing already runs each line up to the next one (adjacent cues even share a frame,
+       which turns off the cut handoff), so extra lead/tail frames would only show two lines at once. */
+    lead-frames: 0;
+    tail-frames: 0;
     handoff: cut;
     cue-enter: fade;
     cue-enter-frames: 3;

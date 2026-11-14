@@ -72,17 +72,31 @@ def speech_text(line: str, readings: dict[str, str]) -> str:
     return "".join(t[1] if t[0] == "plain" else t[2] for t in tokens(line, readings))
 
 
+OPENING = set("「『（(〈《【“‘")
+
+
 def script_prose(line: str, readings: dict[str, str]) -> str:
-    """Render one line as Hypit Script prose (Dual Text for readings, reserved chars escaped)."""
-    parts = []
+    """Render one line as Hypit Script prose (Dual Text for readings, reserved chars escaped).
+
+    Hypit attaches unspoken punctuation to the word before it, so an opening bracket would end up at the
+    end of the previous caption (or line). Each opening bracket is therefore bound to the next spoken
+    character or reading as Dual Text: 「東芝」 → <「東芝|とうしば>」, 「からくり → <「か|か>らくり."""
+    esc = lambda s: SCRIPT_RESERVED.sub(r"\\\1", xml_text(s))
+    parts, pending = [], ""
     for t in tokens(line, readings):
         if t[0] == "plain":
-            parts.append(SCRIPT_RESERVED.sub(r"\\\1", xml_text(t[1])))
+            for ch in t[1]:
+                if ch in OPENING:
+                    pending += ch
+                elif pending:
+                    parts.append(f"<{esc(pending + ch)}|{esc(ch)}>")
+                    pending = ""
+                else:
+                    parts.append(esc(ch))
         else:
-            disp = SCRIPT_RESERVED.sub(r"\\\1", xml_text(t[1]))
-            speech = SCRIPT_RESERVED.sub(r"\\\1", xml_text(t[2]))
-            parts.append(f"<{disp}|{speech}>")
-    return "".join(parts)
+            parts.append(f"<{esc(pending + t[1])}|{esc(t[2])}>")
+            pending = ""
+    return "".join(parts) + esc(pending)
 
 
 def xml_text(s: str) -> str:
