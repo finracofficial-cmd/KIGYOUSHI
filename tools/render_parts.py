@@ -34,13 +34,21 @@ def duration(p: Path) -> float:
                                 capture_output=True, text=True, check=True).stdout)
 
 
-def ensure_services():
+def ensure_services(need_whisperx: bool = True):
+    """WhisperX (large-v3) holds several GB even when idle. A part whose alignment is reused from an earlier build
+    does not need it, and rendering next to it can run out of memory, so it is stopped for such parts."""
     import urllib.request
     try:
         urllib.request.urlopen("http://127.0.0.1:8765/health", timeout=5).read()
+        running = True
     except Exception:
+        running = False
+    if need_whisperx and not running:
         print("starting WhisperX", flush=True)
         sh(["hypit", "programs", "up", "--endpoint", "whisperx.local"], check=True, stdout=subprocess.DEVNULL)
+    elif not need_whisperx and running:
+        print("stopping WhisperX (alignment is reused)", flush=True)
+        sh(["hypit", "programs", "down", "--endpoint", "whisperx.local"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     sh(["hypit", "runtime", "up"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
@@ -144,7 +152,8 @@ def main():
             if free_gb < 2:
                 sys.exit(f"only {free_gb:.1f} GB of disk left; a part needs about 1 GB while it renders. Delete finished "
                          "episodes' old builds under .hypit/results/<date>/ (keep the ones out/align-cache.json names) and rerun")
-            ensure_services()
+            svrun_text = (d / part["svrun"]).read_text()
+            ensure_services(need_whisperx=not all(f'output="{sid}-align.alignment"' in svrun_text for sid in part["segments"]))
             bid = render(d, part)
             mp4.unlink(missing_ok=True)
             r = sh(["hypit", "get", bid, "--output", "final.video", "--to", str(mp4)], capture_output=True, text=True)
