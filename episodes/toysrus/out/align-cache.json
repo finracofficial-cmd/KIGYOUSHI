@@ -10,5 +10,9 @@
  "ch02": {
   "hash": "362cb8fcc691494a5ca7164ee94d1bfdd52d299f741797be57336fe245b31e17",
   "build": "bld_20261115T053414461Z_11904F30C2"
+ },
+ "ch03": {
+  "hash": "9f1bbb94249c0ab44629c2e90e68c32f05654b2e8e6fd3fa6cd8accbe11cd44e",
+  "build": "bld_20261115T060418939Z_D780590F69"
  }
 }
