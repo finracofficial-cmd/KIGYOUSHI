@@ -61,6 +61,8 @@ def _under_10000(n: int) -> str:
 
 
 DIGIT_KANA = "ゼロ イチ ニ サン ヨン ゴ ロク ナナ ハチ キュウ".split()
+DAY_KANA = {1: "ツイタチ", 2: "フツカ", 3: "ミッカ", 4: "ヨッカ", 5: "イツカ", 6: "ムイカ", 7: "ナノカ", 8: "ヨウカ",
+            9: "ココノカ", 10: "トオカ", 14: "ジュウヨッカ", 20: "ハツカ", 24: "ニジュウヨッカ"}
 COUNTERS = "年月日円万億兆人台社件本枚個歳%％倍度時分秒期位回キセメグワ"
 
 
@@ -68,11 +70,16 @@ def normalize_heard(text: str) -> str:
     """Turn digits from the recognizer into readable form so readings can be compared.
 
     Codes such as 0840 or 724106 are read digit by digit; quantities (1996年, 1,500人) as numbers."""
-    text = re.sub(r"(?<=\d),(?=\d{3})", "", text)
+    # days of the month have their own readings (10月1日 = じゅうがつ ついたち, not いちにち)
+    text = re.sub(r"(?<=月)(\d{1,2})日", lambda m: DAY_KANA.get(int(m.group(1)), m.group(0)), text)
+    # a thousands separator marks a quantity (1,159 / 4,100平方メートル), never a code read digit by digit
+    text = re.sub(r"\d{1,3}(?:,\d{3})+", lambda m: int_to_kanji(int(m.group().replace(",", ""))), text)
 
     def repl(m):
         digits, nxt = m.group(), text[m.end():m.end() + 1]
-        if digits.startswith("0") or len(digits) >= 5 or (len(digits) == 4 and nxt not in COUNTERS):
+        # 4-digit codes (4649) are read digit by digit; round numbers such as 4100 or 8000 are quantities
+        if digits.startswith("0") or len(digits) >= 5 or (len(digits) == 4 and nxt not in COUNTERS
+                                                          and not digits.endswith("00")):
             if not (nxt and nxt in "年万億円"):
                 return "".join(DIGIT_KANA[int(c)] for c in digits)
         return int_to_kanji(int(digits))
