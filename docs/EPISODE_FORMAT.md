@@ -37,6 +37,7 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
 
   // サムネイル。image は images のキー。lines は2〜3行（最後の行は赤帯）
   "thumbnail": { "image": "sign-removal", "lines": ["三洋電機", "なぜ消えた？", "倒産してないのに…"] },
+  "thumbnail_variants": [ { "image": "...", "lines": ["...", "...", "..."] } ],  // 任意。YouTube の「テストと比較」用の別案
 
   // YouTube の概要欄。tools/youtube_meta.py が下の順に組み立てる（目次・チャンネル紹介・AI 表記は自動）
   "description": {
@@ -86,6 +87,7 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
 | `out/parts/pNN.mp4` | パートごとの書き出し（結合前） |
 | `out/<slug>.mp4` | 完成動画 |
 | `out/thumbnail.png` | サムネイル |
+| `out/thumbnail-b.png` ほか | サムネイルの別案（`thumbnail_variants` があるとき。「テストと比較」に一緒に上げる） |
 | `out/youtube.txt` | タイトル・概要欄・タグ（確認用） |
 | `out/description.txt` | 概要欄だけ（そのまま YouTube に貼る） |
 | `out/review/` | 確認用のコマ一覧と音量測定 |

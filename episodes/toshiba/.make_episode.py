@@ -349,6 +349,7 @@ ep = {
     "ITmedia、AV Watch、BCN",
   ]},
   "thumbnail": {"image": "op-empty-hq", "lines": ["東芝", "なぜ解体された？", "売上7兆円の名門だったのに…"]},
+  "thumbnail_variants": [{"image": "op-tv-showroom", "lines": ["テレビも冷蔵庫も", "中国へ", "東芝はなぜ解体された？"]}, {"image": "delisting-2023", "lines": ["150年の名門", "上場廃止", "東芝に何が起きた？"]}],
   "description": {
     "intro": [
       "炊飯器、洗濯機、冷蔵庫、テレビ、ワープロ、ノートパソコン、そしてフラッシュメモリー。数々の「日本初」をうたい、日曜夕方の『サザエさん』を長年支えた総合電機メーカー「東芝」。",

@@ -338,6 +338,7 @@ ep = {
     "Bell Laboratories Record（1958年）",
   ]},
   "thumbnail": {"image": "op-pager-display", "lines": ["ポケベル", "なぜ消えた？", "1000万台が鳴ったのに…"]},
+  "thumbnail_variants": [{"image": "colorful-pagers-1990", "lines": ["この数字、読めますか？", "14106", "ポケベルはなぜ消えた？"]}, {"image": "op-phone-queue", "lines": ["公衆電話に行列した", "ポケベル", "なぜ消えた？"]}],
 }
 json.dump(ep, open("/home/user/KIGYOUSHI/episodes/pager/episode.json", "w"), ensure_ascii=False, indent=2)
 

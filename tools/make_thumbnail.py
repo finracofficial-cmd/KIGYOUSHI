@@ -7,6 +7,8 @@ episode.json:
     "lines": ["三洋電機", "なぜ消えた？", "倒産してないのに…"]  # 2-3 short lines
   }
 Line 1 is white, the middle line(s) are the large gold hook, the last line sits on a red band.
+Optional "thumbnail_variants": [{"image": ..., "lines": [...]}, ...] are extra versions for YouTube's
+thumbnail test (Test & compare); they are written as thumbnail-b.png, thumbnail-c.png, ...
 Writes episodes/<slug>/out/thumbnail.png.
 
 Usage: make_thumbnail.py <slug>
@@ -47,7 +49,16 @@ def main():
     slug = sys.argv[1]
     ep = load_episode(slug)
     d = episode_dir(slug)
-    spec = ep["thumbnail"]
+    out = d / "out"
+    out.mkdir(exist_ok=True)
+    specs = [("thumbnail.png", ep["thumbnail"])]
+    specs += [(f"thumbnail-{chr(ord('b') + i)}.png", v) for i, v in enumerate(ep.get("thumbnail_variants", []))]
+    for name, spec in specs:
+        compose(d, spec).convert("RGB").save(out / name)
+        print(out / name)
+
+
+def compose(d, spec) -> Image.Image:
     base = cover(Image.open(d / "assets" / "images" / f"{spec['image']}.png").convert("RGB"))
 
     # darken the left side so the title reads at phone size
@@ -95,12 +106,7 @@ def main():
     sd.rounded_rectangle(box, radius=10, fill=CHANNEL["colors"]["seal"], outline="white", width=4)
     sd.text(((box[0] + box[2]) / 2, box[1] + 30), a, font=sf, fill="white", anchor="mm")
     sd.text(((box[0] + box[2]) / 2, box[1] + 78), b, font=sf, fill="white", anchor="mm")
-    canvas = Image.alpha_composite(canvas, seal)
-
-    out = d / "out"
-    out.mkdir(exist_ok=True)
-    canvas.convert("RGB").save(out / "thumbnail.png")
-    print(out / "thumbnail.png")
+    return Image.alpha_composite(canvas, seal)
 
 
 if __name__ == "__main__":
