@@ -3,4 +3,12 @@
 <svrun version="1">
   <author source="./episode-p02.svml"/>
   <target output="final.video"/>
+  <build-record id="kept-ch02-media-media" build="bld_20261115T053414461Z_11904F30C2" output="ch02-media.media"/>
+  <satisfy output="ch02-media.media" candidate="kept-ch02-media-media"/>
+  <build-record id="kept-ch02-media-domain" build="bld_20261115T053414461Z_11904F30C2" output="ch02-media.domain"/>
+  <satisfy output="ch02-media.domain" candidate="kept-ch02-media-domain"/>
+  <build-record id="kept-ch02-media-extent" build="bld_20261115T053414461Z_11904F30C2" output="ch02-media.extent"/>
+  <satisfy output="ch02-media.extent" candidate="kept-ch02-media-extent"/>
+  <build-record id="kept-ch02-align-alignment" build="bld_20261115T053414461Z_11904F30C2" output="ch02-align.alignment"/>
+  <satisfy output="ch02-align.alignment" candidate="kept-ch02-align-alignment"/>
 </svrun>
