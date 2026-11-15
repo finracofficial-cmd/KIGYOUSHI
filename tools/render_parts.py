@@ -15,6 +15,7 @@ import json
 import time
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -139,6 +140,10 @@ def main():
                 bid = None
         if not bid:
             print(f"{part['name']}: rendering {', '.join(part['segments'])}", flush=True)
+            free_gb = shutil.disk_usage(ROOT).free / 1e9
+            if free_gb < 2:
+                sys.exit(f"only {free_gb:.1f} GB of disk left; a part needs about 1 GB while it renders. Delete finished "
+                         "episodes' old builds under .hypit/results/<date>/ (keep the ones out/align-cache.json names) and rerun")
             ensure_services()
             bid = render(d, part)
             mp4.unlink(missing_ok=True)

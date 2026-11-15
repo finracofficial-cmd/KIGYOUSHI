@@ -42,6 +42,8 @@ NODE_OPTIONS=--max-old-space-size=6144 hypit runtime up   # ビルド担当プ�
   （既定の2GBだと結果の保存で落ち、Result が "needs attention" になる。その場合は `hypit result finish <id>`）。
 - 20分を超える映像を1本で書き出すと、Hypit の字幕データ（約480MB）が JavaScript の文字列上限を超えて失敗する。
   そのため章ごとのパートに分けて書き出し、ffmpeg でつないでから BGM を重ねる。変わっていないパートは再書き出ししない。
+- ディスクは1セッションの割り当て制。書き出しの結果は `.hypit/results/<日付>/bld_*`（1パート200〜400MB）にたまる。
+  残りが2GBを切ると render が止まるので、完成した回の古い build（`out/align-cache.json` に載っていないもの）を消す。
 - 音声を変えずに見た目だけ直した再書き出しでは、前回の位置合わせ結果を自動で再利用する（`out/align-cache.json`）。
 - ナレーションは絵1枚ぶん（block）ずつ生成し、WhisperX で聞き直して読みを確かめる（`tools/gen_voice.py`、
   結果は `out/voice-report.md`）。全回共通の読みは `channel/yomi.json`、回ごとの読みは episode.json の `readings`。
