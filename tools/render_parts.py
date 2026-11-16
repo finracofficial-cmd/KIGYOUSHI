@@ -80,14 +80,25 @@ def adopt(d: Path, part: dict) -> str | None:
 
 
 def wait_build(bid: str) -> bool:
-    """Wait until the Worker has finished a build. `hypit build --follow` can return while the build is still
-    running, so the Worker's own state is what counts. True when the Result is complete."""
+    """Wait until the Worker has finished a build, by polling `hypit status` (the Worker's own state).
+    Restarts the runtime once if the build stops moving for 20 minutes. True when the Result is complete."""
+    last, since, restarted = None, time.time(), False
     while True:
         b = status(bid)
         if b is None:
             sys.exit(f"cannot read the state of build {bid}; is the runtime up? (`hypit runtime up`)")
         if b["work"]["state"] != "working":
             break
+        mark = json.dumps([b["work"].get("requests"), b.get("commands"), b["result"].get("outputCount")])
+        if mark != last:
+            last, since = mark, time.time()
+        elif time.time() - since > 20 * 60 and not restarted:
+            # the Worker process can die while the runtime still reports it as running (seen after a session
+            # restart): nothing moves. Restarting the runtime lets the queued build continue.
+            print(f"build {bid} has not moved for 20 minutes; restarting the Hypit runtime", flush=True)
+            sh(["hypit", "runtime", "down"], capture_output=True)
+            sh(["hypit", "runtime", "up"], capture_output=True)
+            since, restarted = time.time(), True
         time.sleep(60)
     finish = ["hypit", "result", "finish", bid, "--project", str(ROOT), "--runtime", str(ROOT / "hypit.runtime.json")]
     if b.get("attention") or b["result"].get("state") == "open":
@@ -111,7 +122,8 @@ def render(d: Path, part: dict) -> str:
     log = d / "out" / "parts" / f"{part['name']}.build.log"
     (d / "out" / "parts" / f"{part['name']}.pending").write_text(part["fingerprint"])
     with open(log, "w") as f:
-        sh(["hypit", "build", str(svrun), "--title", f"{d.name}-{part['name']}", "--follow"], stdout=f, stderr=subprocess.STDOUT)
+        # submit only; wait_build() polls the Worker (a --follow client can hang when the Worker dies)
+        sh(["hypit", "build", str(svrun), "--title", f"{d.name}-{part['name']}"], stdout=f, stderr=subprocess.STDOUT)
     text = log.read_text(errors="replace")
     m = re.search(r"bld_[0-9A-Za-z_]+", text)
     if not m:
