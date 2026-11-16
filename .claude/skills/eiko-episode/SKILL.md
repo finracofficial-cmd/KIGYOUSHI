@@ -47,6 +47,9 @@ STYLE_GUIDE.md の型どおりに書く。数字・年・社名・人名は rese
     research.md で実際に開いた主要な URL を `reference_urls` に10〜16件入れる。`notes` には数字の食い違いや
     同名の別法人など、視聴者が誤解しやすい点を確かめた事実だけで書く。
 
+- `shorts` に縦型ショートを1〜2本書く（本編の宣伝。書式は docs/EPISODE_FORMAT.md）。最初の1行で一番強い場面か数字を出し、
+  逆説の問いを立てて「答えは、本編で。」で終える。合計45〜55秒（約200〜250字）、絵は本編の images から3〜4枚。
+
 書いたら自分で読み直す:
 1. 全ての数字・年月を research.md と照合する。
 2. `tools/run_episode.sh <slug> lint` を通す。
@@ -59,7 +62,7 @@ tools/run_episode.sh <slug>
 ```
 
 lint → images（OpenAI）→ voice（ElevenLabs）→ assets → svml → render（Hypit + WhisperX）
-→ thumb → meta → review の順に進む。有料ステージは同じ prompt / 本文なら再生成しない。
+→ thumb → meta → review → shorts の順に進む。有料ステージは同じ prompt / 本文なら再生成しない。
 途中で失敗したら、そのステージから再実行できる（例: `tools/run_episode.sh <slug> render thumb meta review`）。
 
 - 画像が安全フィルタで拒否されたら、その prompt を穏当な描写に直して `images` だけ再実行。
@@ -85,6 +88,6 @@ lint → images（OpenAI）→ voice（ElevenLabs）→ assets → svml → rend
 
 ## 6. 渡す
 
-`out/<slug>.mp4`、`out/thumbnail.png`、`out/description.txt`（概要欄）と `out/youtube.txt`（タイトル・タグ）の場所と、題材の要点・尺・使った画像枚数と
+`out/<slug>.mp4`、`out/shorts/*.mp4`（とその `.txt`）、`out/thumbnail.png`、`out/description.txt`（概要欄）と `out/youtube.txt`（タイトル・タグ）の場所と、題材の要点・尺・使った画像枚数と
 ElevenLabs の文字数を短く報告する。動画ファイルは git に入れない（.gitignore 済み）。
 episode.json・research.md・TOPICS.md の更新はコミットしてプッシュする。

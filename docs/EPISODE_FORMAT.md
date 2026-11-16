@@ -39,6 +39,11 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
   "thumbnail": { "image": "sign-removal", "lines": ["三洋電機", "なぜ消えた？", "倒産してないのに…"] },
   "thumbnail_variants": [ { "image": "...", "lines": ["...", "...", "..."] } ],  // 任意。YouTube の「テストと比較」用の別案
 
+  // 縦型ショート（任意、1〜3本）。1行＝字幕1枚＝読み上げ1回。合計45〜55秒（約200〜250字）。最後は「答えは、本編で。」
+  "shorts": [ { "id": "s1", "youtube_title": "〇〇はなぜ消えた？… #shorts", "title": ["〇〇は", "なぜ消えた？"],
+                "scenes": [ { "image": "<images のキー>", "lines": ["…", "…"] } ],
+                "description": ["…"], "hashtags": ["〇〇", "企業史"] } ],
+
   // YouTube の概要欄。tools/youtube_meta.py が下の順に組み立てる（目次・チャンネル紹介・AI 表記は自動）
   "description": {
     "intro": ["何だったのか・全盛期（2〜3文）", "転落と消滅の経緯を年つきで（1〜2文）"],
@@ -87,6 +92,7 @@ Hypit のソース（`episode.svml`）・サムネイルがすべて生成され
 | `out/parts/pNN.mp4` | パートごとの書き出し（結合前） |
 | `out/<slug>.mp4` | 完成動画 |
 | `out/thumbnail.png` | サムネイル |
+| `out/shorts/<id>.mp4` / `.txt` | 縦型ショート（1080×1920）と、そのタイトル・説明・ハッシュタグ |
 | `out/thumbnail-b.png` ほか | サムネイルの別案（`thumbnail_variants` があるとき。「テストと比較」に一緒に上げる） |
 | `out/youtube.txt` | タイトル・概要欄・タグ（確認用） |
 | `out/description.txt` | 概要欄だけ（そのまま YouTube に貼る） |

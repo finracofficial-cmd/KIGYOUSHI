@@ -13,6 +13,7 @@
 #   thumb     compose out/thumbnail.png
 #   meta      write out/youtube.txt (title, description with chapter timestamps, tags)
 #   review    write contact sheets of the finished video to out/review/
+#   shorts    vertical YouTube Shorts from episode.json "shorts" -> out/shorts/<id>.mp4   (paid)
 # Paid stages skip anything already generated with the same prompt/text.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -21,7 +22,7 @@ export NODE_OPTIONS="${NODE_OPTIONS:-} --max-old-space-size=6144"
 slug="${1:?usage: tools/run_episode.sh <slug> [stage...]}"
 shift || true
 stages=("$@")
-[ ${#stages[@]} -eq 0 ] && stages=(lint images voice assets svml render thumb meta review)
+[ ${#stages[@]} -eq 0 ] && stages=(lint images voice assets svml render thumb meta review shorts)
 ep="episodes/$slug"
 [ -f "$ep/episode.json" ] || { echo "missing $ep/episode.json" >&2; exit 1; }
 mkdir -p "$ep/out"
@@ -44,6 +45,7 @@ sys.exit(1 if p else 0)") ;;
     thumb)  (cd tools && python3 make_thumbnail.py "$slug") ;;
     meta)   (cd tools && python3 youtube_meta.py "$slug") ;;
     review) python3 tools/review_sheets.py "$ep/out/$slug.mp4" "$ep/out/review" ;;
+    shorts) python3 tools/make_shorts.py "$slug" ;;
     *) echo "unknown stage $stage" >&2; exit 1 ;;
   esac
 done
