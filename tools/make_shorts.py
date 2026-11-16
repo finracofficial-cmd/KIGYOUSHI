@@ -250,13 +250,18 @@ def make_short(ep: dict, d: Path, spec: dict, check: bool):
             f"amix=inputs={k}:normalize=0:duration=longest,apad,atrim=0:{total:.3f},loudnorm=I=-14:TP=-2[voice];" \
             f"[{k}:a]atrim=0:{total:.3f},asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo," \
             f"loudnorm=I=-33:TP=-9,afade=t=out:st={max(0.0, total - 1.5):.3f}:d=1.5[bgm];" \
-            "[voice][bgm]amix=inputs=2:normalize=0,alimiter=limit=0.89[a]"
+            "[voice][bgm]amix=inputs=2:normalize=0,loudnorm=I=-14:TP=-1.5,alimiter=limit=0.84[a]"
         audio = tmp / "audio.m4a"
         sh(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", graph, "-map", "[a]", "-c:a", "aac",
             "-b:a", "192k", str(audio)])
+        # one-pass loudnorm overshoots on a clip this short: measure, then set the level with a plain gain
+        r = subprocess.run(["ffmpeg", "-v", "info", "-i", str(audio), "-af", "ebur128", "-f", "null", "-"],
+                           capture_output=True, text=True)
+        measured = float(r.stderr.rsplit("I:", 1)[1].split("LUFS")[0])
         final = out / f"{sid}.mp4"
         sh(["ffmpeg", "-v", "error", "-y", "-i", str(video), "-i", str(audio), "-map", "0:v", "-map", "1:a",
-            "-c:v", "copy", "-c:a", "copy", "-shortest", "-movflags", "+faststart", str(final)])
+            "-af", f"volume={-14 - measured:.2f}dB,alimiter=limit=0.8:level=false", "-c:v", "copy", "-c:a", "aac",
+            "-b:a", "192k", "-shortest", "-movflags", "+faststart", str(final)])
 
     # 4. title, description and hashtags for the upload
     main_min = None
