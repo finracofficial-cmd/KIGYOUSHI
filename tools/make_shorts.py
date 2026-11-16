@@ -81,8 +81,8 @@ def _good_break(text: str, i: int) -> bool:
         return False
     if a in "、。！？」』）":
         return True
-    if a in "はがをにでともへ" and i >= 2 and _kind(text[i - 2]) != "hira":   # 店は|どう, 東芝が|…
-        return True
+    if a in "はがをにでともへ" and i >= 2 and _kind(text[i - 2]) != "hira" and b not in "はがもをのにへとで":
+        return True                                     # 店は|どう, 東芝が|… but never 年に|は
     return _kind(a) == "hira" and _kind(b) in ("other", "kata", "num")
 
 
