@@ -2,5 +2,9 @@
  "op": {
   "hash": "c4277d78f6a2e9a0dc8d02a003ca6393c548989b61c0745d6f3f57bebb1dd520",
   "build": "bld_20261116T023341147Z_7AF2C0B523"
+ },
+ "ch01": {
+  "hash": "ce1ccc621217c4f05be50dcfdac6563f97d03365a9564e910e0ec8df46757488",
+  "build": "bld_20261116T034306460Z_E0EB57F90E"
  }
 }
