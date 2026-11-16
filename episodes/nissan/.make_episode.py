@@ -1,0 +1,439 @@
+"""Builds episodes/nissan/episode.json (kept beside the episode so the script stays editable)."""
+import json
+import re
+from pathlib import Path
+
+images = {
+  "op-showroom-1989": "A Japanese car dealership showroom in 1989: a gleaming dark grey sports coupe and a long elegant luxury sedan on display under spotlights, families and young men in late-1980s fashion admiring them, salesmen in suits. Bright, prosperous bubble-era mood. No logos or readable text.",
+  "op-signing-1999": "A crowded press conference in Tokyo in March 1999: a Japanese executive and a French executive in dark suits shake hands on a stage with Japanese and French flags, photographers' flashes. Faces not in sharp focus. No logos or readable text.",
+  "op-oppama-2026": "A large car assembly plant beside the sea in Yokosuka, Japan, in 2026, seen at dusk from across the water: long factory buildings, a car-carrier ship at the quay, rows of new compact cars waiting. Quiet, uncertain mood. No logos or readable text.",
+  "op-question": "An empty, softly lit corporate lobby in Yokohama at night in 2026 with a single concept car on display, reflections on the polished floor, city lights through tall windows. Reflective mood. No logos or readable text.",
+  "dat-1914": "A small Japanese workshop in Tokyo in 1914: mechanics in work clothes and an engineer in a Western suit stand proudly beside a tiny early open-top automobile, wooden walls, tools on benches. Sepia-tinted early Taisho atmosphere.",
+  "yokohama-1935": "Japan's first mass-production car factory in Yokohama in 1935: a moving assembly line of small boxy black cars, workers in caps, high windows letting in light, a few managers in suits watching. Industrious mood. No readable text.",
+  "rally-1958": "Two small Japanese sedans from 1958, one painted with Mount Fuji and one with cherry blossoms, racing across the red dirt outback of Australia, dust trailing behind, a crew in khaki waving. Adventurous, sunny scene.",
+  "us-dealer-1960": "A used-car lot in Los Angeles in 1960: a Japanese man in a suit talks earnestly with an American dealer beside a small unfamiliar imported sedan, palm trees and big American cars around them. Warm afternoon light. No readable text.",
+  "skyline-1969": "A Japanese racing circuit in 1969: a boxy white four-door sports sedan with racing numbers leads a pack of cars through a corner, spectators in late-1960s clothing along the fence. Energetic scene. No logos.",
+  "z-1970": "A long-hood white Japanese sports coupe from 1970 parked on a California coastal road at sunset, a young American couple admiring it. Nostalgic golden light. No logos or readable text.",
+  "showroom-1970s": "A busy Japanese car dealership on a weekend in the early 1970s: families crowd around compact sedans, salesmen with brochures, colorful paper flags overhead. Booming, optimistic mood. No logos or readable text.",
+  "uk-plant-1986": "The opening of a new car factory in northeast England in September 1986: a line of new compact sedans, British workers and Japanese managers in company jackets, a ceremony with a small crowd and a lectern. Overcast sky. No logos or readable text.",
+  "labor-1981": "A tense meeting room in a Japanese company in the early 1980s: managers in suits on one side of a long table and union representatives in work jackets on the other, papers and ashtrays, nobody smiling. No readable text.",
+  "be1-1987": "A small, round, retro-styled city car in pastel color displayed in a stylish boutique in Tokyo's Minami-Aoyama in 1987, young women and men in 1980s fashion lining up to place orders. Playful, trendy atmosphere. No logos.",
+  "cima-1988": "A large, sleek luxury sedan gliding through Tokyo at night in 1988, neon signs and taxis around, a businessman in the back seat. Glamorous bubble-economy mood. No logos or readable text.",
+  "gtr-1989": "A dark grey Japanese sports coupe from 1989 racing on a circuit in front of packed grandstands, other touring cars behind it, motion blur. Triumphant, high-energy scene. No logos or readable text.",
+  "decline-1990s": "A Japanese car company's sales office in the mid-1990s: worried managers look at a bar chart going down on a whiteboard, cigarette smoke, rain on the window. Gloomy mood. No readable text.",
+  "zama-1995": "A car assembly plant in Zama, Japan, on its last day of vehicle production in March 1995: workers in uniforms stand in rows beside the final car on the line, some bowing their heads. Somber light. No logos or readable text.",
+  "renault-1999": "Two corporate executives, one Japanese and one French, sign documents at a table in a Tokyo hotel ballroom in March 1999, flags of Japan and France behind them, interpreters and photographers. Faces not in sharp focus. No logos.",
+  "nrp-1999": "A large auditorium in Tokyo in October 1999: a foreign executive in a dark suit presents a restructuring plan on a big screen with charts to a packed audience of Japanese journalists. Speaker seen from behind. No readable text.",
+  "murayama-2001": "The last car rolling off an assembly line at a closing plant in Tokyo in March 2001: a mid-size sedan decorated with a paper banner, workers applauding with tears, flowers. Emotional farewell scene. No readable text.",
+  "record-2001": "A Japanese company's earnings press conference in 2001: executives on stage in front of a screen with a rising profit chart, reporters typing, bright lights. Optimistic mood. Faces not in sharp focus. No readable text.",
+  "zcar-2002": "A new silver sports coupe from 2002 parked in front of a Japanese showroom at dusk, a middle-aged man and his son looking at it with excitement. Hopeful mood. No logos or readable text.",
+  "leaf-2010": "A compact electric hatchback being charged at a charging station in a Japanese city in 2010, a young family watching the charging cable, clean modern street. Fresh, forward-looking mood. No logos or readable text.",
+  "inspection-2017": "A car factory final inspection line in Japan in 2017: an inspector in a uniform with a clipboard beside a car on rollers, a supervisor watching, harsh fluorescent light. Uneasy atmosphere. No readable text.",
+  "airport-2018": "A private jet parked on a dark airport apron in Tokyo on a November night in 2018, several unmarked cars and officials in dark coats nearby, distant camera flashes. Tense, mysterious mood. No faces, no readable text.",
+  "court-2022": "The exterior of a large modern courthouse building in Tokyo on a grey day in March 2022, reporters and TV crews waiting outside the gate with cameras and umbrellas. Serious mood. No readable text.",
+  "boardroom-2019": "An empty corporate boardroom in Yokohama in 2019: a long table with neat chairs and closed folders, a wall clock, late light. Cold, silent mood. No people, no readable text.",
+  "pandemic-2020": "A deserted car factory parking lot and quiet assembly hall in Japan in spring 2020, a few workers in face masks, rows of idle machines. Uneasy pandemic mood. No readable text.",
+  "us-lot-2024": "A huge American car dealership lot in 2024 full of unsold crossovers with big discount stickers without readable text, a salesman alone under a grey sky. Sluggish mood.",
+  "china-ev-2024": "A busy car showroom in a Chinese city in 2024 crowded with customers looking at new electric cars with large screens, bright LED lighting. Dynamic mood. No logos or readable text.",
+  "honda-talks-2024": "A press conference in Tokyo in December 2024: two Japanese executives in dark suits stand at separate podiums on a stage, journalists and cameras in front. Faces not in sharp focus. No logos or readable text.",
+  "breakup-2025": "Two separate empty podiums on a stage after a press conference in Tokyo in February 2025, chairs being cleared, a screen turned off. Quiet, deflated mood. No people's faces, no readable text.",
+  "oppama-2025": "Workers on the assembly line of a car plant by the sea in Yokosuka in 2025 building compact cars, a long corridor of robots, the bay visible through an open door. Steady but bittersweet mood. No logos or readable text.",
+  "gtr-last-2025": "The last unit of a long-running Japanese sports coupe leaving a factory line in Tochigi in August 2025, workers gathered around taking photos, a hand-written farewell sign without readable text. Emotional scene.",
+  "kyushu-2026": "A modern car plant in Kyushu, Japan, in 2026 at sunrise, trucks and a car-carrier ship at the port, new compact cars lined up. Hopeful but uncertain mood. No logos or readable text.",
+  "new-cars-2026": "A Japanese motor show stand in 2026: a new crossover and a new electric hatchback under spotlights, a sleek sports sedan under a cover, visitors taking photos. Hopeful mood. No logos or readable text.",
+  "sunrise-ending": "A small 1930s Japanese car and a modern electric car parked side by side on a quiet Yokohama waterfront at sunrise, the sun rising over the bay. Hopeful, reflective mood. No logos or readable text.",
+  "credits-road": "An empty coastal road in Japan at dusk with a single car's tail lights disappearing into the distance, calm sea and soft sky. Nostalgic, quiet mood. No readable text.",
+}
+
+op = [
+  {"image": "op-showroom-1989", "lines": [
+    "スカイライン、フェアレディ[Z|ぜっと]、ブルーバード、マーチ、セレナ。",
+    "日本の道を走ってきた車の多くに、この名前がありました。日産です。",
+    "かつて国内の販売台数でトヨタと二強を争い、技術の日産と呼ばれた会社です。",
+  ]},
+  {"image": "op-signing-1999", "lines": [
+    "[1999年|せんきゅうひゃくきゅうじゅうきゅうねん]、日産は、自動車事業だけでおよそ[2兆円|にちょうえん]の借金を抱えて行き詰まります。",
+    "フランスのルノーから約[6,000億円|ろくせんおくえん]規模の出資を受け、送り込まれた経営者のもとで、わずか[2年|にねん]後には過去最高の利益を出しました。",
+    "奇跡の復活。そう呼ばれた会社でした。",
+  ]},
+  {"image": "op-oppama-2026", "lines": [
+    "それから、四半世紀。",
+    "[2025年3月期|にせんにじゅうごねんさんがつき]の最終赤字は、[6,709億円|ろくせんななひゃくきゅうおくえん]。",
+    "日産は、世界の車の工場を[17|じゅうなな]から[10|じゅう]に減らし、[2万人|にまんにん]を削減する計画を打ち出します。",
+    "[60年|ろくじゅうねん]以上、車を作り続けてきた神奈川県の追浜工場も、[2027年度|にせんにじゅうななねんど]の末で車の生産を終えることになりました。",
+    "倒産したわけではありません。会社は今もあり、新しい車も作られています。",
+    "それでも日産は、四半世紀のあいだに、二度目の危機を迎えていたのです。",
+  ]},
+  {"image": "op-question", "lines": [
+    "一度は奇跡の復活を遂げた会社が、なぜ、もう一度転落したのか。",
+    "なぜ、ホンダとの経営統合の話は、[2か月|にかげつ]足らずで白紙になったのか。",
+    "そして、日産はいま、どこへ向かっているのか。",
+    "今回ひもとくのは、日産の栄枯盛衰です。",
+  ]},
+]
+
+ch01 = [
+  {"image": "dat-1914", "lines": [
+    "物語は、大正時代の東京から始まります。",
+    "[1914年|せんきゅうひゃくじゅうよねん]、小さな工場で作られた国産車が、博覧会に出品されました。名前は「ダット」。",
+    "出資した[3人|さんにん]の名前の頭文字から取った車名でした。",
+    "やがて、その小型版は「ダットの息子」という意味で「ダットソン」と名付けられます。",
+    "ところが、ソンという響きは、損に通じる。そこで太陽のサンに変えて、「ダットサン」になりました。",
+  ]},
+  {"image": "yokohama-1935", "lines": [
+    "[1933年|せんきゅうひゃくさんじゅうさんねん]、実業家の鮎川義介が、横浜に自動車製造という会社を設立します。",
+    "翌年、社名を日産自動車に改めました。日産とは、親会社だった日本産業の略です。",
+    "[1935年|せんきゅうひゃくさんじゅうごねん]、横浜工場で一貫生産が始まります。日産は、これを日本で最初の量産工場としています。",
+  ]},
+  {"image": "rally-1958", "lines": [
+    "戦争で乗用車の生産は止まりましたが、戦後、日産は再び走り出します。",
+    "[1958年|せんきゅうひゃくごじゅうはちねん]、オーストラリア一周、およそ[1万6,000キロ|いちまんろくせんきろ]のラリーに、[2台|にだい]のダットサンが挑みました。",
+    "車体に富士山と桜を描いた[2台|にだい]はそろって完走し、富士号は小型車のクラスで優勝します。",
+    "翌年には、ブルーバードが発売されました。",
+  ]},
+  {"image": "us-dealer-1960", "lines": [
+    "[1960年|せんきゅうひゃくろくじゅうねん]、日産はロサンゼルスにアメリカの販売会社を作ります。",
+    "最初は、中古車店を一軒ずつ回って、ダットサンを置いてもらうよう頼むところからの出発でした。",
+    "[1966年|せんきゅうひゃくろくじゅうろくねん]、日産は大衆車サニーを発売します。",
+    "同じ年の秋、トヨタはカローラを出し、他社の[1,000cc|せんしーしー]の大衆車に対して「プラス[100cc|ひゃくしーしー]の余裕」とうたいました。",
+  ]},
+  {"image": "skyline-1969", "lines": [
+    "同じ[1966年|せんきゅうひゃくろくじゅうろくねん]、日産はスカイラインを作っていたプリンス自動車と合併し、村山工場も日産のものになります。",
+    "[1969年|せんきゅうひゃくろくじゅうきゅうねん]には、スカイラインに、レースを意識した[GT-R|じーてぃーあーる]が登場します。",
+    "のちに何度も名前が呼び戻される、日産の象徴の誕生でした。",
+  ]},
+  {"image": "z-1970", "lines": [
+    "同じ年、フェアレディ[Z|ぜっと]も誕生します。",
+    "アメリカではダットサンの名前で売られ、手の届くスポーツカーとして人気を集めました。",
+  ]},
+  {"image": "showroom-1970s", "lines": [
+    "[1970年代|せんきゅうひゃくななじゅうねんだい]の前半、国内の販売シェアは、トヨタがおよそ[4割|よんわり]、日産が[3割|さんわり]ほど。",
+    "日本の自動車市場は、トヨタと日産の二強の時代を迎えていました。",
+    "ただ、この頃を境に、日産はトヨタとの差を少しずつ広げられていきます。",
+  ]},
+]
+
+ch02 = [
+  {"image": "uk-plant-1986", "lines": [
+    "[1980年代|せんきゅうひゃくはちじゅうねんだい]、日産は海外での生産に乗り出します。",
+    "[1983年|せんきゅうひゃくはちじゅうさんねん]にはアメリカのテネシー州で、[1986年|せんきゅうひゃくはちじゅうろくねん]にはイギリスで、工場が動き始めました。",
+    "イギリス工場の開所式には、当時のサッチャー首相も出席しています。",
+  ]},
+  {"image": "labor-1981", "lines": [
+    "ただ、この海外進出をめぐっては、社内で激しい対立がありました。",
+    "イギリス進出をめぐって労働組合のトップが反対し、経営陣と正面から対立したと伝えられています。",
+    "当時の石原俊社長は、社長在任中の力の[7割|ななわり]から[8割|はちわり]を、労使関係の立て直しに費やしたと語っています。",
+  ]},
+  {"image": "be1-1987", "lines": [
+    "一方で、この時代の日産からは、話題の車が次々と生まれました。",
+    "[1987年|せんきゅうひゃくはちじゅうななねん]の小さな丸い車、[Be-1|びーわん]。[1万台|いちまんだい]限定の予約は[2か月|にかげつ]で埋まり、販売店によっては、競争率が[48倍|よんじゅうはちばい]に達したといいます。",
+    "[1989年|せんきゅうひゃくはちじゅうきゅうねん]のパオは、[3か月|さんかげつ]だけ注文を受け付け、納車まで[1年|いちねん]以上待つ人もいました。",
+    "[1991年|せんきゅうひゃくきゅうじゅういちねん]のフィガロは、[2万台|にまんだい]の限定販売に、およそ[21万件|にじゅういちまんけん]の申し込みがあったといわれます。",
+    "[1988年|せんきゅうひゃくはちじゅうはちねん]のセフィーロは、井上陽水さんの「お元気ですか」という呼びかけと、「くうねるあそぶ」のコピーで記憶されています。",
+  ]},
+  {"image": "cima-1988", "lines": [
+    "同じ年、およそ[500万円|ごひゃくまんえん]の高級車シーマが、[1年|いちねん]で[3万5,000台|さんまんごせんだい]を超えて売れました。",
+    "高い車ほど売れる。その様子は「シーマ現象」と呼ばれ、流行語にもなります。",
+  ]},
+  {"image": "gtr-1989", "lines": [
+    "[1989年|せんきゅうひゃくはちじゅうきゅうねん]には、スカイライン[GT-R|じーてぃーあーる]が[16年|じゅうろくねん]ぶりに復活。",
+    "レースでは連勝を重ね、技術の日産の象徴になりました。",
+    "ところが、話題の車が並んだこの年が、ひとつの頂点でした。",
+  ]},
+  {"image": "decline-1990s", "lines": [
+    "日産の資料によれば、軽自動車を除く国内シェアは、[1989年度|せんきゅうひゃくはちじゅうきゅうねんど]の[23.7%|にじゅうさんてんななぱーせんと]をピークに、長い下り坂に入ります。",
+    "バブルが崩れた[1992年度|せんきゅうひゃくきゅうじゅうにねんど]からの[7年間|ななねんかん]で、最終黒字になったのは、わずか[1年|いちねん]だけでした。",
+    "のちに社長となる塙義一氏は、バブルの頃に慎重さを感じていたものの、それを口にできる雰囲気ではなかったと振り返っています。",
+    "[1993年|せんきゅうひゃくきゅうじゅうさんねん]、日産は神奈川県の座間工場で車の組み立てをやめると発表し、[1995年|せんきゅうひゃくきゅうじゅうごねん]に生産を終えました。",
+    "当時の社長は、つらい決断もしなければならない、と語りました。",
+    "それでも、すべての車種をそろえるメーカーをやめる考えはない、とも話したと伝えられています。",
+  ]},
+  {"image": "zama-1995", "lines": [
+    "それでも、赤字は止まりませんでした。",
+    "[1999年|せんきゅうひゃくきゅうじゅうきゅうねん]、国内の[7|なな]つの工場で[24|にじゅうよん]種類の車台を作り、工場の稼働率は[53%|ごじゅうさんぱーせんと]。",
+    "部品の取引先は[1,145社|せんひゃくよんじゅうごしゃ]、株を持つ会社は[1,394社|せんさんびゃくきゅうじゅうよんしゃ]にのぼりました。",
+    "何を作り、何をやめるのか。それを決めきれないまま、借金だけが積み上がっていたのです。",
+    "そしてこの年、国内シェアは初めて[2割|にわり]を割り込みます。",
+  ]},
+]
+
+ch03 = [
+  {"image": "renault-1999", "lines": [
+    "[1999年3月|せんきゅうひゃくきゅうじゅうきゅうねんさんがつ]。有力な相手とみられていたダイムラークライスラーとの交渉は、打ち切られていました。",
+    "残った相手が、フランスのルノーです。",
+    "[3月27日|さんがつにじゅうしちにち]、両社は提携に調印します。ルノーは日産株の[36.8%|さんじゅうろくてんはちぱーせんと]を、[1株|ひとかぶ][400円|よんひゃくえん]で引き受けました。",
+    "そしてルノーから、一人の経営者が送り込まれます。カルロス・ゴーン氏です。",
+  ]},
+  {"image": "nrp-1999", "lines": [
+    "[10月|じゅうがつ]、ゴーン氏は日産リバイバルプランを発表します。",
+    "村山工場を含む[5|いつ]つの工場を閉じ、[2万1,000人|にまんいっせんにん]を削減する。部品の取引先は半分近くに絞り、持っていた会社の株は売る。",
+    "そして、[2000年度|にせんねんど]の黒字化など、[3|みっ]つの約束を、期限つきで掲げました。",
+    "日産はこの約束を、コミットメントと呼びました。",
+    "アメリカの業界誌によれば、ゴーン氏は、黒字にできなければ辞任すると明言していたといいます。",
+  ]},
+  {"image": "murayama-2001", "lines": [
+    "[2001年3月|にせんいちねんさんがつ]、村山工場で最後の一台が作られます。",
+    "[1962年|せんきゅうひゃくろくじゅうにねん]にプリンス自動車の工場として始まり、およそ[968万台|きゅうひゃくろくじゅうはちまんだい]を送り出した工場でした。",
+    "痛みを伴う改革でした。そして、数字はすぐに表れます。",
+  ]},
+  {"image": "record-2001", "lines": [
+    "前の年度に、およそ[6,800億円|ろくせんはっぴゃくおくえん]の最終赤字を出していた日産は、[2000年度|にせんねんど]、[3,311億円|さんぜんさんびゃくじゅういちおくえん]の過去最高の利益をあげます。",
+    "ゴーン氏は、日産は復活した、と述べました。",
+    "[3|みっ]つの約束は、いずれも期限より早く達成され、[2003年3月|にせんさんねんさんがつ]には、自動車事業の実質的な借金がなくなりました。",
+    "コストの[6割|ろくわり]を占める部品の購入費は、[3年|さんねん]で[2割|にわり]削られました。",
+    "[2005年|にせんごねん]、日産は[6年|ろくねん]にわたる再建が完了したと宣言します。",
+  ]},
+  {"image": "zcar-2002", "lines": [
+    "車も戻ってきます。[2002年|にせんにねん]にはフェアレディ[Z|ぜっと]が復活。",
+    "[2007年|にせんななねん]には[GT-R|じーてぃーあーる]が、[2010年|にせんじゅうねん]には量産型の電気自動車リーフが発売されました。",
+    "[2016年|にせんじゅうろくねん]には、燃費の不正で苦しんでいた三菱自動車にも出資します。",
+  ]},
+  {"image": "leaf-2010", "lines": [
+    "[2017年度|にせんじゅうななねんど]、日産の世界販売は[577万台|ごひゃくななじゅうななまんだい]。過去最高でした。",
+    "ルノー、三菱と合わせたグループは、販売台数で世界一になったと発表します。",
+    "ただ、のちに日産が設けた委員会の報告書は、この頃のゴーン氏が、社内で救世主として神格化されていたと書いています。",
+  ]},
+]
+
+ch04 = [
+  {"image": "inspection-2017", "lines": [
+    "最初の亀裂は、工場で見つかりました。",
+    "[2017年9月|にせんじゅうななねんくがつ]、国の立ち入り検査で、資格のない従業員が、出荷前の完成検査の一部をしていたことが分かります。",
+    "日産は、[4回|よんかい]のリコールでおよそ[114万台|ひゃくじゅうよんまんだい]を届け出ました。",
+    "外部の弁護士による報告書は、追浜工場では遅くとも[1989年|せんきゅうひゃくはちじゅうきゅうねん]ごろから行われていたとしています。",
+    "報告書が挙げた背景は、検査員の不足と、決まりを守る意識の薄れでした。",
+  ]},
+  {"image": "airport-2018", "lines": [
+    "そして、[2018年11月19日|にせんじゅうはちねんじゅういちがつじゅうくにち]。",
+    "東京地検特捜部は、ゴーン会長と、もう一人の代表取締役を逮捕しました。",
+    "容疑は、有価証券報告書に、会長の報酬を実際より少なく書いたというものです。",
+    "検察によれば、少なく書かれた報酬は、[8年分|はちねんぶん]でおよそ[90億円|きゅうじゅうおくえん]にのぼりました。",
+    "日産は同じ日、社内調査で、会社のお金の私的な支出なども確認したと発表します。",
+    "日産の社内調査は、のちに、不正の規模を全体で約[350億円|さんびゃくごじゅうおくえん]以上としました。",
+  ]},
+  {"image": "boardroom-2019", "lines": [
+    "ゴーン氏は、無実を訴えました。",
+    "開示されていない報酬は受け取っていない。逮捕は、日産の一部の幹部による陰謀だ、と主張しています。",
+    "一方、日産が設けた委員会は、不正の根本的な原因を、ゴーン氏への権限の集中だとしました。",
+    "取締役会の時間は、平均で[20分|にじゅっぷん]足らずだったとも指摘しています。",
+    "報告書は、誰もゴーン氏に異を唱えない企業風土があった、とも書いています。",
+  ]},
+  {"image": "court-2022", "lines": [
+    "[2019年12月|にせんじゅうきゅうねんじゅうにがつ]、保釈中のゴーン氏は日本を出国し、レバノンに渡りました。",
+    "そのため、ゴーン氏本人の裁判は、日本では開かれていません。",
+    "法人としての日産には[2022年|にせんにじゅうにねん]、罰金[2億円|におくえん]の判決が出て、確定しています。",
+    "もう一人の元代表取締役は、一審と二審で一部が有罪とされ、[2025年|にせんにじゅうごねん]、検察と弁護側の双方が最高裁に上告しました。",
+    "経営の混乱は続きます。[2019年|にせんじゅうきゅうねん]には社長も辞任し、トップが次々と入れ替わりました。",
+  ]},
+]
+
+ch05 = [
+  {"image": "pandemic-2020", "lines": [
+    "[2019年12月|にせんじゅうきゅうねんじゅうにがつ]、社長に就いた内田誠氏は、就任直後にこう語っています。",
+    "「できないことをできるといわせる文化が生まれてしまった」。",
+    "台数を追い、アメリカで値引きを重ねた拡大路線への反省でした。",
+    "そこに新型コロナが重なります。[2020年3月期|にせんにじゅうねんさんがつき]からの[2年間|にねんかん]で、最終赤字は合わせて[1兆円|いっちょうえん]を超えました。",
+    "日産は拡大路線をやめ、生産能力を[2割|にわり]減らして、スペインとインドネシアの工場を閉じると決めます。",
+    "[2023年|にせんにじゅうさんねん]には、ルノーとの関係も見直され、互いに[15%|じゅうごぱーせんと]ずつ株を持ち合う対等な形になりました。",
+  ]},
+  {"image": "us-lot-2024", "lines": [
+    "その後、利益はいったん戻ります。しかし内田氏は、のちにこう振り返りました。",
+    "半導体不足で車が足りず、値引きに頼らずに売れたことに助けられていた、と。",
+    "[2024年|にせんにじゅうよねん]、市場が元に戻ると、アメリカでは在庫が膨らみ、値引きの費用がかさみます。",
+    "需要が急に伸びたハイブリッド車を、日産はアメリカで持っていませんでした。",
+  ]},
+  {"image": "china-ev-2024", "lines": [
+    "中国では、地元メーカーの電気自動車が急速に広がり、日産の販売は落ち込んでいきます。",
+    "世界販売は、[2017年度|にせんじゅうななねんど]の[577万台|ごひゃくななじゅうななまんだい]から、[2025年度|にせんにじゅうごねんど]には[315万台|さんびゃくじゅうごまんだい]へ。およそ[45%|よんじゅうごぱーせんと]減りました。",
+    "[2024年11月|にせんにじゅうよねんじゅういちがつ]、日産は世界で[9,000人|きゅうせんにん]を削減すると発表します。",
+  ]},
+  {"image": "honda-talks-2024", "lines": [
+    "そして、[2024年12月23日|にせんにじゅうよねんじゅうにがつにじゅうさんにち]。",
+    "日産とホンダは、経営統合に向けた検討に入ると発表しました。",
+    "共同で持株会社をつくり、両社がその下に入る。取締役の過半数と社長は、ホンダが指名する案でした。",
+    "両社は、統合で売上高[30兆円|さんじゅっちょうえん]規模を目指すとしていました。実現すれば、世界有数の自動車グループが生まれるはずでした。",
+  ]},
+  {"image": "breakup-2025", "lines": [
+    "しかし[2025年2月13日|にせんにじゅうごねんにがつじゅうさんにち]、両社は基本合意を解約します。発表から、わずか[52日|ごじゅうににち]でした。",
+    "両社の発表によれば、協議の途中でホンダが、日産を子会社にする案を提案していました。",
+    "ホンダは、決断のスピードを優先するためだったと説明しています。",
+    "日産の内田氏は、自主性がどこまで守られるのか、最後まで確信を持てなかったと語りました。",
+  ]},
+]
+
+ch06 = [
+  {"image": "oppama-2025", "lines": [
+    "[2025年4月|にせんにじゅうごねんしがつ]、日産のトップは、イヴァン・エスピノーサ氏に代わります。",
+    "[2025年3月期|にせんにじゅうごねんさんがつき]の最終赤字は[6,709億円|ろくせんななひゃくきゅうおくえん]。本業の利益は黒字を保ったものの、工場などの価値を大きく引き下げました。",
+    "[5月|ごがつ]、日産は再建計画を発表します。世界の車の工場を[17|じゅうなな]から[10|じゅう]へ。[2万人|にまんにん]を削減する計画です。",
+    "[7月|しちがつ]には、追浜工場の車の生産を、[2027年度|にせんにじゅうななねんど]の末で九州へ移すと決めました。",
+    "[1961年|せんきゅうひゃくろくじゅういちねん]に動き始め、[1,780万台|せんななひゃくはちじゅうまんだい]以上を作ってきた工場です。エスピノーサ氏は、大きな決断だったと語っています。",
+    "工場で働くおよそ[2,400人|にせんよんひゃくにん]のうち、九州への転籍を希望したのは[400人|よんひゃくにん]ほどと伝えられています。",
+  ]},
+  {"image": "gtr-last-2025", "lines": [
+    "[2025年8月|にせんにじゅうごねんはちがつ]、[18年間|じゅうはちねんかん]作られた今の[GT-R|じーてぃーあーる]が、生産を終えました。",
+    "横浜の本社ビルも売却し、借りて使い続ける形に変えています。",
+    "[2026年3月期|にせんにじゅうろくねんさんがつき]も、アメリカの関税などが響き、[2年|にねん]続けての最終赤字になりました。",
+    "全体の本業の利益は黒字でも、車の事業だけで見ると赤字。車を買う人へのローンなどの金融事業が、会社を支えていました。",
+    "海外の大手格付け会社は、日産の社債を投機的な等級に位置づけています。",
+  ]},
+  {"image": "kyushu-2026", "lines": [
+    "[2026年7月|にせんにじゅうろくねんしちがつ]には熊本地震が起き、九州の工場が一時止まります。",
+    "[11月|じゅういちがつ]に発表した半年の決算は、本業の利益は黒字に戻ったものの、最終損益は[397億円|さんびゃくきゅうじゅうななおくえん]の赤字でした。",
+    "中国での販売は、この年度、前の年より[4割|よんわり]前後減る見通しです。",
+    "日産は、通期での最終黒字を見込み、[2027年2月|にせんにじゅうななねんにがつ]に新しい事業計画を発表するとしています。",
+  ]},
+  {"image": "new-cars-2026", "lines": [
+    "会社は、倒産したわけではありません。",
+    "フェアレディ[Z|ぜっと]は今も作られ、[2026年|にせんにじゅうろくねん]には新しいリーフも発売されました。新しいスカイラインも、発表が予告されています。",
+    "それでも、従業員は[2018年|にせんじゅうはちねん]の約[13万9,000人|じゅうさんまんきゅうせんにん]から、およそ[12万人|じゅうにまんにん]に。国内シェアは、いまや[1割|いちわり]を下回るまでになりました。",
+    "かつてトヨタと国内市場を二分した会社の、いまの姿です。",
+  ]},
+  {"image": "sunrise-ending", "lines": [
+    "ダットソンの「ソン」が、損に通じる。そう言って、太陽の「サン」に名前を変えた会社でした。",
+    "一度沈みかけた日は、四半世紀前、見事に昇りました。",
+    "けれども、一度の復活は、二度目の危機を防いではくれませんでした。",
+    "日産に、もう一度日は昇るのか。その答えは、まだ書かれていません。",
+    "日産の栄枯盛衰。続きの書かれていないファイルを、いったんここで閉じます。",
+  ]},
+]
+
+shorts = [{
+  "id": "s1",
+  "youtube_title": "日産はなぜ転落した？奇跡のV字回復から2度目の危機へ #shorts",
+  "title": ["日産は", "なぜ転落した？"],
+  "scenes": [
+    {"image": "gtr-1989", "lines": [
+      "スカイライン、フェアレディ[Z|ぜっと]、[GT-R|じーてぃーあーる]。技術の日産と呼ばれた会社です。"]},
+    {"image": "renault-1999", "lines": [
+      "[1999年|せんきゅうひゃくきゅうじゅうきゅうねん]、およそ[2兆円|にちょうえん]の借金で行き詰まり、ルノーの出資を受けます。",
+      "そして、わずか[2年|にねん]で過去最高の利益へ。奇跡の復活と呼ばれました。"]},
+    {"image": "op-oppama-2026", "lines": [
+      "ところが[2025年3月期|にせんにじゅうごねんさんがつき]、最終赤字は[6,709億円|ろくせんななひゃくきゅうおくえん]。",
+      "神奈川の追浜工場は、車の生産を終えることになりました。"]},
+    {"image": "op-question", "lines": [
+      "一度よみがえった会社が、なぜ、もう一度転落したのか。答えは、本編で。"]},
+  ],
+  "description": [
+    "1999年、およそ2兆円の借金で行き詰まった日産は、ルノーとの提携と大胆なリストラで、わずか2年で過去最高益に。しかし2025年3月期には6,709億円の最終赤字となり、追浜工場の車両生産終了を決めました。",
+    "一度よみがえった会社が、なぜもう一度転落したのか。本編で、ダットサンの誕生から現在までをたどっています。"],
+  "hashtags": ["日産", "日産自動車", "追浜工場", "スカイライン", "企業史"],
+}]
+
+ep = {
+  "slug": "nissan",
+  "youtube_title": "日産はなぜ転落した？奇跡のV字回復から2度目の危機まで【栄枯盛衰ファイル】",
+  "tags": ["日産","日産自動車","日産 なぜ","日産 赤字","日産 転落","追浜工場","カルロス・ゴーン","ゴーン","ホンダ 日産 統合","ルノー","スカイライン","GT-R","フェアレディZ","ダットサン","自動車メーカー","企業の歴史","企業史","栄枯盛衰","栄枯盛衰ファイル","経済解説"],
+  "theme": {"main": "なぜ「日産」は転落したのか？", "sub": "技術の日産、二度の危機の栄枯盛衰"},
+  "readings": {
+    "日産自動車": "にっさんじどうしゃ",
+    "日産": "にっさん",
+    "追浜工場": "おっぱまこうじょう",
+    "追浜": "おっぱま",
+    "座間工場": "ざまこうじょう",
+    "村山工場": "むらやまこうじょう",
+    "鮎川義介": "あゆかわよしすけ",
+    "日本産業": "にほんさんぎょう",
+    "富士号": "ふじごう",
+    "石原俊": "いしはらたかし",
+    "井上陽水": "いのうえようすい",
+    "セフィーロ": "せふぃーろ",
+    "稼働率": "かどうりつ",
+    "車台": "しゃだい",
+    "ダイムラークライスラー": "だいむらーくらいすらー",
+    "カルロス・ゴーン": "かるろす・ごーん",
+    "ゴーン": "ごーん",
+    "日産リバイバルプラン": "にっさんりばいばるぷらん",
+    "神格化": "しんかくか",
+    "東京地検特捜部": "とうきょうちけんとくそうぶ",
+    "有価証券報告書": "ゆうかしょうけんほうこくしょ",
+    "代表取締役": "だいひょうとりしまりやく",
+    "取締役会": "とりしまりやくかい",
+    "内田誠": "うちだまこと",
+    "持株会社": "もちかぶがいしゃ",
+    "イヴァン・エスピノーサ": "いゔぁん・えすぴのーさ",
+    "エスピノーサ": "えすぴのーさ",
+    "最終損益": "さいしゅうそんえき",
+  },
+  "images": {k: {"prompt": v} for k, v in images.items()},
+  "segments": [
+    {"id": "op", "kind": "opening", "blocks": op},
+    {"id": "ch01", "kind": "chapter", "title": "ダットソンからダットサンへ", "blocks": ch01},
+    {"id": "ch02", "kind": "chapter", "title": "シーマ現象", "blocks": ch02},
+    {"id": "ch03", "kind": "chapter", "title": "コミットメント", "blocks": ch03},
+    {"id": "ch04", "kind": "chapter", "title": "2018年11月19日", "blocks": ch04},
+    {"id": "ch05", "kind": "chapter", "title": "ホンダとの52日", "blocks": ch05},
+    {"id": "ch06", "kind": "chapter", "title": "大きな決断", "blocks": ch06},
+  ],
+  "ident_image": "op-showroom-1989",
+  "credits": {"image": "credits-road", "sources": [
+    "日産自動車 会社と製品の歴史・ヘリテージ、ニュースリリース、決算資料・有価証券報告書",
+    "日産自動車「日産リバイバルプラン」発表資料（1999年）",
+    "日産自動車 ガバナンス改善特別委員会 報告書（2019年）、社内調査報告の要約（2019年）",
+    "日産自動車 完成検査に関する調査報告書（2017年）",
+    "国土交通省 報道発表資料（2017〜2018年）",
+    "東京地方裁判所・東京高等裁判所 判決（2022年・2025年）",
+    "金融庁、米証券取引委員会（SEC）の公表資料",
+    "本田技研工業 ニュースリリース（2024〜2025年）",
+    "法政大学大原社会問題研究所『日本労働年鑑』",
+    "トヨタ自動車75年史",
+    "日本経済新聞、時事通信、共同通信、NHK、ロイター、AP",
+    "東洋経済オンライン、ニュースイッチ、MONOist、Car Watch、ベストカー、乗りものニュース",
+  ]},
+  "thumbnail": {"image": "op-oppama-2026", "lines": ["日産", "なぜ転落？", "奇跡の復活だったのに…"]},
+  "thumbnail_variants": [
+    {"image": "gtr-1989", "lines": ["技術の日産", "2度目の危機", "日産はなぜ転落した？"]},
+    {"image": "renault-1999", "lines": ["V字回復から25年", "赤字6,709億円", "日産に何が起きた？"]},
+  ],
+  "shorts": shorts,
+  "description": {
+    "intro": [
+      "スカイライン、フェアレディZ、ブルーバード、マーチ。数々の名車を生み、かつて国内でトヨタと二強を争った「日産自動車」。",
+      "1999年、自動車事業でおよそ2兆円の借金を抱えて行き詰まった日産は、ルノーとの提携とカルロス・ゴーン氏による日産リバイバルプランで、わずか2年で過去最高益を達成しました。",
+      "しかし2018年のゴーン氏の逮捕、コロナ禍、アメリカと中国での販売不振を経て、2025年3月期には6,709億円の最終赤字に。ホンダとの経営統合の協議は2か月足らずで白紙となり、工場を17から10に減らす再建計画のなかで、追浜工場の車両生産終了が決まりました。"
+    ],
+    "questions": [
+      "なぜ、一度は奇跡の復活を遂げた日産は、もう一度転落したのでしょうか。",
+      "そして、ホンダとの経営統合はなぜ白紙になったのでしょうか。"
+    ],
+    "overview": "今回の「栄枯盛衰ファイル」では、ダットサンの誕生から、トヨタとの二強時代、シーマ現象とバブル期の名車、1990年代の長い赤字、ルノーとの提携とV字回復、完成検査問題とゴーン氏の逮捕、ホンダとの統合協議の破談、そして再建計画と追浜工場の決断まで、日産の歴史をたどります。",
+    "comment_prompt": "あの頃、日産の車に乗っていた方、スカイラインやフェアレディZに憧れた方は、ぜひ思い出をコメント欄で教えてください。",
+    "sources_summary": "本動画は、日産自動車の沿革・ニュースリリース・決算資料・有価証券報告書、日産リバイバルプランの発表資料、ガバナンス改善特別委員会の報告書、国土交通省・金融庁・裁判所の公表資料、ホンダの発表、当時の新聞・専門メディアの報道などを参考に制作しています。",
+    "main_sources": ["日産自動車","本田技研工業","ルノー・日産アライアンス","国土交通省","金融庁","東京地方裁判所","東京高等裁判所","米証券取引委員会（SEC）","法政大学大原社会問題研究所","トヨタ自動車75年史","日本経済新聞","時事通信","共同通信","ロイター","MONOist","Car Watch"],
+    "notes": [
+      "※カルロス・ゴーン氏は日本で起訴されましたが、公判前に出国したため、本人についての日本の刑事判決は出ていません。ゴーン氏は一貫して容疑を否認しています。動画内の金額は、検察・日産の社内調査・判決が示したものです。",
+      "※2025年3月期・2026年3月期は、本業の営業利益は黒字で、最終損益が赤字です。2025年3月期の最終赤字6,709億円は、2020年3月期の6,712億円をわずかに下回ります。",
+      "※追浜工場は2027年度末で車両生産を終了する予定で、研究所やテストコース、衝突試験場、専用ふ頭は残ります。",
+      "※1970年代の国内シェアは、資料によって年・定義が異なるため、おおよその値で紹介しています。",
+      "※日産は倒産しておらず、上場企業として経営再建を進めています（動画制作時点、2026年11月）。"
+    ],
+    "reference_urls": [
+      {"title": "日産自動車 会社と製品の歴史", "url": "https://www.nissan-global.com/JP/COMPANY/PROFILE/HERITAGE/HISTORY/"},
+      {"title": "日産自動車 日産リバイバルプラン発表資料（1999年10月）", "url": "https://www.nissan-global.com/JP/COMPANY/PLAN/HISTORY/ASSETS/PDF/fs_re_detail1999h.pdf"},
+      {"title": "日産自動車 日産リバイバルプランの発表（1999年10月18日）", "url": "https://global.nissannews.com/ja-JP/releases/nissan-unveils-revival-plan-j"},
+      {"title": "日産自動車 2000年度決算（2001年5月17日）", "url": "https://global.nissannews.com/ja-JP/releases/010517-01"},
+      {"title": "日産自動車 完成検査に関する調査報告書（2017年11月17日）", "url": "https://www.nissan-global.com/PDF/20171117_report01.pdf"},
+      {"title": "国土交通省 日産自動車への業務改善指示（2018年3月）", "url": "https://www.mlit.go.jp/report/press/jidosha08_hh_002913.html"},
+      {"title": "日産自動車 ガバナンス改善特別委員会報告書（2019年3月27日）", "url": "https://www2.jpx.co.jp/disc/72010/140120190327496403.pdf"},
+      {"title": "日産自動車 社内調査報告の要約（2019年9月9日）", "url": "https://www.nissan-global.com/PDF/190909-02-j_01.pdf"},
+      {"title": "裁判所 東京高裁判決（2025年2月4日）", "url": "https://www.courts.go.jp/hanrei/93807/detail4/index.html"},
+      {"title": "本田技研工業・日産自動車 経営統合に関する基本合意書の解約（2025年2月13日）", "url": "https://global.honda/jp/news/2025/c250213a.html"},
+      {"title": "日産自動車 経営再建計画「Re:Nissan」（2025年5月13日）", "url": "https://global.nissannews.com/ja-JP/releases/250513-02-j"},
+      {"title": "日産自動車 追浜工場の車両生産の移管（2025年7月15日）", "url": "https://global.nissannews.com/ja-JP/releases/250715-01-j"},
+      {"title": "日産自動車 2025年度決算（2026年5月13日）", "url": "https://global.nissannews.com/ja-JP/releases/260513-01-j"},
+      {"title": "日産自動車 2026年度上期決算（2026年11月11日）", "url": "https://global.nissannews.com/ja-JP/releases/261111-01-j"},
+      {"title": "MONOist 日産とホンダの経営統合協議の終了", "url": "https://monoist.itmedia.co.jp/mn/articles/2502/14/news117.html"},
+      {"title": "トヨタ自動車75年史 国内販売シェアのデータ", "url": "https://www.toyota.co.jp/jpn/company/history/75years/data/automotive_business/sales/sales_volume/japan/1950.html"}
+    ],
+    "hashtags": ["日産","日産自動車","追浜工場","ゴーン","ホンダ","スカイライン","GTR","フェアレディZ","自動車メーカー","企業史"]
+  },
+}
+
+out = Path(__file__).resolve().parent / "episode.json"
+json.dump(ep, open(out, "w"), ensure_ascii=False, indent=2)
+total = 0
+for s in ep["segments"]:
+    n = sum(len(re.sub(r"\[([^|\]]+)\|[^\]]+\]", r"\1", l)) for b in s["blocks"] for l in b["lines"])
+    total += n
+    print(s["id"], len(s["blocks"]), "blocks", n, "chars")
+print("total", total, "chars;", len(images), "images")
