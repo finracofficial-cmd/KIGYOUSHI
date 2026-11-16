@@ -6,5 +6,9 @@
  "ch01": {
   "hash": "ce1ccc621217c4f05be50dcfdac6563f97d03365a9564e910e0ec8df46757488",
   "build": "bld_20261116T034306460Z_E0EB57F90E"
+ },
+ "ch02": {
+  "hash": "2b43ddf1dd511b5a5070f7e55fc95069f147b06dc29f985301e990162d3eb531",
+  "build": "bld_20261116T040848496Z_36A839B2F4"
  }
 }
