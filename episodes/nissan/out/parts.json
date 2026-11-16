@@ -1,0 +1,58 @@
+[
+ {
+  "name": "p00",
+  "svrun": "episode-p00.svrun",
+  "segments": [
+   "op"
+  ],
+  "fingerprint": "9aaf17006b4f9ea35e1864bf774178f6d91e14d34673d63ca26700511c141ef9"
+ },
+ {
+  "name": "p01",
+  "svrun": "episode-p01.svrun",
+  "segments": [
+   "ch01"
+  ],
+  "fingerprint": "f250571b26eedc126c0541009d82a19266e3649e0b2c87114e47ce443cb349ad"
+ },
+ {
+  "name": "p02",
+  "svrun": "episode-p02.svrun",
+  "segments": [
+   "ch02"
+  ],
+  "fingerprint": "688f600ad52bbdfca901f709b514a68c93412578244e96410063107232182edb"
+ },
+ {
+  "name": "p03",
+  "svrun": "episode-p03.svrun",
+  "segments": [
+   "ch03"
+  ],
+  "fingerprint": "532a82d7596b5364b9e311b56f75404beefb92df9628bdda9094c4613a9b850d"
+ },
+ {
+  "name": "p04",
+  "svrun": "episode-p04.svrun",
+  "segments": [
+   "ch04"
+  ],
+  "fingerprint": "cc0519d97646c979a276b00f9c5b3e6844c14e9d1dca54b3c00f86a99328f43c"
+ },
+ {
+  "name": "p05",
+  "svrun": "episode-p05.svrun",
+  "segments": [
+   "ch05"
+  ],
+  "fingerprint": "299e8791e4623e89976cdc9e0fa5220d6de3ba1425686ab4e8a3d61c323ce216"
+ },
+ {
+  "name": "p06",
+  "svrun": "episode-p06.svrun",
+  "segments": [
+   "ch06"
+  ],
+  "fingerprint": "6afefc68b04ee778368a247eddfa3c0607c348910f60579a705f611a4037e42f"
+ }
+]
