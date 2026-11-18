@@ -1,0 +1,539 @@
+"""Builds episodes/rareearth/episode.json (kept beside the episode so the script stays editable)."""
+import json
+import re
+from pathlib import Path
+
+images = {
+  "op-oxides": "Small heaps of rare earth oxide powders in shallow glass dishes on a dark laboratory bench: white, pale pink, pale green, light grey and beige powders, with a chunk of dark heavy ore beside them. Soft dramatic side light, mysterious mood. No readable text.",
+  "op-port-2026": "A container port in China at dusk in winter 2026: gantry cranes, stacked containers, a cargo ship waiting at the quay, customs officers inspecting a few small sealed drums on a pallet. Tense, cold mood. No readable text or logos.",
+  "op-magnet-globe": "A hand holding a small shiny silver disc magnet in front of a softly lit old globe on a dark wooden desk, a few iron filings arranged in a curved pattern around the magnet. Reflective, mysterious mood. No readable text.",
+  "op-question": "A vast dark ocean at night seen from above, with a single brightly lit deep-sea drilling ship far away on the horizon under a starry sky. Quiet, mysterious mood. No readable text.",
+  "ytterby-1787": "A small feldspar quarry beside a Swedish fishing village by the Baltic sea in 1787: an officer in a blue 18th-century Swedish army coat crouches to examine a heavy black stone, quarrymen with picks and wheelbarrows behind him, red wooden cottages. Painterly, muted sepia colors.",
+  "gadolin-1794": "A chemist's laboratory in a Finnish university town in 1794: glass flasks and retorts, a brass balance, candles, a chemist in 18th-century clothes seen from behind examining a small dish of white powder. Warm candlelight, painterly.",
+  "separation-old": "Rows of glass separatory funnels on a 19th-century laboratory bench, each holding two layers of liquid in very slightly different pale colors, a gloved hand turning a stopcock. Soft window light. No readable text.",
+  "gas-mantle-1890s": "A street in Vienna at dusk in the 1890s lit by bright white incandescent gas lamps with glowing mantles, people in Victorian-era coats and hats walking on cobblestones, a horse-drawn carriage. Warm, elegant light. No readable text.",
+  "mojave-1949": "Two prospectors in 1949 on a rocky hillside in the Mojave Desert, one holding a Geiger counter with headphones, Joshua trees and an old pickup truck behind them, harsh bright sun. Sense of discovery.",
+  "colortv-1966": "An American family in a 1960s living room gathered around a new wooden-cabinet color television, the screen glowing with vivid red and warm colors, kids on the shag carpet, parents on the sofa. Nostalgic, cheerful. No readable text on the screen.",
+  "mountain-pass-1970s": "A large open-pit rare-earth mine and processing plant in the Mojave Desert in the 1970s: terraced pit, dump trucks, conveyor belts, tanks and buildings, desert mountains behind. Bright, prosperous industrial mood. No logos or readable text.",
+  "fujitsu-1978": "A Japanese corporate research laboratory at night in 1978: a young researcher in a white lab coat sits alone at a desk covered with notebooks and small metal samples, a single desk lamp, an old oscilloscope nearby. Quiet, determined mood. Face not in sharp focus. No readable text.",
+  "sumitomo-1982": "A Japanese materials laboratory in 1982: three researchers in lab coats cheering and raising their arms with joy beside a sintering furnace and a measuring instrument, small dark metal blocks on the bench. Faces not in sharp focus. Joyful mood. No readable text.",
+  "gm-lab-1982": "An American automotive research laboratory in Michigan in 1982: a scientist in safety glasses watches a stream of molten metal hitting a fast-spinning copper wheel, producing thin shiny metal ribbons. Industrial blue and orange light. No logos or readable text.",
+  "magnet-uses": "A small silver neodymium magnet lifting a heavy steel weight on a white table, surrounded by an electric motor cut in half, an opened hard disk drive, a smartphone, wireless earbuds and a small wind turbine model. Clean product-photo style. No logos or readable text.",
+  "japan-import-1980s": "A Japanese port in the 1980s: cranes unloading steel drums and sacks of mineral powder from a cargo ship, workers in helmets and blue uniforms, a warehouse behind. Busy, matter-of-fact mood. No readable text.",
+  "bayan-obo-1950s": "A huge iron-ore mountain rising from the grasslands of Inner Mongolia in the 1950s: early mining terraces, workers with shovels, horse carts and a few old trucks, a steel plant chimney far away on the plain. Vast, windswept, muted colors.",
+  "lab-1970s-china": "A modest chemistry laboratory in Beijing in the early 1970s: long rows of glass separation funnels and tubes, a researcher in a white coat and glasses seen from behind adjusting a valve, a blackboard with chalk diagrams but no readable text. Determined mood.",
+  "bayan-obo-1980s": "Enormous open-pit mine terraces in Inner Mongolia in the 1980s seen from the rim, dump trucks looking tiny, dust in the air, reddish-brown rock layers. Overwhelming scale. No readable text.",
+  "deng-1992": "A southern Chinese city under construction in 1992: tower cranes, new high-rises rising beside old low buildings, crowds of bicycles on a wide road, a distant official motorcade. Booming, optimistic mood. No readable text.",
+  "cheap-exports-1990s": "A Chinese port in the late 1990s: workers loading sacks and steel drums of mineral powder onto a cargo ship, piles of bags on the dock, hazy sky. Busy, low-cost industrial mood. No readable text.",
+  "pollution-tailings": "A vast grey tailings lake beside the smokestacks of a refinery in northern China, dark pipes pouring black liquid into the lake, hazy yellow sky, no people. Desolate mood. No readable text.",
+  "pipeline-leak-1990s": "A long pipeline crossing a dry white lakebed in the California desert in the 1990s, a dark stain spreading on the ground from a leak, inspectors in protective suits and a pickup truck. Uneasy mood. No readable text.",
+  "magnet-factory-closing-2003": "Inside a magnet factory in Indiana in 2003: machines wrapped in plastic and packed into wooden crates for shipping, a forklift, a few workers in jackets watching silently. Melancholic light. No readable text.",
+  "china-dominance-2009": "A massive rare-earth processing complex in China at night in 2009: rows of lit tanks, pipes and factory buildings stretching to the horizon, steam rising. Imposing mood. No readable text.",
+  "senkaku-2010": "A white Japan Coast Guard patrol ship and a small Chinese fishing boat very close together on rough grey seas near rocky uninhabited islands, September 2010, overcast sky. Tense mood. No readable text.",
+  "port-halt-2010": "Steel drums and wooden crates stacked and waiting on a Chinese dock in autumn 2010, customs officers with clipboards inspecting them, an idle cargo ship behind. Stalled, tense mood. No readable text.",
+  "diet-2010": "A committee room of the Japanese Diet in 2010: a minister answering at a microphone, seen from behind and far away, rows of lawmakers at desks, officials with folders. Serious mood. No identifiable faces, no readable text.",
+  "price-spike-2011": "A Japanese trading company office in 2011: traders on phones in front of several monitors showing steeply rising line charts without numbers, papers on desks, evening light. Frantic mood. No readable text or logos.",
+  "lynas-2011": "A large open-pit rare-earth mine in the red outback of Western Australia in 2011: haul trucks on red terraces, a vast blue sky, spinifex grass. Hopeful mood. No logos or readable text.",
+  "recycling-2010": "A Japanese recycling plant in 2010: a machine dismantling hard disk drives and air-conditioner compressors, small magnets being collected in a tray, workers in helmets and gloves. Clean, diligent mood. No readable text.",
+  "wto-2014": "The exterior of an elegant lakeside building in Geneva in 2014 with flags flying, delegates in suits walking toward the entrance, Lake Geneva and mountains behind. Faces not identifiable. No readable text.",
+  "molycorp-2015": "A modern but deserted rare-earth processing plant in the California desert at sunset in 2015: gleaming new tanks and pipes, an empty parking lot, a closed gate. Ironic, empty mood. No logos or readable text.",
+  "mine-restart-2017": "A rare-earth open-pit mine in the California desert restarting in 2017: dump trucks moving again on the terraces, dust in the morning sun, a few workers in hard hats. Cautious, hopeful mood. No logos or readable text.",
+  "magnet-factory-china-2019": "A modern Chinese magnet factory in 2019: robotic arms handling shiny silver magnet blocks on a conveyor, workers in clean white uniforms, bright LED lighting. Efficient, powerful mood. No readable text or logos.",
+  "export-control-2025": "A Chinese customs inspection hall in 2025: officers checking boxes of shiny silver magnets and small sealed bags of powder, stacks of stamped paperwork on a table. Tense, bureaucratic mood. No readable text.",
+  "ford-idle-2025": "A huge American car assembly plant in Chicago standing idle in 2025: half-finished SUVs stopped on the line, no workers, dim lights. Uneasy mood. No logos or readable text.",
+  "pentagon-deal-2025": "An American desert rare-earth mine at golden hour with a new magnet factory building beside it and an American flag on a pole. Resolute, determined mood. No readable text or logos.",
+  "busan-2025": "A summit venue by the sea in Busan, South Korea, in October 2025: two motorcades of black cars arriving at a modern building, security staff, flags of the United States and China. No faces, no readable text.",
+  "diet-2025": "The Budget Committee room of Japan's House of Representatives in November 2025: a prime minister answering at the podium, seen from behind and far away, rows of lawmakers and TV cameras. No identifiable faces, no readable text.",
+  "beijing-ministry-2025": "A grand government building in Beijing on a grey November day in 2025: a black diplomatic car arriving at the entrance, guards standing at attention, bare trees. Cold, tense mood. No readable text.",
+  "notice-2026": "A stack of official documents with red seals on a wooden desk in a Beijing office in January 2026, a pen and a teacup, flags slightly out of focus in the background. Cold, formal mood. No readable text.",
+  "lists-2026": "A Japanese aerospace and shipbuilding industrial area by the sea in 2026: a large factory hangar with a jet engine on a stand and a ship under construction at the dock behind it. Serious mood. No logos or readable text.",
+  "japan-factory-2026": "A Japanese electronic-components factory in 2026: workers in clean suits handling small magnets and white powders, a storage shelf half empty, a supervisor checking a tablet. Worried mood. No readable text.",
+  "rotterdam-2026": "A bonded warehouse in Rotterdam in 2026: small sealed steel drums of rare earth oxide on pallets under cold blue light, a trader checking a tablet, a port crane visible through a high window. No readable text.",
+  "minamitorishima": "A small, remote, flat triangular coral island in the vast deep-blue Pacific Ocean seen from the air, a runway across it, white surf around the reef, no other land in sight. Isolated, majestic mood. No readable text.",
+  "deep-sea-mud": "The deep-sea floor at about 5,600 meters: soft dark brown mud, a few small rocks, a metal sampling corer lit by a faint beam of light from above, darkness all around. Mysterious mood.",
+  "chikyu-2026": "A huge Japanese deep-sea drilling ship with a tall derrick on the open Pacific Ocean in rough seas in January 2026, big waves crashing, grey sky. Dramatic mood. No readable text or logos.",
+  "mud-on-deck-2026": "On the deck of a deep-sea drilling ship at night, researchers in helmets and orange work suits watch thick dark brown mud flowing into a container under bright floodlights. Excited mood. Faces not in sharp focus. No readable text.",
+  "pacific-dawn-ending": "The sun rising over the Pacific Ocean near a remote island, a deep-sea drilling ship silhouetted on the horizon, calm sea, golden light. Hopeful but uncertain mood. No readable text.",
+  "credits-ore": "A chunk of dark heavy ore on a wooden table beside a small shiny modern magnet, soft light, dark background. Quiet, reflective mood. No readable text.",
+}
+
+op = [
+  {"image": "op-oxides", "lines": [
+    "レアアース。日本語では希土類と呼ばれる、[17|じゅうなな]の元素の仲間です。",
+    "名前の意味は、まれな土。ところが実は、レアではありません。",
+    "たとえばセリウムは、地殻の中に、銅や鉛よりも多くあります。",
+    "いちばん少ない種類でさえ、金のおよそ[200倍|にひゃくばい]あるのです。",
+  ]},
+  {"image": "op-port-2026", "lines": [
+    "それなのに[2026年|にせんにじゅうろくねん]、日本は、このありふれた元素を、思うように手に入れられなくなっています。",
+    "中国の貿易統計では、電気自動車のモーターの磁石などに使うジスプロシウムとテルビウムの日本向け輸出が、",
+    "[1月|いちがつ]から、ゼロになりました。",
+  ]},
+  {"image": "op-magnet-globe", "lines": [
+    "けれども時計の針を戻すと、景色はまるで違います。",
+    "[1974年|せんきゅうひゃくななじゅうよねん]、世界のレアアースの[8割|はちわり]近くは、アメリカの[1つ|ひとつ]の鉱山から掘り出されていました。",
+    "[1982年|せんきゅうひゃくはちじゅうにねん]、いま最も強い磁石、ネオジム磁石を生み出したのは、日本とアメリカの研究者でした。",
+    "ところがいま、世界の採掘のおよそ[7割|ななわり]、精製の[8割|はちわり]以上を握っているのは、中国です。",
+  ]},
+  {"image": "op-question", "lines": [
+    "掘っていたのはアメリカ。発明したのは日本とアメリカ。なのに、なぜ中国が握ることになったのか。",
+    "そして、日本の南の深い海の底で、いま何が始まろうとしているのか。",
+    "今回ひもとくのは、レアアースの栄枯盛衰です。",
+  ]},
+]
+
+ch01 = [
+  {"image": "ytterby-1787", "lines": [
+    "物語は、[18世紀|じゅうはっせいき]のスウェーデンから始まります。",
+    "[1787年|せんななひゃくはちじゅうななねん]、ストックホルムの近く、イッテルビーという村の鉱山で、陸軍の将校が、妙に重い黒い石を見つけました。",
+    "[1794年|せんななひゃくきゅうじゅうよねん]、化学者のガドリンが、この石に未知の成分を見つけます。のちのイットリウム、最初のレアアースです。",
+    "同じ鉱山の石からは、その後も新しい元素が見つかり、[4つ|よっつ]の元素が、村の名前をもらっています。",
+  ]},
+  {"image": "separation-old", "lines": [
+    "まれな鉱物から見つかったので、レア。",
+    "けれども本当にまれだったのは、元素そのものではなく、掘って採算が合うほど濃く集まった場所でした。",
+    "しかも[17|じゅうなな]の元素は性質がよく似ていて、[1つ|ひとつ]ずつ分けるのがとても難しい。",
+    "掘れる場所と、分ける技術。この[2つ|ふたつ]が、のちに世界を動かすことになります。",
+  ]},
+  {"image": "gas-mantle-1890s", "lines": [
+    "最初の使い道は、ガス灯を明るく光らせるマントルでした。",
+    "[1903年|せんきゅうひゃくさんねん]には、セリウムと鉄の合金を削ると火花が出ることが見つかります。ライターの石です。",
+    "とはいえ[20世紀|にじゅっせいき]の半ばまで、レアアースの用途は、ほぼその程度のものでした。",
+  ]},
+  {"image": "mojave-1949", "lines": [
+    "[1949年|せんきゅうひゃくよんじゅうきゅうねん]、アメリカ、カリフォルニア州のモハーベ砂漠。",
+    "ウランを探していた探鉱者のガイガーカウンターが、音を立てます。",
+    "そこにあったのは、ウランではなく、レアアースを含む、世界でも例外的に濃い鉱石でした。",
+    "マウンテンパス鉱山の始まりです。",
+  ]},
+  {"image": "colortv-1966", "lines": [
+    "この鉱山を世界一に押し上げたのは、カラーテレビでした。",
+    "ブラウン管で鮮やかな赤を出すのに、レアアースのユウロピウムが欠かせなかったのです。",
+    "アメリカの生産量は、[1964年|せんきゅうひゃくろくじゅうよねん]からのわずか[2年|にねん]で、およそ[50倍|ごじゅうばい]に増えました。",
+  ]},
+  {"image": "mountain-pass-1970s", "lines": [
+    "レンズを磨く研磨剤、石油精製の触媒。用途が広がるなか、アメリカはレアアースをほぼ自給し、世界にも売りました。",
+    "[1974年|せんきゅうひゃくななじゅうよねん]、アメリカの生産量は、世界の[8割|はちわり]近くに達します。",
+    "レアアースの世界の中心は、アメリカの砂漠にあったのです。",
+  ]},
+]
+
+ch02 = [
+  {"image": "fujitsu-1978", "lines": [
+    "そのころ日本では、富士通の研究所にいた佐川眞人さんが、ある磁石の組み合わせを思いついていました。",
+    "レアアースと鉄に、ホウ素を加える。",
+    "ところが会社の正式な研究テーマにはならず、上司には、もっと富士通らしい研究をしなさい、と言われたといいます。",
+  ]},
+  {"image": "sumitomo-1982", "lines": [
+    "[1982年|せんきゅうひゃくはちじゅうにねん]、佐川さんは、磁石を作る会社、住友特殊金属に移ります。",
+    "入社してすぐに作った[100種類|ひゃくしゅるい]以上の試作品の中に、世界最強の磁石がありました。ネオジム磁石です。",
+    "[3人|さんにん]とも飛び上がって喜びました。佐川さんは、そう振り返っています。",
+  ]},
+  {"image": "gm-lab-1982", "lines": [
+    "同じ年、アメリカのGMの研究所でも、ジョン・クロートさんが、別の作り方で同じ磁石にたどり着いていました。",
+    "特許の出願は、日本が[8月21日|はちがつにじゅういちにち]、アメリカが[9月3日|くがつみっか]。その差は、わずか[13日|じゅうさんにち]でした。",
+    "[2人|ふたり]は[2023年|にせんにじゅうさんねん]、そろって本田賞を受けています。",
+  ]},
+  {"image": "magnet-uses", "lines": [
+    "強さは、それまで最強だった磁石のおよそ[2倍|にばい]。小さくて強いから、モーターを小さく、軽くできます。",
+    "スマートフォン、エアコン、ハイブリッド車や電気自動車のモーター、そして風力発電。",
+    "ただ熱に弱く、それを補うために加えられたのが、重いレアアースのジスプロシウムやテルビウムでした。",
+  ]},
+  {"image": "japan-import-1980s", "lines": [
+    "けれども、磁石を生んだ日本は、原料のレアアースのほとんどを輸入に頼っていました。",
+    "技術は手元にあり、原料は海の向こうにある。この形が、のちに日本を悩ませ続けることになります。",
+  ]},
+]
+
+ch03 = [
+  {"image": "bayan-obo-1950s", "lines": [
+    "そのころ、中国の北、内モンゴルには、バヤンオボーという巨大な鉄の鉱床がありました。",
+    "レアアースの濃さは、マウンテンパスには及びません。けれども鉄を掘るついでに掘れ、しかも量は世界最大でした。",
+  ]},
+  {"image": "lab-1970s-china", "lines": [
+    "ただ[1970年代|せんきゅうひゃくななじゅうねんだい]の初め、中国が作れたのは、レアアースが混ざったままの金属。ライターの石くらいでした。",
+    "[1972年|せんきゅうひゃくななじゅうにねん]、北京大学の化学者、徐光憲さんが、よく似たネオジムとプラセオジムを分ける研究に挑みます。",
+    "手がかりにしたのは、アメリカの鉱山局が、役に立たないとして機密を解いたやり方でした。",
+    "[2年|にねん]後、純度は[99.9%|きゅうじゅうきゅうてんきゅうぱーせんと]に。徐さんは特許を取らず、技術は中国中の工場に広がっていきます。",
+  ]},
+  {"image": "bayan-obo-1980s", "lines": [
+    "[1983年|せんきゅうひゃくはちじゅうさんねん]、中国が埋蔵量を公表すると、世界のレアアースの埋蔵量は、一気におよそ[6倍|ろくばい]に跳ね上がりました。",
+    "アメリカ地質調査所の統計では、[1992年|せんきゅうひゃくきゅうじゅうにねん]、中国の生産がアメリカを上回ります。",
+  ]},
+  {"image": "deng-1992", "lines": [
+    "その[1992年|せんきゅうひゃくきゅうじゅうにねん]、中国の最高実力者、鄧小平は、こう語ったと伝えられています。",
+    "中東には石油がある。中国にはレアアースがある。",
+    "公式の講話の記録に、この言葉は見当たりません。それでも、のちに中国の資源戦略を語る決まり文句になりました。",
+  ]},
+  {"image": "cheap-exports-1990s", "lines": [
+    "中国のレアアースは、安さを武器に世界へ出ていきます。",
+    "中国側の記事によれば、[2008年|にせんはちねん]までの[18年|じゅうはちねん]で、輸出の量はおよそ[10倍|じゅうばい]に。平均の価格は[6割|ろくわり]ほどに下がりました。",
+  ]},
+  {"image": "pollution-tailings", "lines": [
+    "その裏には、環境への重い負担がありました。",
+    "中国政府自身が、のちの白書で、遅れた採掘や精錬が深刻な環境破壊を招いたと認めています。",
+    "値段は長いあいだ、価値を反映していなかった。違法な採掘や密輸も深刻だった。同じ白書は、そうも書いています。",
+  ]},
+  {"image": "pipeline-leak-1990s", "lines": [
+    "汚れる工程を引き受けた場所は、どこも問題を抱えます。",
+    "日本の会社が出資したマレーシアの精製工場は、放射性の廃棄物をめぐる住民の反対を受け、[1994年|せんきゅうひゃくきゅうじゅうよねん]に閉鎖されました。",
+    "マウンテンパスでも廃水のパイプラインから漏れが繰り返され、[1998年|せんきゅうひゃくきゅうじゅうはちねん]に分ける工程を、[2002年|にせんにねん]には採掘も止めます。",
+    "理由は、中国の安値との競争と、環境や規制の問題。どちらを重く見るかは、資料によって違います。",
+  ]},
+  {"image": "magnet-factory-closing-2003", "lines": [
+    "[1995年|せんきゅうひゃくきゅうじゅうごねん]、GMは磁石部門のマグネクエンチを、およそ[7,000万ドル|ななせんまんどる]で売却しました。",
+    "買い手は、アメリカの投資会社と、中国の国有系の企業[2社|にしゃ]のグループです。",
+    "アメリカ政府の監査機関によれば、工場は[2003年|にせんさんねん]までに閉じられ、設備は中国へ。",
+    "[2010年|にせんじゅうねん]、アメリカ国内のネオジム磁石の生産は、ゼロになっていました。",
+  ]},
+  {"image": "china-dominance-2009", "lines": [
+    "[2009年|にせんきゅうねん]、中国のシェアは、鉱石でも、分けた酸化物でも[97%|きゅうじゅうななぱーせんと]。",
+    "日本も[2000年代|にせんねんだい]の後半には、輸入するレアアースのおよそ[9割|きゅうわり]を中国に頼っていました。",
+    "安くて、いくらでも手に入る。世界がそう思っているあいだに、中国は輸出の量に枠を設け、少しずつ絞り始めていました。",
+  ]},
+]
+
+ch04 = [
+  {"image": "senkaku-2010", "lines": [
+    "[2010年9月7日|にせんじゅうねんくがつなのか]。沖縄県の尖閣諸島の沖で、中国の漁船が、海上保安庁の巡視船にぶつかりました。",
+    "翌日、海上保安庁は船長を逮捕します。",
+    "日本が有効に支配し、中国も領有権を主張する島々。緊張は一気に高まりました。",
+  ]},
+  {"image": "port-halt-2010", "lines": [
+    "その[2週間|にしゅうかん]後。日本の大手商社の関係者は、[9月21日|くがつにじゅういちにち]から日本向けのレアアースの出荷だけが止まった、と話します。",
+    "中国の商務省は、そのようなことはない、すべて通常どおりだと否定しました。",
+    "その年の輸出枠を、[9月|くがつ]末で使い切る見込みだった。そんな別の説明をする商社の関係者もいます。",
+  ]},
+  {"image": "diet-2010", "lines": [
+    "[10月|じゅうがつ]、大畠章宏経済産業大臣は、国会でこう説明しています。",
+    "中国政府は禁止していないと言う。けれども港の検査で新しい書類などを求められ、結果として船が出られない。",
+    "中国側は、密輸を取り締まるため検査を強めたと説明し、レアアースを交渉の道具には使わない、とも述べました。",
+    "出荷が再び動き出したのは、止まってから、およそ[2か月|にかげつ]後のことでした。",
+  ]},
+  {"image": "price-spike-2011", "lines": [
+    "値段は、跳ね上がりました。",
+    "酸化ネオジムの年間の平均価格は、[2009年|にせんきゅうねん]から[2011年|にせんじゅういちねん]までに、およそ[15倍|じゅうごばい]。",
+    "ジスプロシウムも、およそ[15倍|じゅうごばい]になります。日本では、この騒ぎがレアアース・ショックと呼ばれました。",
+  ]},
+  {"image": "lynas-2011", "lines": [
+    "日本は動きました。",
+    "[2011年|にせんじゅういちねん]、商社の双日と国の機関のJOGMECは、オーストラリアのライナスに、出資と融資をあわせて、",
+    "[2億5,000万ドル|におくごせんまんどる]を投じます。見返りは[10年間|じゅうねんかん]、日本の消費量の[3割|さんわり]ほどにあたる供給でした。",
+  ]},
+  {"image": "recycling-2010", "lines": [
+    "使う量を減らす工夫も進みます。",
+    "[2016年|にせんじゅうろくねん]には、大同特殊鋼とホンダが、重いレアアースを使わない磁石を、ハイブリッド車のモーターで実用化します。",
+    "その磁石の原料の粉を作っていたのは、かつてGMが手放した、あのマグネクエンチでした。",
+    "かつて[9割|きゅうわり]だった中国への依存は、[2012年|にせんじゅうにねん]には[6割|ろくわり]前後まで下がっています。",
+  ]},
+  {"image": "wto-2014", "lines": [
+    "[2012年|にせんじゅうにねん]、日本はアメリカ、ヨーロッパとともに、中国の輸出枠や輸出税を、世界貿易機関、WTOに訴えます。",
+    "中国は、資源と環境を守るための措置だと主張しました。",
+    "けれども[2014年|にせんじゅうよねん]、中国の敗訴が決まり、中国は翌年、輸出枠と輸出税をやめました。",
+  ]},
+  {"image": "molycorp-2015", "lines": [
+    "ところが値段が下がると、今度はアメリカ復活の旗手が倒れます。",
+    "[17億ドル|じゅうななおくどる]を超える資金を鉱山に投じたモリコープが、[2015年|にせんじゅうごねん]に経営破綻したのです。",
+    "[2017年|にせんじゅうななねん]、鉱山を手に入れたのは、アメリカの投資会社などのグループ。",
+    "そこには、中国のレアアース企業も加わっていました。",
+  ]},
+]
+
+ch05 = [
+  {"image": "mine-restart-2017", "lines": [
+    "新しい持ち主の会社、MPマテリアルズは、鉱山を再び動かし始めます。",
+    "ただ、掘り出して濃くした鉱石は中国へ送られ、中国で分けられていました。",
+    "アメリカ最大のレアアース鉱山でさえ、中国を通らなければ製品にならなかったのです。",
+  ]},
+  {"image": "magnet-factory-china-2019", "lines": [
+    "やがて、アメリカと中国の対立は、貿易からハイテクへと広がっていきます。",
+    "中国は[2021年|にせんにじゅういちねん]、国有の大手をまとめて中国稀土集団をつくり、",
+    "[2023年|にせんにじゅうさんねん]には、レアアースを分ける技術そのものの輸出を禁じました。",
+  ]},
+  {"image": "export-control-2025", "lines": [
+    "そして、[2025年4月4日|にせんにじゅうごねんしがつよっか]。",
+    "中国は、ジスプロシウムやテルビウムなど[7つ|ななつ]のレアアースと、それを使った磁石の輸出を、許可制にしました。",
+    "禁輸ではありません。許可が下りれば輸出できます。けれども、その許可がなかなか下りませんでした。",
+  ]},
+  {"image": "ford-idle-2025", "lines": [
+    "[5月|ごがつ]、アメリカのフォードは、レアアースの不足で、シカゴの工場を[1週間|いっしゅうかん]止めました。",
+    "日本では、スズキが小型車スイフトの生産を一時止めます。",
+    "スズキは部品の供給不足と説明しましたが、関係者によれば、原因は中国のレアアースの規制でした。",
+    "小さな磁石が届かないだけで、車は作れなくなる。世界は、そのことを思い知らされます。",
+  ]},
+  {"image": "pentagon-deal-2025", "lines": [
+    "アメリカは、国を挙げて巻き返しに出ます。",
+    "[2025年7月|にせんにじゅうごねんしちがつ]、国防総省はMPマテリアルズに[4億ドル|よんおくどる]を投じ、筆頭株主になりました。",
+    "さらに、ネオジムとプラセオジムの値段に、[1キロ|いちきろ]あたり[110ドル|ひゃくじゅうどる]の最低価格を、[10年間|じゅうねんかん]保証します。",
+    "市場の値段が下がっても、事業を続けられるようにするための約束です。",
+  ]},
+  {"image": "busan-2025", "lines": [
+    "[10月|じゅうがつ]、中国は規制の対象をさらに広げると発表します。",
+    "ところが韓国の釜山で米中の首脳が会談すると、中国は、この上乗せ分を[1年|いちねん]止めることになりました。",
+    "その停止は、この[11月|じゅういちがつ]、[2027年1月10日|にせんにじゅうななねんいちがつとおか]まで延ばされています。",
+    "ただし、[4月|しがつ]に始まった[7つ|ななつ]の元素の許可制は、いまも続いています。",
+  ]},
+]
+
+ch06 = [
+  {"image": "diet-2025", "lines": [
+    "そのころ、日本と中国の間でも、緊張が高まっていました。",
+    "[2025年11月7日|にせんにじゅうごねんじゅういちがつなのか]、衆議院の予算委員会。台湾をめぐる質問に、高市早苗首相はこう答えます。",
+    "「それが戦艦を使って、そして武力の行使も伴うものであれば、",
+    "これはどう考えても存立危機事態になり得るケースであると私は考えます」",
+    "存立危機事態とは、日本が集団的自衛権を使うことのできる事態のことです。",
+    "首相は同じ答弁で、即これを存立危機事態だと認定して、武力行使を行うということではない、とも述べています。",
+  ]},
+  {"image": "beijing-ministry-2025", "lines": [
+    "中国外務省は日本の大使を呼び出し、答弁の撤回を求めました。",
+    "高市首相は、答弁は政府の従来の見解に沿ったもので、撤回するつもりはないと答えます。",
+  ]},
+  {"image": "notice-2026", "lines": [
+    "そして年が明けた、[2026年1月6日|にせんにじゅうろくねんいちがつむいか]。",
+    "中国の商務省は、軍事にも民生にも使える両用品目について、",
+    "日本の軍事ユーザーや、日本の軍事力を高めるあらゆる用途への輸出を禁じる、と発表しました。",
+    "理由に挙げたのは、日本の指導者の、台湾に関する発言です。",
+    "発表に、レアアースの文字はありません。けれども、許可制になった[7つ|ななつ]のレアアースも、この両用品目にあたります。",
+    "日本政府は、極めて遺憾だと抗議し、撤回を求めました。",
+  ]},
+  {"image": "lists-2026", "lines": [
+    "[2月|にがつ]と[6月|ろくがつ]には、三菱重工のグループ会社やJAXAなど、[40|よんじゅう]の団体が、輸出禁止のリストに載せられます。",
+    "SUBARUやTDKなど、さらに[40|よんじゅう]の企業や大学が、審査を厳しくする注視の対象になりました。",
+    "中国の商務省は、通常の貿易には影響しない、と説明しています。",
+  ]},
+  {"image": "japan-factory-2026", "lines": [
+    "けれども、数字ははっきりと変わりました。",
+    "中国の貿易統計では、ジスプロシウムとテルビウムの日本向け輸出は、[1月|いちがつ]からゼロ。",
+    "半導体の製造装置などに使う酸化イットリウムも、[9月|くがつ]までで、前の年より[98%|きゅうじゅうはちぱーせんと]減りました。",
+    "一方で、磁石そのものの輸出は、減りながらも続いています。",
+  ]},
+  {"image": "rotterdam-2026", "lines": [
+    "[9月|くがつ]、ヨーロッパの酸化ジスプロシウムの値段は、中国国内のおよそ[16倍|じゅうろくばい]に達しました。",
+    "ある電子部品の大手は、今は備蓄で対応しているが、先行きが心配だ、と打ち明けています。",
+    "日本政府は必要に応じて国の備蓄を放出し、あのライナスとは、重いレアアースの[75%|ななじゅうごぱーせんと]を日本向けに確保しました。",
+    "[2010年|にせんじゅうねん]から[16年|じゅうろくねん]。日本は、いちばん替えのきかない部分で、再び揺さぶられているのです。",
+  ]},
+]
+
+ch07 = [
+  {"image": "minamitorishima", "lines": [
+    "東京からおよそ[1,900キロ|せんきゅうひゃくきろ]。日本の最も東にある島、南鳥島。",
+    "この島のまわりの深い海の底に、レアアースを含む泥が眠っています。",
+    "[2013年|にせんじゅうさんねん]、東京大学の加藤泰浩教授らは、ここでジスプロシウムの濃さが中国の鉱山の[32倍|さんじゅうにばい]という泥を見つけました。",
+  ]},
+  {"image": "deep-sea-mud", "lines": [
+    "最も有望な区域だけで、ジスプロシウムは世界の需要の[56年|ごじゅうろくねん]分にあたる、という推定もあります。",
+    "陸の鉱石と違い、放射性の物質をほとんど含まない、と研究者は説明します。",
+    "問題は、その場所です。泥があるのは、水深およそ[5,600メートル|ごせんろっぴゃくめーとる]の海の底でした。",
+  ]},
+  {"image": "chikyu-2026", "lines": [
+    "[2026年1月|にせんにじゅうろくねんいちがつ]、地球深部探査船「ちきゅう」が、南鳥島の沖へ向かいます。",
+    "高さ[7メートル|ななめーとる]近い波の中、パイプをつなぎ、[5,569メートル|ごせんごひゃくろくじゅうきゅうめーとる]の海底まで、泥をほぐす装置を降ろしました。",
+    "[2月1日|にがつついたち]の真夜中過ぎ、泥が、船の上へ上がってきます。",
+    "海洋研究開発機構、JAMSTECによれば、この深さから泥を連続して揚げたのは、世界で初めてです。",
+  ]},
+  {"image": "mud-on-deck-2026", "lines": [
+    "回収した泥は、およそ[50トン|ごじゅっとん]。",
+    "含まれるレアアースの半分以上は、イットリウムやジスプロシウムなど、中くらいから重い種類でした。",
+    "いま日本に入りにくくなっている、まさにその種類です。ただし、泥の濃さなどは、まだ公表されていません。",
+  ]},
+  {"image": "pacific-dawn-ending", "lines": [
+    "次は[2027年2月|にせんにじゅうななねんにがつ]。[1日|いちにち]におよそ[350トン|さんびゃくごじゅっとん]の泥を揚げる、本格的な試験が予定されています。",
+    "そして[2028年3月|にせんにじゅうはちねんさんがつ]までに、採算が合うかどうかを評価します。",
+    "「ちきゅう」を動かすだけで、年に百数十億円かかる、という指摘もあります。",
+    "深海の泥が、中国の値段と競えるのか。分けて精製する力も国内で立て直す必要がある、と専門家は言います。",
+  ]},
+  {"image": "credits-ore", "lines": [
+    "[18世紀|じゅうはっせいき]、スウェーデンの村で拾われた、重い黒い石。",
+    "レアアースは、レアではありませんでした。まれだったのは、それを掘り、分け、汚れを引き受ける場所でした。",
+    "アメリカはその場所を手放し、中国はそれを引き受けて技術を磨き、世界の供給を握りました。",
+    "そして、最強の磁石を生んだ日本は、原料を海の向こうに頼り続けてきました。",
+    "深い海の底の泥は、その形を変えられるのか。答えが出るのは、まだ少し先のことです。",
+    "レアアースの栄枯盛衰。このファイルは、まだ閉じられそうにありません。",
+  ]},
+]
+
+shorts = [{
+  "id": "s1",
+  "youtube_title": "レアアースはなぜ中国に握られた？発明は日本とアメリカだったのに #shorts",
+  "title": ["レアアースは", "なぜ中国に？"],
+  "scenes": [
+    {"image": "op-oxides", "lines": [
+      "レアアース。名前の意味は、まれな土。でも実は、銅や鉛より多い元素もあります。"]},
+    {"image": "mountain-pass-1970s", "lines": [
+      "[1974年|せんきゅうひゃくななじゅうよねん]、世界の生産の[8割|はちわり]近くは、アメリカの鉱山でした。",
+      "最強のネオジム磁石を生んだのは、日本とアメリカの研究者です。"]},
+    {"image": "op-port-2026", "lines": [
+      "ところがいま、採掘のおよそ[7割|ななわり]、精製の[8割|はちわり]以上は中国。",
+      "日本向けのジスプロシウムの輸出は、中国の統計でゼロになりました。"]},
+    {"image": "op-question", "lines": [
+      "なぜ、中国がここまで握ったのか。答えは、本編で。"]},
+  ],
+  "description": [
+    "1974年、世界のレアアースの8割近くはアメリカの鉱山から掘られていました。最強のネオジム磁石を生んだのは、日本とアメリカの研究者です。ところがいま、採掘のおよそ7割、精製の8割以上を中国が握り、2026年にはジスプロシウムとテルビウムの日本向け輸出が中国の統計でゼロになりました。",
+    "なぜ中国がここまで握ったのか。本編で、1787年の発見から南鳥島のレアアース泥までをたどっています。"],
+  "hashtags": ["レアアース", "中国", "南鳥島", "ネオジム磁石", "経済安全保障"],
+}]
+
+USED = {b["image"] for seg in (op, ch01, ch02, ch03, ch04, ch05, ch06, ch07) for b in seg}
+USED |= {sc["image"] for s in shorts for sc in s["scenes"]} | {"credits-ore", "op-port-2026", "chikyu-2026", "mountain-pass-1970s"}
+
+ep = {
+  "slug": "rareearth",
+  "youtube_title": "レアアースはなぜ中国に握られた？日本の最強磁石、消えた米国の鉱山、南鳥島の泥【栄枯盛衰ファイル】",
+  "tags": ["レアアース","レアアース 中国","レアアース とは","レアアース 日本","レアアース 輸出規制","レアアース 南鳥島","南鳥島","南鳥島 レアアース","ネオジム磁石","ジスプロシウム","レアメタル","中国 輸出規制","経済安全保障","地政学","米中対立","日中関係","MPマテリアルズ","資源","栄枯盛衰","栄枯盛衰ファイル"],
+  "theme": {"main": "なぜ「レアアース」は中国に握られたのか？", "sub": "ありふれた元素をめぐる栄枯盛衰"},
+  "readings": {
+    "希土類": "きどるい",
+    "地殻": "ちかく",
+    "砲兵将校": "ほうへいしょうこう",
+    "地質学者": "ちしつがくしゃ",
+    "探鉱者": "たんこうしゃ",
+    "研磨剤": "けんまざい",
+    "自給": "じきゅう",
+    "佐川眞人": "さがわまさと",
+    "住友特殊金属": "すみともとくしゅきんぞく",
+    "ホウ素": "ほうそ",
+    "GM": "じーえむ",
+    "本田賞": "ほんだしょう",
+    "地質調査所": "ちしつちょうさしょ",
+    "内モンゴル": "うちもんごる",
+    "鉄鉱床": "てっこうしょう",
+    "包頭": "ぱおとう",
+    "副産物": "ふくさんぶつ",
+    "徐光憲": "じょこうけん",
+    "徐さん": "じょさん",
+    "北京大学": "ぺきんだいがく",
+    "鉱山局": "こうざんきょく",
+    "鉱床": "こうしょう",
+    "鄧小平": "とうしょうへい",
+    "改革開放": "かいかくかいほう",
+    "精錬": "せいれん",
+    "国有系": "こくゆうけい",
+    "監査機関": "かんさきかん",
+    "輸出枠": "ゆしゅつわく",
+    "尖閣諸島": "せんかくしょとう",
+    "海上保安庁": "かいじょうほあんちょう",
+    "巡視船": "じゅんしせん",
+    "商務省": "しょうむしょう",
+    "大畠章宏": "おおはたあきひろ",
+    "双日": "そうじつ",
+    "JOGMEC": "じょぐめっく",
+    "大同特殊鋼": "だいどうとくしゅこう",
+    "WTO": "だぶりゅーてぃーおー",
+    "MPマテリアルズ": "えむぴーまてりあるず",
+    "精鉱": "せいこう",
+    "習近平": "しゅうきんぺい",
+    "江西省": "こうせいしょう",
+    "中国稀土集団": "ちゅうごくきどしゅうだん",
+    "国防総省": "こくぼうそうしょう",
+    "筆頭株主": "ひっとうかぶぬし",
+    "釜山": "ぷさん",
+    "衆議院": "しゅうぎいん",
+    "高市早苗": "たかいちさなえ",
+    "高市首相": "たかいちしゅしょう",
+    "存立危機事態": "そんりつききじたい",
+    "武力行使": "ぶりょくこうし",
+    "集団的自衛権": "しゅうだんてきじえいけん",
+    "核心的利益": "かくしんてきりえき",
+    "両用品目": "りょうようひんもく",
+    "三菱重工": "みつびしじゅうこう",
+    "川崎重工": "かわさきじゅうこう",
+    "JAXA": "じゃくさ",
+    "SUBARU": "すばる",
+    "TDK": "てぃーでぃーけー",
+    "再軍事化": "さいぐんじか",
+    "南鳥島": "みなみとりしま",
+    "加藤泰浩": "かとうやすひろ",
+    "排他的経済水域": "はいたてきけいざいすいいき",
+    "深海底": "しんかいてい",
+    "地球深部探査船": "ちきゅうしんぶたんさせん",
+    "海洋研究開発機構": "かいようけんきゅうかいはつきこう",
+    "JAMSTEC": "じゃむすてっく",
+    "百数十億円": "ひゃくすうじゅうおくえん",
+    "日本向け": "にほんむけ",
+    "米中": "べいちゅう",
+  },
+  "images": {k: {"prompt": v} for k, v in images.items() if k in USED},
+  "segments": [
+    {"id": "op", "kind": "opening", "blocks": op},
+    {"id": "ch01", "kind": "chapter", "title": "イッテルビーの黒い石", "blocks": ch01},
+    {"id": "ch02", "kind": "chapter", "title": "13日差の発明", "blocks": ch02},
+    {"id": "ch03", "kind": "chapter", "title": "中東には石油、中国にはレアアース", "blocks": ch03},
+    {"id": "ch04", "kind": "chapter", "title": "2010年9月", "blocks": ch04},
+    {"id": "ch05", "kind": "chapter", "title": "戦略物資", "blocks": ch05},
+    {"id": "ch06", "kind": "chapter", "title": "2026年1月6日", "blocks": ch06},
+    {"id": "ch07", "kind": "chapter", "title": "南鳥島の泥", "blocks": ch07},
+  ],
+  "ident_image": "op-oxides",
+  "credits": {"image": "credits-ore", "sources": [
+    "米国地質調査所（USGS）Mineral Commodity Summaries、Minerals Yearbook、Fact Sheet 087-02、Data Series 140",
+    "米政府説明責任局（GAO）報告（2010年）、米議会調査局（CRS）報告、米中経済安全保障調査委員会報告（2010年）",
+    "中国国務院新聞弁公室「中国の希土類の状況と政策」（2012年）、中国商務部・外交部の公告と発表",
+    "国会会議録（2010年、2025年）",
+    "世界貿易機関（WTO）紛争案件DS433",
+    "JOGMEC 発表資料・鉱物資源マテリアルフロー",
+    "海洋研究開発機構（JAMSTEC）・内閣府 SIP 海洋、東京大学・早稲田大学の発表",
+    "科学技術振興機構 サイエンスポータル、本田賞の発表、地質調査所月報（1988年）",
+    "Molycorp・MP Materials の米証券取引委員会（SEC）提出書類と発表",
+    "大同特殊鋼、日立製作所、豊田通商、CISTEC（安全保障貿易情報センター）",
+    "ロイター、AP、AFP、共同通信、時事通信、日本経済新聞、nippon.com、Benchmark Mineral Intelligence",
+  ]},
+  "thumbnail": {"image": "op-port-2026", "lines": ["レアアース", "なぜ中国に？", "最強磁石は日本生まれなのに…"]},
+  "thumbnail_variants": [
+    {"image": "chikyu-2026", "lines": ["南鳥島の泥", "日本の切り札？", "レアアースの栄枯盛衰"]},
+    {"image": "mountain-pass-1970s", "lines": ["米国8割→中国7割", "レアアース覇権", "何が起きた？"]},
+  ],
+  "shorts": shorts,
+  "description": {
+    "intro": [
+      "スマートフォン、電気自動車、エアコン、風力発電。現代の暮らしを支える最強の磁石「ネオジム磁石」に欠かせないのが、17の元素の仲間「レアアース（希土類）」です。",
+      "1970年代、世界のレアアースの8割近くはアメリカの一つの鉱山から掘られていました。1982年には日本とアメリカの研究者がネオジム磁石を生み出します。ところがいま、採掘のおよそ7割、精製の8割以上を握っているのは中国です。",
+      "2026年、中国の貿易統計では、ジスプロシウムとテルビウムの日本向け輸出がゼロになりました。そして南鳥島の沖では、水深5,569メートルの海底からレアアースを含む泥を引き揚げる試験が行われています。"
+    ],
+    "questions": [
+      "なぜ、名前ほど「レア」ではない元素の供給を、中国が握ることになったのでしょうか。",
+      "そして日本は、南鳥島の泥で、その形を変えられるのでしょうか。"
+    ],
+    "overview": "今回の「栄枯盛衰ファイル」では、1787年のスウェーデンでの発見から、アメリカ・マウンテンパス鉱山の全盛期、日本とアメリカで生まれたネオジム磁石、中国の分離技術と安値輸出、2010年の対日出荷停止とWTOでの争い、米中対立と中国の輸出管理、2026年の対日措置、そして南鳥島のレアアース泥まで、レアアースをめぐる栄枯盛衰をたどります。",
+    "comment_prompt": "レアアースの問題に日本はどう向き合うべきだと思いますか。南鳥島の試験への期待やご意見も、ぜひコメント欄で教えてください。",
+    "sources_summary": "本動画は、米国地質調査所（USGS）の統計、米政府・議会の報告書、中国政府の白書と商務部の公告、国会会議録、WTOの紛争記録、JOGMEC・JAMSTEC・内閣府の発表資料、企業の発表と米証券取引委員会への提出書類、通信社・専門メディアの報道などを参考に制作しています。",
+    "main_sources": ["米国地質調査所（USGS）","米政府説明責任局（GAO）","米議会調査局（CRS）","中国国務院新聞弁公室","中国商務部","国会会議録","世界貿易機関（WTO）","JOGMEC","海洋研究開発機構（JAMSTEC）","内閣府","科学技術振興機構","MP Materials","ロイター","AP","共同通信","日本経済新聞"],
+    "notes": [
+      "※2010年の日本向け出荷の停止について、中国政府は禁輸を一貫して否定しています。動画では、日本の商社・政府の説明と中国政府の説明を並べて紹介しています。WTOの判断は輸出枠・輸出税についてのもので、2010年の出荷停止を裁いたものではありません。",
+      "※2026年1月6日の中国の措置は、日本の軍事ユーザー・軍事用途などへの両用品目の輸出を禁じるもので、レアアースは名指しされていません。ジスプロシウム・テルビウム・イットリウムの日本向け輸出の減少は、中国・日本の貿易統計と報道によるものです。",
+      "※中国のシェアは、段階（採掘・精製・磁石）と年によって異なります。採掘のおよそ7割は米国地質調査所（2025年の推計）、精製の8割以上は国際エネルギー機関（2025年）の数字です。1974年のアメリカの8割近くは、米国地質調査所の統計から計算したものです。",
+      "※鄧小平氏の「中東には石油があり、中国にはレアアースがある」という言葉は広く引用されていますが、公式の講話記録には見当たりません。",
+      "※南鳥島の数字は資源量の推定で、経済的に採掘できる埋蔵量ではありません。2027年の本格試験を経て、2028年3月までに経済性が評価される予定です。",
+      "※動画の内容は、2026年11月18日時点の情報にもとづいています。"
+    ],
+    "reference_urls": [
+      {"title": "米国地質調査所 Mineral Commodity Summaries 2026: Rare Earths", "url": "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths.pdf"},
+      {"title": "米国地質調査所 Rare Earth Elements—Critical Resources for High Technology（2002年）", "url": "https://pubs.usgs.gov/fs/2002/fs087-02/fs087-02.pdf"},
+      {"title": "科学技術振興機構 サイエンスポータル 佐川眞人氏の講演（2012年）", "url": "http://scienceportal.jst.go.jp/stories/20120605_01/"},
+      {"title": "本田技研工業 2023年本田賞 佐川眞人博士・ジョン・クロート博士", "url": "https://global.honda/jp/topics/2023/ce_2023-09-29.html"},
+      {"title": "米政府説明責任局 Rare Earth Materials in the Defense Supply Chain（2010年）", "url": "https://www.gao.gov/assets/gao-10-617r.pdf"},
+      {"title": "中国国務院新聞弁公室 Situation and Policies of China's Rare Earth Industry（2012年）", "url": "https://govt.chinadaily.com.cn/s/201206/20/WS5c249418498eb4f01ff25628/situation-and-policies-of-chinas-rare-earth-industry.html"},
+      {"title": "国会会議録 参議院経済産業委員会（2010年10月21日）", "url": "https://kokkai.ndl.go.jp/txt/117614080X00220101021/17"},
+      {"title": "JOGMEC 豪ライナス社への出融資（2011年3月30日）", "url": "https://www.jogmec.go.jp/news/release/release_00280.html"},
+      {"title": "世界貿易機関 DS433 China — Rare Earths, Tungsten and Molybdenum", "url": "https://www.wto.org/english/tratop_e/dispu_e/cases_e/ds433_e.htm"},
+      {"title": "大同特殊鋼 重希土類完全フリー磁石のハイブリッド車用モーターへの採用（2016年）", "url": "https://www.daido.co.jp/about/release/2016/0712_freemag_hevmotor.html"},
+      {"title": "MP Materials 米国防総省との官民連携（2025年7月10日）", "url": "https://mpmaterials.com/news/mp-materials-announces-transformational-public-private-partnership-with-the-department-of-defense-to-accelerate-u-s-rare-earth-magnet-independence/"},
+      {"title": "国会会議録 衆議院予算委員会（2025年11月7日）", "url": "https://kokkai.ndl.go.jp/txt/121905261X00220251107/188"},
+      {"title": "CISTEC 中国商務部公告2026年第1号（仮訳）", "url": "https://www.cistec.or.jp/service/keizai_anzenhosho/china/data/20260106-2.pdf"},
+      {"title": "中国商務部 公告2026年第11号（2026年2月24日）", "url": "https://www.mofcom.gov.cn/zcfb/zc/art/2026/art_a73f2b59e13d4454b0f58618917f3944.html"},
+      {"title": "海洋研究開発機構 南鳥島沖レアアース泥の分析結果（2026年7月24日）", "url": "https://www.jamstec.go.jp/j/about/press_release/20260724/"},
+      {"title": "科学技術振興機構 サイエンスポータル 南鳥島レアアース泥（2026年8月18日）", "url": "https://scienceportal.jst.go.jp/stories/20260818_s01/"}
+    ],
+    "hashtags": ["レアアース","中国","南鳥島","ネオジム磁石","ジスプロシウム","レアメタル","経済安全保障","地政学","米中対立","日中関係"]
+  },
+}
+
+out = Path(__file__).resolve().parent / "episode.json"
+json.dump(ep, open(out, "w"), ensure_ascii=False, indent=2)
+total = 0
+for s in ep["segments"]:
+    n = sum(len(re.sub(r"\[([^|\]]+)\|[^\]]+\]", r"\1", l)) for b in s["blocks"] for l in b["lines"])
+    total += n
+    print(s["id"], len(s["blocks"]), "blocks", n, "chars")
+print("total", total, "chars;", len(ep["images"]), "images; unused:", sorted(set(images) - USED))
