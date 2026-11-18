@@ -6,7 +6,7 @@ __pycache__/
 episodes/*/assets/
 episodes/*/out/*.mp4
 episodes/*/out/shorts/*.mp4
-episodes/*/out/build.log
+episodes/*/out/*.log
 episodes/*/out/check/
 episodes/*/out/parts/
 episodes/*/out/review/
