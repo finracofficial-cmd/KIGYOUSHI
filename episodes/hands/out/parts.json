@@ -53,6 +53,14 @@
   "segments": [
    "ch06"
   ],
-  "fingerprint": "20204e0e296fc2f0cceb0000181a1019a880c674f6de06d60480821f88385927"
+  "fingerprint": "e934e2fc922ab7bca71e20250fced86b53924278cf7a2d6f4ae3ca5452f783f2"
+ },
+ {
+  "name": "p07",
+  "svrun": "episode-p07.svrun",
+  "segments": [
+   "ch07"
+  ],
+  "fingerprint": "e3df93a2ebe39ca6450106fca4adcceea966ecd0819c07a76139fa3e184b4dd7"
  }
 ]
