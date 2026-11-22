@@ -261,6 +261,9 @@ ch06 = [
     "熟練の店員[180人|ひゃくはちじゅうにん]の知識を学ばせた、[AI|えーあい]の接客も始まっています。",
     "会社は、[2030年|にせんさんじゅうねん]には[150|ひゃくごじゅう]店にする目標を掲げています。",
   ]},
+]
+
+ch07 = [
   {"image": "shibuya-building-2026", "lines": [
     "その一方で、[2026年5月|にせんにじゅうろくねんごがつ]、渋谷店の閉店が発表されます。理由は、建物の賃貸借の契約が満了すること。",
     "高家会長は、建物の老朽化などの事情から、契約を更新できなかったと説明しました。",
@@ -361,7 +364,7 @@ shorts = [
   },
 ]
 
-USED = {b["image"] for seg in (op, ch01, ch02, ch03, ch04, ch05, ch06) for b in seg}
+USED = {b["image"] for seg in (op, ch01, ch02, ch03, ch04, ch05, ch06, ch07) for b in seg}
 USED |= {sc["image"] for s in shorts for sc in s["scenes"]} | {"credits-tools", "op-thanks-sign", "last-day-rain", "op-question"}
 
 ep = {
@@ -440,7 +443,8 @@ ep = {
     {"id": "ch03", "kind": "chapter", "title": "最初の陰り", "blocks": ch03},
     {"id": "ch04", "kind": "chapter", "title": "3倍の店、横ばいの売上", "blocks": ch04},
     {"id": "ch05", "kind": "chapter", "title": "東急が手放した日", "blocks": ch05},
-    {"id": "ch06", "kind": "chapter", "title": "THANKS", "blocks": ch06},
+    {"id": "ch06", "kind": "chapter", "title": "カインズ流", "blocks": ch06},
+    {"id": "ch07", "kind": "chapter", "title": "THANKS", "blocks": ch07},
   ],
   "ident_image": "op-thanks-sign",
   "credits": {"image": "credits-tools", "sources": [

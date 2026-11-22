@@ -522,7 +522,7 @@
     {
       "id": "ch06",
       "kind": "chapter",
-      "title": "THANKS",
+      "title": "カインズ流",
       "blocks": [
         {
           "image": "cainz-method",
@@ -551,7 +551,14 @@
             "熟練の店員[180人|ひゃくはちじゅうにん]の知識を学ばせた、[AI|えーあい]の接客も始まっています。",
             "会社は、[2030年|にせんさんじゅうねん]には[150|ひゃくごじゅう]店にする目標を掲げています。"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "ch07",
+      "kind": "chapter",
+      "title": "THANKS",
+      "blocks": [
         {
           "image": "shibuya-building-2026",
           "lines": [
